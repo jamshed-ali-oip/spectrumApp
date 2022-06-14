@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -78,8 +79,13 @@ import org.apache.tools.ant.taskdefs.condition.Os
  * ]
  */
 
+
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
+]
+
+project.ext.vectoricons = [
+        iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf', 'Ionicons.ttf', 'FontAwesome5.ttf', 'Feather.ttf',  'MaterialCommunityIcons.ttf', 'FontAwesome.ttf','SimpleLineIcons.ttf', 'Fontisto.ttf', 'Foundation.ttf', 'Octicons.ttf' ] // Name of the font files you want to copy
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -228,6 +234,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -266,7 +280,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-background-timer')
+    implementation project(':react-native-svg')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
@@ -317,3 +333,4 @@ def isNewArchitectureEnabled() {
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
+
