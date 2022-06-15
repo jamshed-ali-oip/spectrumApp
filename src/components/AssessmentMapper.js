@@ -10,13 +10,32 @@ import Heading from './Heading';
 import {themeLightPurple} from '../assets/colors/colors';
 const {width, height} = Dimensions.get('window');
 
+import LONG_JUMP from '../assets/images/long-jump.png';
+import SPRINTING from '../assets/images/sprinting.png';
+import SHOT_PUT from '../assets/images/shot-put.png';
+import HURDLES from '../assets/images/hurdles.png';
+
 const AssessmentMapper = ({item, index, onPress}) => {
+
+  let SHOW_IMAGE =
+
+    item?.Name === 'Long Jump'
+      ? LONG_JUMP
+      : item?.Name === 'Sprinting'
+      ? SPRINTING
+      : item?.Name === 'Shot Put'
+      ? SHOT_PUT
+      : HURDLES;
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
-        <Image source={item?.image} resizeMode='contain' style={styles.imageStyles} />
+        <Image
+          source={SHOW_IMAGE}
+          resizeMode="contain"
+          style={styles.imageStyles}
+        />
         <Heading
-          title={item?.name}
+          title={item?.Name}
           passedStyle={styles.nameStyle}
           fontType="regular"
         />

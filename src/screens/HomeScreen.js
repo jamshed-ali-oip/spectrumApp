@@ -18,11 +18,12 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {template} from '@babel/core';
+import * as actions from '../store/actions';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, logoutRequest}) => {
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -30,7 +31,7 @@ const HomeScreen = ({navigation}) => {
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
         <Image
-        resizeMode='contain'
+          resizeMode="contain"
           source={require('../assets/images/logo.png')}
           style={{
             marginTop: height * 0.15,
@@ -77,6 +78,7 @@ const HomeScreen = ({navigation}) => {
           }}
           onBtnPress={() => {
             // navigation.navigate('runAssessment');
+            logoutRequest();
           }}
           btnTextStyle={{color: 'white', fontSize: width * 0.045}}
           isBgColor={false}
@@ -86,7 +88,7 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-export default HomeScreen;
+export default connect(null, actions)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

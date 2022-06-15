@@ -5,59 +5,116 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
+  RefreshControl,
+  Platform,
+  Text,
 } from 'react-native';
-import React from 'react';
-import Button from '../components/Button';
+import React, {useEffect, useState, useCallback} from 'react';
+import LottieView from 'lottie-react-native';
 import {themeDarkBlue, themeFerozi} from '../assets/colors/colors';
 import AssessmentMapper from '../components/AssessmentMapper';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import Heading from '../components/Heading';
-
+import {connect} from 'react-redux';
+import * as actions from '../store/actions';
 const {width, height} = Dimensions.get('window');
 
-const Assessments = ({navigation}) => {
-  const _onPressRunAssessment = (item) => {
+const Assessments = ({navigation, userReducer, getAssessments}) => {
+  const accessToken = userReducer.accessToken;
+  const [assessments, setAssessments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const _onPressRunAssessment = item => {
     navigation.navigate('runAssessment', {item: item});
   };
 
+  useEffect(() => {
+    getAllAssessments();
+  }, []);
+
+  useEffect(() => {
+    setAssessments(userReducer?.assessments);
+  }, [userReducer?.assessments]);
+
+  const getAllAssessments = async () => {
+    setIsLoading(true);
+    await getAssessments(accessToken);
+    setIsLoading(false);
+  };
+
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1500).then(() => {
+      setRefreshing(false);
+      getAllAssessments();
+    });
+  }, []);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <Heading
-          title={'ASSESSMENTS'}
-          passedStyle={styles.headingStyles}
-          fontType="semi-bold"
-        />
-        {/* Colors  */}
-        <ColoredFlatlist />
-
         {/* Assessments List */}
-        <FlatList
-          data={list}
-          style={styles.assessmentListStyle}
-          keyExtractor={({item, index}) => item?.id?.toString()}
-          renderItem={({item, index}) => (
-            <AssessmentMapper
-              item={item}
-              index={index}
-              onPress={_onPressRunAssessment}
-            />
-          )}
-        />
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
+          />
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListHeaderComponent={
+              <>
+                <Heading
+                  title={'ASSESSMENTS'}
+                  passedStyle={styles.headingStyles}
+                  fontType="semi-bold"
+                />
+                {/* Colors  */}
+                <ColoredFlatlist />
+              </>
+            }
+            data={assessments}
+            keyExtractor={({item, index}) => item?.id?.toString()}
+            renderItem={({item, index}) => (
+              <AssessmentMapper
+                item={item}
+                index={index}
+                onPress={_onPressRunAssessment}
+              />
+            )}
+          />
+        )}
       </ImageBackground>
     </>
   );
 };
 
-export default Assessments;
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(Assessments);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: themeDarkBlue,
+  },
+  lottieStyle: {
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.098,
+    marginLeft: width * 0.07,
   },
   headingStyles: {
     width: width * 0.55,
@@ -73,64 +130,9 @@ const styles = StyleSheet.create({
     marginTop: height * 0.02,
     marginBottom: height * 0.1,
   },
-  assessmentListStyle: {
-    position: 'absolute',
-    bottom: height * 0.35,
-    left: width * 0.05,
-  },
+  // assessmentListStyle: {
+  //   position: 'absolute',
+  //   bottom: height * 0.25,
+  //   left: width * 0.05,
+  // },
 });
-
-const colors = [
-  {
-    id: 1,
-    color: '#E5306D',
-  },
-
-  {
-    id: 2,
-    color: '#EF4A37',
-  },
-  {
-    id: 3,
-    color: '#F17A29',
-  },
-  {
-    id: 4,
-    color: '#E4C546',
-  },
-  {
-    id: 5,
-    color: '#40C0C9',
-  },
-  {
-    id: 6,
-    color: '#6592CD',
-  },
-  {
-    id: 7,
-    color: '#704FA0',
-  },
-];
-
-const list = [
-  {
-    id: 1,
-    name: 'Long Jump',
-    image: require('../assets/images/long-jump.png'),
-  },
-  {
-    id: 2,
-    name: 'Sprinting',
-    image: require('../assets/images/sprinting.png'),
-  },
-  {
-    id: 3,
-    name: 'Shot Put',
-    image: require('../assets/images/shot-put.png'),
-  },
-  {
-    id: 4,
-    name: 'Hurdles',
-    image: require('../assets/images/hurdles.png'),
-  },
-];

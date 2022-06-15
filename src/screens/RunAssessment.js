@@ -16,16 +16,27 @@ import {
   themePink,
   themeYellow,
 } from '../assets/colors/colors';
-import AssessmentMapper from '../components/AssessmentMapper';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import Heading from '../components/Heading';
 import IconComp from '../components/IconComp';
-
+import LONG_JUMP from '../assets/images/long-jump.png';
+import SPRINTING from '../assets/images/sprinting.png';
+import SHOT_PUT from '../assets/images/shot-put.png';
+import HURDLES from '../assets/images/hurdles.png';
 const {width, height} = Dimensions.get('window');
 
 const RunAssessment = ({navigation, route}) => {
   const _onPressRunAssessment = () => {};
   const ITEM = route.params.item;
+
+  let SHOW_IMAGE =
+    ITEM?.Name === 'Long Jump'
+      ? LONG_JUMP
+      : ITEM?.Name === 'Sprinting'
+      ? SPRINTING
+      : ITEM?.Name === 'Shot Put'
+      ? SHOT_PUT
+      : HURDLES;
 
   return (
     <>
@@ -52,7 +63,7 @@ const RunAssessment = ({navigation, route}) => {
             passedStyle={styles.iconStyle}
           />
           <Heading
-            title={ITEM.name}
+            title={ITEM.Name}
             passedStyle={styles.participantsLabelStyle}
             fontType="semi-bold"
           />
@@ -64,7 +75,7 @@ const RunAssessment = ({navigation, route}) => {
         <View style={styles.assessmentListStyle}>
           <Image
             resizeMode="contain"
-            source={ITEM.image}
+            source={SHOW_IMAGE}
             style={{
               width: width * 0.4,
               height: height * 0.13,
@@ -72,6 +83,7 @@ const RunAssessment = ({navigation, route}) => {
             }}
           />
           <TouchableOpacity
+          activeOpacity={0.7}
             onPress={() => navigation.navigate('groups', {item: ITEM})}>
             <Heading
               title={'START'}

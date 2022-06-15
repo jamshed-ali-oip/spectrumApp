@@ -9,10 +9,13 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
+  RefreshControl,Platform
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import Heading from '../components/Heading';
-import Button from '../components/Button';
+import * as actions from '../store/actions';
+import LottieView from 'lottie-react-native';
+
 import {
   themeBlue,
   themeDarkBlue,
@@ -23,11 +26,43 @@ import {
 import {template} from '@babel/core';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-const GroupsScreen = ({navigation, route}) => {
+const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
   const ITEM = route.params.item;
+  const accessToken = userReducer.accessToken;
+  const [assessments, setAssessments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // useEffect(() => {
+  //   getAllGroups();
+  // }, []);
+
+  // useEffect(() => {
+  //   setAssessments(userReducer?.assessments);
+  // }, [userReducer?.assessments]);
+
+  const getAllGroups = async () => {
+    setIsLoading(true);
+    await getGroups(accessToken);
+    setIsLoading(false);
+  };
+
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1500).then(() => {
+      setRefreshing(false);
+      getAllGroups();
+    });
+  }, []);
+
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -35,82 +70,100 @@ const GroupsScreen = ({navigation, route}) => {
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
         {/* Participants FlatList  */}
-        <FlatList
-          contentContainerStyle={{paddingBottom: height * 0.1}}
-          ListHeaderComponent={
-            <>
-              <Heading
-                title={ITEM?.name}
-                passedStyle={styles.headingStyles}
-                fontType="semi-bold"
-              />
-
-              <View style={styles.filterLabelViewStyle}>
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
+          />
+        ) : (
+          <FlatList
+            contentContainerStyle={{paddingBottom: height * 0.1}}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListHeaderComponent={
+              <>
                 <Heading
-                  title="Run Assessment"
-                  passedStyle={styles.filterLabelStyle}
-                  fontType="regular"
-                />
-                <IconComp
-                  iconName={'chevron-right'}
-                  type="Feather"
-                  passedStyle={styles.rightIconStyle}
-                />
-                <Heading
-                  title={ITEM?.name}
-                  passedStyle={styles.filterLabelStyle}
-                  fontType="regular"
-                />
-                <IconComp
-                  iconName={'chevron-right'}
-                  type="Feather"
-                  passedStyle={styles.rightIconStyle}
-                />
-                <Heading
-                  title="Groups"
-                  passedStyle={styles.selectFilterTextStyle}
+                  title={ITEM?.Name}
+                  passedStyle={styles.headingStyles}
                   fontType="semi-bold"
                 />
-              </View>
 
-              {/* Colors  */}
-              <ColoredFlatlist />
-            </>
-          }
-          data={list}
-          keyExtractor={({item, index}) => item?.id?.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation?.navigate('grades', {item: {...ITEM, grade: item.name}})
-                }
-                style={{
-                  width: width * 0.9,
-                  alignSelf: 'center',
-                  zIndex: 999,
-                  borderBottomColor: 'silver',
-                  borderBottomWidth: 1,
-                  height: height * 0.07,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Heading
-                  title={item?.name}
-                  passedStyle={{color: 'white', fontSize: width * 0.04}}
-                  fontType="regular"
-                />
-              </TouchableOpacity>
-            );
-          }}
-        />
+                <View style={styles.filterLabelViewStyle}>
+                  <Heading
+                    title="Run Assessment"
+                    passedStyle={styles.filterLabelStyle}
+                    fontType="regular"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.rightIconStyle}
+                  />
+                  <Heading
+                    title={ITEM?.Name}
+                    passedStyle={styles.filterLabelStyle}
+                    fontType="regular"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.rightIconStyle}
+                  />
+                  <Heading
+                    title="Groups"
+                    passedStyle={styles.selectFilterTextStyle}
+                    fontType="semi-bold"
+                  />
+                </View>
+
+                {/* Colors  */}
+                <ColoredFlatlist />
+              </>
+            }
+            data={list}
+            keyExtractor={({item, index}) => item?.id?.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation?.navigate('grades', {
+                      item: {...ITEM, grade: item.name},
+                    })
+                  }
+                  style={{
+                    width: width * 0.9,
+                    alignSelf: 'center',
+                    zIndex: 999,
+                    borderBottomColor: 'silver',
+                    borderBottomWidth: 1,
+                    height: height * 0.07,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Heading
+                    title={item?.name}
+                    passedStyle={{color: 'white', fontSize: width * 0.04}}
+                    fontType="regular"
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
       </ImageBackground>
     </>
   );
 };
 
-export default GroupsScreen;
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(GroupsScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -129,6 +182,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: width * 0.04,
     fontFamily: 'Montserrat-SemiBold',
+  },
+  lottieStyle: {
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.098,
+    marginLeft: width * 0.07,
   },
   selectFilterStyle: {
     flexDirection: 'row',
