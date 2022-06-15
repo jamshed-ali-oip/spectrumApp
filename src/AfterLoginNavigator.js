@@ -14,6 +14,8 @@ import RunAssessment from './screens/RunAssessment';
 import GroupsScreen from './screens/GroupsScreen';
 import GradesScreen from './screens/GradesScreen';
 import TimeAssessment from './screens/TimeAssessment';
+import GradingSystem from './screens/GradingSystem';
+import ScaleScreen from './screens/ScaleScreen';
 
 const {width, height} = Dimensions.get('window');
 
@@ -309,7 +311,64 @@ const AfterLoginNavigator = ({navigation}) => {
         })}
         component={TimeAssessment}
       />
+       <AfterLoginStack.Screen
+        name="GradingSystem"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          headerStyle: {
+            height: height * 0.05,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+         
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        component={GradingSystem}
+      />
+           <AfterLoginStack.Screen
+        name="ScaleScreen"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          headerStyle: {
+            height: height * 0.05,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+         
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        component={ScaleScreen}
+      />
     </AfterLoginStack.Navigator>
+    
   );
 };
 

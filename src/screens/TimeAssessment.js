@@ -261,7 +261,8 @@ const ViewParticipants = ({navigation, route}) => {
 
           <TouchableOpacity
             onPress={() => {
-              timerRef.current.pause();
+              // timerRef.current.pause();
+             navigation.navigate('GradingSystem')
             }}
             style={{marginTop: height * 0.02, marginLeft: width * 0.05}}>
             <Heading
