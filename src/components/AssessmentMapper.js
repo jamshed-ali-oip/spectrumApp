@@ -15,10 +15,8 @@ import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
 
-const AssessmentMapper = ({item, index, onPress}) => {
-
+const AssessmentMapper = ({item, index, onPress, assessments}) => {
   let SHOW_IMAGE =
-
     item?.Name === 'Long Jump'
       ? LONG_JUMP
       : item?.Name === 'Sprinting'
@@ -27,7 +25,15 @@ const AssessmentMapper = ({item, index, onPress}) => {
       ? SHOT_PUT
       : HURDLES;
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+
+        index !== assessments?.length - 1 && {
+          borderBottomColor: 'silver',
+          borderBottomWidth: 1,
+        },
+      ]}>
       <View style={{flexDirection: 'row'}}>
         <Image
           source={SHOW_IMAGE}
@@ -63,8 +69,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 999,
     //   marginTop:-100,
-    borderBottomColor: 'silver',
-    borderBottomWidth: 1,
+    // borderBottomColor: 'silver',
+    // borderBottomWidth: 1,
     height: height * 0.09,
     justifyContent: 'space-between',
     flexDirection: 'row',

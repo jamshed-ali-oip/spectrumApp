@@ -9,9 +9,10 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
-  RefreshControl,Platform
+  RefreshControl,
+  Platform,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
@@ -33,17 +34,17 @@ const {width, height} = Dimensions.get('window');
 const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
   const ITEM = route.params.item;
   const accessToken = userReducer.accessToken;
-  const [assessments, setAssessments] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // useEffect(() => {
-  //   getAllGroups();
-  // }, []);
+  useEffect(() => {
+    getAllGroups();
+  }, []);
 
-  // useEffect(() => {
-  //   setAssessments(userReducer?.assessments);
-  // }, [userReducer?.assessments]);
+  useEffect(() => {
+    setGroups(userReducer?.groups);
+  }, [userReducer?.groups]);
 
   const getAllGroups = async () => {
     setIsLoading(true);
@@ -124,30 +125,39 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
                 <ColoredFlatlist />
               </>
             }
-            data={list}
+            data={groups}
             keyExtractor={({item, index}) => item?.id?.toString()}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
                     navigation?.navigate('grades', {
-                      item: {...ITEM, grade: item.name},
+                      item: {...ITEM, grade: `${item?.Name} - ${item?.Abbr}`},
+                      id: item?.id,
                     })
                   }
-                  style={{
-                    width: width * 0.9,
-                    alignSelf: 'center',
-                    zIndex: 999,
-                    borderBottomColor: 'silver',
-                    borderBottomWidth: 1,
-                    height: height * 0.07,
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
+                  style={[
+                    index !== groups?.length - 1 && {
+                      borderBottomColor: 'silver',
+                      borderBottomWidth: 1,
+                    },
+                    {
+                      width: width * 0.9,
+                      alignSelf: 'center',
+                      zIndex: 999,
+                      height: height * 0.07,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    },
+                  ]}>
                   <Heading
-                    title={item?.name}
-                    passedStyle={{color: 'white', fontSize: width * 0.04}}
+                    title={`${item?.Name} - ${item?.Abbr}`}
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.04,
+                      textTransform: 'capitalize',
+                    }}
                     fontType="regular"
                   />
                 </TouchableOpacity>

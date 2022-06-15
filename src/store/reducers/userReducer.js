@@ -1,7 +1,10 @@
 import {
   GET_ASSESSMENTS_REQUEST,
+  GET_GROUPS_REQUEST,
+  GET_GROUP_MEMBERS_REQUEST,
   LOGIN_REQUEST,
   LOGOUT_REQUEST,
+  GET_COLORS_REQUEST,
 } from '../actions/actionType';
 
 const INITIAL_STATE = {
@@ -9,6 +12,9 @@ const INITIAL_STATE = {
   userData: null,
   accessToken: '',
   assessments: [],
+  groups: [],
+  groupMembers: [],
+  colors: [],
 };
 
 export const userReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +31,24 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         assessments: action.payload,
+      };
+
+    case GET_GROUPS_REQUEST:
+      return {
+        ...state,
+        groups: action.payload,
+      };
+
+    case GET_GROUP_MEMBERS_REQUEST:
+      return {
+        ...state,
+        groupMembers: action.payload,
+      };
+
+    case GET_COLORS_REQUEST:
+      return {
+        ...state,
+        colors: action.payload,
       };
 
     case LOGOUT_REQUEST:

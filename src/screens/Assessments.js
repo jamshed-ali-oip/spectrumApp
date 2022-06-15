@@ -74,6 +74,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
+            showsVerticalScrollIndicator={false}
             ListHeaderComponent={
               <>
                 <Heading
@@ -86,10 +87,11 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
               </>
             }
             data={assessments}
-            keyExtractor={({item, index}) => item?.id?.toString()}
+            keyExtractor={({item, index}) => index?.toString()}
             renderItem={({item, index}) => (
               <AssessmentMapper
                 item={item}
+                assessments={assessments}
                 index={index}
                 onPress={_onPressRunAssessment}
               />

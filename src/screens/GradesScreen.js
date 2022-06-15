@@ -11,7 +11,7 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -24,12 +24,48 @@ import {
 import {template} from '@babel/core';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
+import {connect} from 'react-redux';
+import * as actions from '../store/actions';
 
 const {width, height} = Dimensions.get('window');
 
-const GradesScreen = ({navigation, route}) => {
+const GradesScreen = ({navigation, route, getGroupMembers, userReducer}) => {
   const ITEM = route.params.item;
+  const ID = route.params.id;
 
+  const accessToken = userReducer.accessToken;
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const apiData = {
+    grade_id: ID,
+  };
+  
+  useEffect(() => {
+    getAllGroupsMembers();
+  }, []);
+
+  useEffect(() => {
+    setGroupMembers(userReducer?.groupMembers);
+  }, [userReducer?.groupMembers]);
+
+  const getAllGroupsMembers = async () => {
+    setIsLoading(true);
+    await getGroupMembers(apiData, accessToken);
+    setIsLoading(false);
+  };
+
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1500).then(() => {
+      setRefreshing(false);
+      getAllGroupsMembers();
+    });
+  }, []);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -42,7 +78,7 @@ const GradesScreen = ({navigation, route}) => {
           ListHeaderComponent={
             <>
               <Heading
-                title={ITEM.name}
+                title={ITEM.Name}
                 passedStyle={styles.headingStyles}
                 fontType="semi-bold"
               />
@@ -62,7 +98,7 @@ const GradesScreen = ({navigation, route}) => {
                     passedStyle={styles.rightIconStyle}
                   />
                   <Heading
-                    title={ITEM.name}
+                    title={ITEM.Name}
                     passedStyle={styles.filterLabelStyle}
                     fontType="regular"
                   />
@@ -93,7 +129,7 @@ const GradesScreen = ({navigation, route}) => {
               <ColoredFlatlist />
             </>
           }
-          data={list}
+          data={groupMembers}
           keyExtractor={({item, index}) => item?.id?.toString()}
           renderItem={({item, index}) => {
             return (
@@ -102,23 +138,31 @@ const GradesScreen = ({navigation, route}) => {
                   navigation?.navigate('timeAssessment', {
                     item: ITEM,
                     grade: ITEM?.grade,
-                    childName:item?.name
+                    childName: `${item?.Firstname} ${item?.Lastname}`,
                   })
                 }
-                style={{
-                  width: width * 0.9,
-                  alignSelf: 'center',
-                  zIndex: 999,
-                  borderBottomColor: 'silver',
-                  borderBottomWidth: 1,
-                  height: height * 0.07,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
+                style={[
+                  index !== groupMembers?.length - 1 && {
+                    borderBottomColor: 'silver',
+                    borderBottomWidth: 1,
+                  },
+                  {
+                    width: width * 0.9,
+                    alignSelf: 'center',
+                    zIndex: 999,
+                    height: height * 0.07,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  },
+                ]}>
                 <Heading
-                  title={item?.name}
-                  passedStyle={{color: 'white', fontSize: width * 0.04}}
+                  title={`${item?.Firstname} ${item?.Lastname}`}
+                  passedStyle={{
+                    color: 'white',
+                    fontSize: width * 0.04,
+                    textTransform: 'capitalize',
+                  }}
                   fontType="regular"
                 />
               </TouchableOpacity>
@@ -130,7 +174,10 @@ const GradesScreen = ({navigation, route}) => {
   );
 };
 
-export default GradesScreen;
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(GradesScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -158,6 +205,7 @@ const styles = StyleSheet.create({
   selectFilterTextStyle: {
     fontSize: width * 0.04,
     color: 'white',
+    textTransform: 'capitalize',
   },
   rightIconStyle: {
     color: 'white',
@@ -190,51 +238,3 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.1,
   },
 });
-
-const list = [
-  {
-    id: 1,
-    name: 'Lalit Beahan',
-  },
-  {
-    id: 2,
-    name: 'Aaron Sanford',
-  },
-  {
-    id: 3,
-    name: 'Emmitt Rohan',
-  },
-  {
-    id: 4,
-    name: 'Denis Schneider',
-  },
-  {
-    id: 5,
-    name: 'Virgie Volkman',
-  },
-  {
-    id: 6,
-    name: 'Zackery Reynolds',
-  },
-  {
-    id: 7,
-    name: 'Aaron Sanford',
-  },
-  {
-    id: 8,
-    name: 'Emmitt Rohan',
-  },
-  {id: 9, name: 'Virgie Volkman'},
-  {
-    id: 10,
-    name: 'Denis Schneider',
-  },
-  {
-    id: 11,
-    name: 'Zackery Reynolds',
-  },
-  {
-    id: 12,
-    name: 'Aaron Sanford',
-  },
-];

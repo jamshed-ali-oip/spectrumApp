@@ -35,7 +35,6 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
   const _onPressLoginButton = async () => {
     setIsLoading(true);
     await loginRequest({email, password}, onLoginFailed);
-    setIsLoading(false);
   };
 
   const onLoginFailed = () => {
@@ -94,7 +93,10 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 <TextInput
                   placeholder="Password"
                   placeholderTextColor="#565B66"
-                  style={styles.inputfieldPassword}
+                  style={[
+                    styles.inputfieldPassword,
+                    {fontSize: showPassword ? width * 0.04 : width * 0.06},
+                  ]}
                   value={password}
                   onChangeText={e => {
                     if (e == ' ') {

@@ -1,7 +1,10 @@
 import {
   GET_ASSESSMENTS_REQUEST,
   LOGIN_REQUEST,
-  LOGOUT_REQUEST,GET_GROUPS_REQUEST
+  LOGOUT_REQUEST,
+  GET_GROUPS_REQUEST,
+  GET_GROUP_MEMBERS_REQUEST,
+  GET_COLORS_REQUEST,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl} from '../../config';
@@ -60,7 +63,7 @@ export const getAssessments = accessToken => async dispatch => {
 
 export const getGroups = accessToken => async dispatch => {
   try {
-    const URL = `${apiUrl}/groups`;
+    const URL = `${apiUrl}/grade`;
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -72,6 +75,62 @@ export const getGroups = accessToken => async dispatch => {
     if (response.data.success) {
       dispatch({
         type: GET_GROUPS_REQUEST,
+        payload: response.data.data,
+      });
+    } else {
+      showMessage({
+        message:
+          response.data.message || response.data.msg || 'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getGroupMembers = (data, accessToken) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/get-participant`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.post(URL, data, headers);
+    if (response.data.success) {
+      dispatch({
+        type: GET_GROUP_MEMBERS_REQUEST,
+        payload: response.data.data,
+      });
+    } else {
+      showMessage({
+        message:
+          response.data.message || response.data.msg || 'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getColors = accessToken => async dispatch => {
+  try {
+    const URL = `${apiUrl}/color`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.get(URL, headers);
+    if (response.data.success) {
+      dispatch({
+        type: GET_COLORS_REQUEST,
         payload: response.data.data,
       });
     } else {

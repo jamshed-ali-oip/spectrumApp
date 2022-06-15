@@ -25,15 +25,20 @@ import {
   themeYellow,
 } from '../assets/colors/colors';
 import WheelOfFortune from 'react-native-wheel-of-fortune';
+import {connect} from 'react-redux';
+import * as actions from '../store/actions';
 
 const {width, height} = Dimensions.get('window');
 
-const ViewParticipants = ({navigation, route}) => {
+const TimeAssessment = ({navigation, route, userReducer, getColors}) => {
   const ITEM = route.params.item;
   const [hasTimerStarted, setHasTimerStarted] = useState(false);
   const GRADE = route.params.grade;
   const CHILD_NAME = route.params.childName;
   const [child, setChild] = useState(null);
+  const accessToken = userReducer?.accessToken;
+  const [colors, setColors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
@@ -44,6 +49,7 @@ const ViewParticipants = ({navigation, route}) => {
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
+
   const wheelOptions = {
     rewards: participants,
     knobSize: 30,
@@ -51,6 +57,7 @@ const ViewParticipants = ({navigation, route}) => {
     borderColor: themeDarkBlue,
     innerRadius: 10,
     width: 50,
+    colors: userReducer?.colors?.map(ele => ele?.WebColor),
     // colors: [
     //   ,
     //   themeDarkBlue,
@@ -101,8 +108,19 @@ const ViewParticipants = ({navigation, route}) => {
   }, [secs]);
 
   useEffect(() => {
-    console.log(wheelState, ': wheelState ');
-  }, [wheelState]);
+    getAllColors();
+  }, []);
+
+  useEffect(() => {
+    setColors(userReducer?.colors);
+  }, [userReducer?.colors]);
+
+  const getAllColors = async () => {
+    setIsLoading(true);
+    await getColors(accessToken);
+    setIsLoading(false);
+  };
+
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -111,7 +129,7 @@ const ViewParticipants = ({navigation, route}) => {
         style={styles.container}>
         <ScrollView>
           <Heading
-            title={ITEM?.name}
+            title={ITEM?.Name}
             passedStyle={styles.headingStyles}
             fontType="semi-bold"
           />
@@ -262,7 +280,7 @@ const ViewParticipants = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => {
               // timerRef.current.pause();
-             navigation.navigate('GradingSystem')
+              navigation.navigate('GradingSystem');
             }}
             style={{marginTop: height * 0.02, marginLeft: width * 0.05}}>
             <Heading
@@ -291,7 +309,10 @@ const ViewParticipants = ({navigation, route}) => {
   );
 };
 
-export default ViewParticipants;
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(TimeAssessment);
 
 const styles = StyleSheet.create({
   timer: {
@@ -326,6 +347,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: width * 0.9,
     alignSelf: 'center',
+    textTransform: 'capitalize',
     fontSize: width * 0.045,
     marginTop: height * 0.02,
     paddingVertical: height * 0.02,
@@ -359,35 +381,3 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
-
-const colors = [
-  {
-    id: 1,
-    color: '#E5306D',
-  },
-
-  {
-    id: 2,
-    color: '#EF4A37',
-  },
-  {
-    id: 3,
-    color: '#F17A29',
-  },
-  {
-    id: 4,
-    color: '#E4C546',
-  },
-  {
-    id: 5,
-    color: '#40C0C9',
-  },
-  {
-    id: 6,
-    color: '#6592CD',
-  },
-  {
-    id: 7,
-    color: '#704FA0',
-  },
-];
