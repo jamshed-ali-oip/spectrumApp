@@ -75,19 +75,46 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => {
+              return (
+                assessments?.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: width * 0.02,
+                      height: height * 0.1,
+                      width: width * 0.5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: height * 0.2,
+                      alignSelf: 'center',
+                    }}>
+                    <Heading
+                      title="No Record, Swipe Down To Refresh"
+                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                )
+              );
+            }}
             ListHeaderComponent={
               <>
-                <Heading
-                  title={'ASSESSMENTS'}
-                  passedStyle={styles.headingStyles}
-                  fontType="semi-bold"
-                />
+                <View style={styles.headingView}>
+                  <Heading
+                    title={'ASSESSMENTS'}
+                    passedStyle={styles.headingStyles}
+                    fontType="semi-bold"
+                  />
+                </View>
                 {/* Colors  */}
                 <ColoredFlatlist />
               </>
             }
             data={assessments}
-            keyExtractor={({item, index}) => index?.toString()}
+            keyExtractor={({item, index}) =>
+              item?.id?.toString() || index?.toString()
+            }
             renderItem={({item, index}) => (
               <AssessmentMapper
                 item={item}
@@ -116,21 +143,25 @@ const styles = StyleSheet.create({
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
     marginTop: height * 0.098,
-    marginLeft: width * 0.07,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   headingStyles: {
-    width: width * 0.55,
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
     paddingVertical: height * 0.01,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  headingView: {
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.05,
+    width: width * 0.55,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
   // assessmentListStyle: {
   //   position: 'absolute',

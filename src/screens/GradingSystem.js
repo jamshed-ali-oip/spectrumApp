@@ -35,100 +35,87 @@ const GradingSystem = ({navigation, route}) => {
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <TouchableOpacity style={styles.jumpbtn}>
-          <Text style={styles.jumpText}>LONG JUMP</Text>
-        </TouchableOpacity>
-  {/* <View 
-        style={{
-          width: 0,
-          height: 0,
-          backgroundColor: "transparent",
-          borderStyle: "solid",
-          borderLeftWidth: 50,
-          borderRightWidth: 50,
-          borderBottomWidth: 100,
-          borderLeftColor: "transparent",
-          borderRightColor: "transparent",
-          borderBottomColor: "red",
-        }}
-        
-        >
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Heading
+            title={`LONG JUMP`}
+            passedStyle={styles.headingStyles}
+            fontType="semi-bold"
+          />
 
-        </View> */}
-        {/* <View style={{width:100,height:20,
-borderTopWidth:0,
-borderBottomWidth:100,
-borderLeftWidth:50,
-borderRightWidth:50,
-borderLeftColor:"transparent"
-}}> */}
-  
-{/* </View> */}
-        <Image
-          resizeMode="contain"
-          source={require('../assets/images/logo.png')}
-          style={styles.bgimage}
-        />
-        <TouchableOpacity style={styles.Button}>
-          <Text style={styles.Text}>Grade-6 Male</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.Button}>
-          <Text style={styles.Text}>Lalit Beahan</Text>
-        </TouchableOpacity>
-        <View
-          style={styles.gradeContainer}>
           <Image
-            source={require('../assets/images/black.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
+            resizeMode="contain"
+            source={require('../assets/images/logo.png')}
+            style={styles.bgimage}
           />
-          <Image
-            source={require('../assets/images/red.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
+          {/* Grade  */}
+          <Heading
+            title={'Grade-6 Male'}
+            passedStyle={styles.headingStyles2}
+            fontType="regular"
           />
+
+          {/* Child Name  */}
+          <Heading
+            title={'Lalit Beahan'}
+            passedStyle={styles.headingStyles2}
+            fontType="regular"
+          />
+
+          <View style={styles.gradeContainer}>
+            <Image
+              source={require('../assets/images/black.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/red.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/yellow.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/pink.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/lightblue.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/orange.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/darkblue.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+            <Image
+              source={require('../assets/images/purple.png')}
+              style={styles.gradeimage}
+              resizeMode={'contain'}
+            />
+          </View>
           <Image
             source={require('../assets/images/yellow.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
+            style={styles.taskimage}
+            //   resizeMode={'contain'}
           />
-          <Image
-            source={require('../assets/images/pink.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
-          />
-          <Image
-            source={require('../assets/images/lightblue.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
-          />
-          <Image
-            source={require('../assets/images/orange.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
-          />
-          <Image
-            source={require('../assets/images/darkblue.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
-          />
-          <Image
-            source={require('../assets/images/purple.png')}
-            style={styles.gradeimage}
-            resizeMode={'contain'}
-          />
-        </View>
-        <Image
-          source={require('../assets/images/yellow.png')}
-          style={styles.taskimage}
-          //   resizeMode={'contain'}
-        />
-        <TouchableOpacity 
-        onPress={()=>{navigation.navigate("ScaleScreen")}}
-        style={styles.savebtn}>
-          <Text style={styles.saveText}>Save</Text>
-        </TouchableOpacity>
-      
+          <TouchableOpacity
+            onPress={() => {
+              alert("Finished Screens.")
+            }}
+            style={styles.savebtn}>
+            <Text style={styles.saveText}>Save</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </ImageBackground>
     </>
   );
@@ -148,6 +135,32 @@ const styles = StyleSheet.create({
     backgroundColor: themeLightBlue,
     alignSelf: 'center',
     width: width * 0.41,
+  },
+  headingStyles: {
+    width: width * 0.6,
+    color: 'white',
+    backgroundColor: themeFerozi,
+    fontSize: width * 0.045,
+    borderRadius: 25,
+    paddingVertical: height * 0.01,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: height * 0.02,
+    marginBottom: height * 0.03,
+  },
+  headingStyles2: {
+    color: 'white',
+    backgroundColor: themeDarkBlue,
+    textAlign: 'center',
+    borderRadius: 25,
+    width: width * 0.9,
+    alignSelf: 'center',
+    textTransform: 'capitalize',
+    fontSize: width * 0.045,
+    marginTop: height * 0.02,
+    paddingVertical: height * 0.02,
   },
   btnTextStyle: {
     color: 'white',
@@ -213,17 +226,19 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     elevation: 5,
+    marginBottom:50,
   },
   saveText: {
     textAlign: 'center',
     fontSize: width * 0.038,
     fontWeight: '400',
     color: 'white',
+    // paddingBottom:50,
   },
-  gradeContainer:{
+  gradeContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 30,
-  }
+  },
 });

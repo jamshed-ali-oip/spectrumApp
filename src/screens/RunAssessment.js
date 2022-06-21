@@ -23,6 +23,7 @@ import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
+import { imageUrl } from '../config';
 const {width, height} = Dimensions.get('window');
 
 const RunAssessment = ({navigation, route}) => {
@@ -44,11 +45,13 @@ const RunAssessment = ({navigation, route}) => {
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <Heading
-          title={'ASSESSMENTS'}
-          passedStyle={styles.headingStyles}
-          fontType="semi-bold"
-        />
+        <View style={styles.headingView}>
+          <Heading
+            title={'ASSESSMENTS'}
+            passedStyle={styles.headingStyles}
+            fontType="semi-bold"
+          />
+        </View>
 
         {/* Participants Head View  */}
         <View style={styles.participantsViewStyle}>
@@ -75,7 +78,7 @@ const RunAssessment = ({navigation, route}) => {
         <View style={styles.assessmentListStyle}>
           <Image
             resizeMode="contain"
-            source={SHOW_IMAGE}
+            source={{uri: `${imageUrl}/assessment_image/${ITEM.Image}`}}
             style={{
               width: width * 0.4,
               height: height * 0.13,
@@ -83,33 +86,61 @@ const RunAssessment = ({navigation, route}) => {
             }}
           />
           <TouchableOpacity
-          activeOpacity={0.7}
+            activeOpacity={0.9}
+            style={styles.buttonContainerStyles}
             onPress={() => navigation.navigate('groups', {item: ITEM})}>
             <Heading
               title={'START'}
-              passedStyle={styles.buttonStyles}
-              fontType="semi-bold"
+              passedStyle={[
+                styles.buttonStyles,
+                {backgroundColor: themeFerozi},
+              ]}
+              fontType="bold"
             />
           </TouchableOpacity>
-          <Heading
-            title={'INFORMATION'}
-            passedStyle={[
-              styles.buttonStyles,
+          {/* <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.buttonContainerStyles,
               {backgroundColor: themeLightPurple},
-            ]}
-            fontType="semi-bold"
-          />
+            ]}>
+            <Heading
+              title={'INFORMATION'}
+              passedStyle={[
+                styles.buttonStyles,
+                {backgroundColor: themeLightPurple},
+              ]}
+              fontType="semi-bold"
+            />
+           </TouchableOpacity> */}
 
-          <Heading
-            title={'SETUP'}
-            passedStyle={[styles.buttonStyles, {backgroundColor: themeYellow}]}
-            fontType="semi-bold"
-          />
-          <Heading
-            title={'FACILIATOR INSTRUCTIONS'}
-            passedStyle={[styles.buttonStyles, {backgroundColor: themePink}]}
-            fontType="semi-bold"
-          />
+          {/* <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.buttonContainerStyles,
+              {backgroundColor: themeYellow},
+            ]}>
+            <Heading
+              title={'SETUP'}
+              passedStyle={[
+                styles.buttonStyles,
+                {backgroundColor: themeYellow},
+              ]}
+              fontType="semi-bold"
+            />
+           </TouchableOpacity> */}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.buttonContainerStyles,
+              {backgroundColor: themePink},
+            ]}>
+            <Heading
+              title={'FACILIATOR INSTRUCTIONS'}
+              passedStyle={[styles.buttonStyles, {backgroundColor: themePink}]}
+              fontType="bold"
+            />
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </>
@@ -124,37 +155,47 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
   headingStyles: {
-    width: width * 0.55,
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
     paddingVertical: height * 0.01,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  headingView: {
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.05,
+    width: width * 0.55,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
   buttonStyles: {
-    width: width * 0.9,
     color: 'white',
-    backgroundColor: themeFerozi,
+
     fontSize: width * 0.04,
-    borderRadius: 25,
-    paddingVertical: height * 0.02,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+
+    // paddingVertical: height * 0.02,
+
     textAlign: 'center',
     // marginTop: height * 0.02,
-    marginVertical: height * 0.02,
     // marginBottom: height * 0.1,
+  },
+  buttonContainerStyles: {
+    width: width * 0.9,
+    backgroundColor: themeFerozi,
+    justifyContent: 'center',
+    paddingVertical: height * 0.02,
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: width * 0.5,
+    marginVertical: height * 0.02,
   },
   assessmentListStyle: {
     position: 'absolute',
-    bottom: height * 0.06,
+    bottom: height * 0.23,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -177,58 +218,3 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
-
-const colors = [
-  {
-    id: 1,
-    color: '#E5306D',
-  },
-
-  {
-    id: 2,
-    color: '#EF4A37',
-  },
-  {
-    id: 3,
-    color: '#F17A29',
-  },
-  {
-    id: 4,
-    color: '#E4C546',
-  },
-  {
-    id: 5,
-    color: '#40C0C9',
-  },
-  {
-    id: 6,
-    color: '#6592CD',
-  },
-  {
-    id: 7,
-    color: '#704FA0',
-  },
-];
-
-const list = [
-  {
-    id: 1,
-    name: 'Long Jump',
-    image: require('../assets/images/long-jump.png'),
-  },
-  {
-    id: 2,
-    name: 'Sprinting',
-    image: require('../assets/images/sprinting.png'),
-  },
-  {
-    id: 3,
-    name: 'Shot Put',
-    image: require('../assets/images/shot-put.png'),
-  },
-  {
-    id: 4,
-    name: 'Hurdles',
-    image: require('../assets/images/hurdles.png'),
-  },
-];

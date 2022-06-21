@@ -5,6 +5,9 @@ import {
   LOGIN_REQUEST,
   LOGOUT_REQUEST,
   GET_COLORS_REQUEST,
+  GET_GAME_INFO,
+  GET_PARTICIPANTS_REQUEST,
+  GET_PAST_ASSESSMENT,
 } from '../actions/actionType';
 
 const INITIAL_STATE = {
@@ -15,6 +18,9 @@ const INITIAL_STATE = {
   groups: [],
   groupMembers: [],
   colors: [],
+  gameInfo: [],
+  participants: [],
+  pastAssessment: [],
 };
 
 export const userReducer = (state = INITIAL_STATE, action) => {
@@ -51,6 +57,24 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         colors: action.payload,
       };
 
+    case GET_GAME_INFO:
+      return {
+        ...state,
+        gameInfo: action.payload,
+      };
+
+    case GET_PARTICIPANTS_REQUEST:
+      return {
+        ...state,
+        participants: action.payload,
+      };
+
+    case GET_PAST_ASSESSMENT:
+      return {
+        ...state,
+        pastAssessment: action.payload,
+      };
+      
     case LOGOUT_REQUEST:
       return {
         isLogin: false,

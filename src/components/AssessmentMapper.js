@@ -14,6 +14,7 @@ import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
+import {imageUrl} from '../config';
 
 const AssessmentMapper = ({item, index, onPress, assessments}) => {
   let SHOW_IMAGE =
@@ -24,6 +25,7 @@ const AssessmentMapper = ({item, index, onPress, assessments}) => {
       : item?.Name === 'Shot Put'
       ? SHOT_PUT
       : HURDLES;
+
   return (
     <View
       style={[
@@ -36,7 +38,7 @@ const AssessmentMapper = ({item, index, onPress, assessments}) => {
       ]}>
       <View style={{flexDirection: 'row'}}>
         <Image
-          source={SHOW_IMAGE}
+          source={{uri: `${imageUrl}/assessment_image/${item?.Image}`}}
           resizeMode="contain"
           style={styles.imageStyles}
         />

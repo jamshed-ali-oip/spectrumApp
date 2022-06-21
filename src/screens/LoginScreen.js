@@ -51,7 +51,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View>
               <Image
-                source={require('../assets/images/logo.png')}
+                source={require('../assets/images/new-logo.png')}
                 style={{
                   marginTop: height * 0.15,
                   marginBottom: height * 0.05,
@@ -59,6 +59,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                   height: height * 0.2,
                   alignSelf: 'center',
                 }}
+                resizeMode="contain"
               />
               <TextInput
                 placeholder="Email Address"
@@ -95,11 +96,11 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                   placeholderTextColor="#565B66"
                   style={[
                     styles.inputfieldPassword,
-                    {fontSize: showPassword ? width * 0.04 : width * 0.06},
+                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
                   ]}
                   value={password}
                   onChangeText={e => {
-                    if (e == ' ') {
+                    if (e == ' ' || isLoading) {
                       return;
                     }
                     setPassword(e);
@@ -145,6 +146,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
               )}
 
               <TouchableOpacity
+                activeOpacity={0.8}
                 onPress={() => {}}
                 style={{marginTop: height * 0.03}}>
                 <Heading
@@ -179,9 +181,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     width: width * 0.9,
-    borderRadius: 25,
+    borderRadius: width * 0.5,
     paddingLeft: 20,
-    height: height * 0.07,
+    height: Platform.OS == 'ios' ? height * 0.06 : height * 0.07,
     fontFamily: 'Montserrat-Medium',
     shadowColor: '#000',
     shadowOffset: {
@@ -196,10 +198,10 @@ const styles = StyleSheet.create({
   inputfieldPassword: {
     alignSelf: 'center',
     width: width * 0.8,
-    borderBottomLeftRadius: 25,
-    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: width * 0.5,
+    borderTopLeftRadius: width * 0.5,
     paddingLeft: 20,
-    height: height * 0.07,
+    height: Platform.OS == 'ios' ? height * 0.06 : height * 0.07,
     fontFamily: 'Montserrat-Medium',
   },
   loginBtnStyle: {
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     width: width * 0.9,
-    height: height * 0.08,
+    height: Platform.OS == 'ios' ? height * 0.06 : height * 0.07,
     marginTop: height * 0.02,
   },
   passwordViewContainer: {
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     width: width * 0.9,
-    borderRadius: 25,
+    borderRadius: width * 0.5,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: {

@@ -85,13 +85,43 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
+            ListFooterComponent={() => {
+              return (
+                groups?.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: width * 0.02,
+                      height: height * 0.1,
+                      width: width * 0.5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop:height * 0.2,
+                      alignSelf: 'center',
+                    }}>
+                    <Heading
+                      title="No Record, Swipe Down To Refresh"
+                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                )
+              );
+            }}
             ListHeaderComponent={
               <>
-                <Heading
+                {/* <Heading
                   title={ITEM?.Name}
                   passedStyle={styles.headingStyles}
                   fontType="semi-bold"
-                />
+                /> */}
+                <View style={styles.headingView}>
+                  <Heading
+                    title={ITEM?.Name}
+                    passedStyle={styles.headingStyles}
+                    fontType="semi-bold"
+                  />
+                </View>
 
                 <View style={styles.filterLabelViewStyle}>
                   <Heading
@@ -132,8 +162,8 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation?.navigate('grades', {
-                      item: {...ITEM, grade: `${item?.Name} - ${item?.Abbr}`},
-                      id: item?.id,
+                      item: ITEM,
+                      groupData: item,
                     })
                   }
                   style={[
@@ -196,7 +226,7 @@ const styles = StyleSheet.create({
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
     marginTop: height * 0.098,
-    marginLeft: width * 0.07,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   selectFilterStyle: {
     flexDirection: 'row',
@@ -223,19 +253,22 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   headingStyles: {
-    width: width * 0.5,
     color: 'white',
-    textTransform: 'uppercase',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
     paddingVertical: height * 0.01,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  headingView: {
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.05,
+    width: width * 0.55,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
 });
 

@@ -1,19 +1,18 @@
 import {
   StyleSheet,
-  Text,
   View,
-  TextInput,
   Dimensions,
   TouchableOpacity,
-  Image,
   ImageBackground,
   StatusBar,
   FlatList,
   ScrollView,
+  Platform,
+  RefreshControl,
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
-import Button from '../components/Button';
+import LottieView from 'lottie-react-native';
 import {
   themeBlue,
   themeDarkBlue,
@@ -29,18 +28,24 @@ import * as actions from '../store/actions';
 
 const {width, height} = Dimensions.get('window');
 
-const GradesScreen = ({navigation, route, getGroupMembers, userReducer}) => {
+const GradesScreen = ({
+  navigation,
+  route,
+  getGroupMembers,
+  userReducer,
+  getColors,
+}) => {
   const ITEM = route.params.item;
-  const ID = route.params.id;
+  const GROUP_DATA = route.params.groupData;
 
   const accessToken = userReducer.accessToken;
   const [groupMembers, setGroupMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const apiData = {
-    grade_id: ID,
+    grade_id: GROUP_DATA?.id,
   };
-  
+
   useEffect(() => {
     getAllGroupsMembers();
   }, []);
@@ -52,6 +57,7 @@ const GradesScreen = ({navigation, route, getGroupMembers, userReducer}) => {
   const getAllGroupsMembers = async () => {
     setIsLoading(true);
     await getGroupMembers(apiData, accessToken);
+    await getColors(accessToken);
     setIsLoading(false);
   };
 
@@ -66,6 +72,7 @@ const GradesScreen = ({navigation, route, getGroupMembers, userReducer}) => {
       getAllGroupsMembers();
     });
   }, []);
+
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -73,102 +80,141 @@ const GradesScreen = ({navigation, route, getGroupMembers, userReducer}) => {
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
         {/* Participants FlatList  */}
-        <FlatList
-          contentContainerStyle={{paddingBottom: height * 0.1}}
-          ListHeaderComponent={
-            <>
-              <Heading
-                title={ITEM.Name}
-                passedStyle={styles.headingStyles}
-                fontType="semi-bold"
-              />
 
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                <View style={styles.filterLabelViewStyle}>
-                  <Heading
-                    title="Run Assessment"
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
+          />
+        ) : (
+          <FlatList
+            contentContainerStyle={{paddingBottom: height * 0.1}}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListFooterComponent={() => {
+              return (
+                groupMembers?.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: width * 0.02,
+                      height: height * 0.1,
+                      width: width * 0.5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: height * 0.2,
+                      alignSelf: 'center',
+                    }}>
+                    <Heading
+                      title="No Record, Swipe Down To Refresh"
+                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                )
+              );
+            }}
+            ListHeaderComponent={
+              <>
+                <View style={styles.headingView}>
                   <Heading
                     title={ITEM.Name}
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Groups"
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title={ITEM?.grade}
-                    passedStyle={styles.selectFilterTextStyle}
+                    passedStyle={styles.headingStyles}
                     fontType="semi-bold"
                   />
                 </View>
-              </ScrollView>
-              {/* Colors  */}
-              <ColoredFlatlist />
-            </>
-          }
-          data={groupMembers}
-          keyExtractor={({item, index}) => item?.id?.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation?.navigate('timeAssessment', {
-                    item: ITEM,
-                    grade: ITEM?.grade,
-                    childName: `${item?.Firstname} ${item?.Lastname}`,
-                  })
-                }
-                style={[
-                  index !== groupMembers?.length - 1 && {
-                    borderBottomColor: 'silver',
-                    borderBottomWidth: 1,
-                  },
-                  {
-                    width: width * 0.9,
-                    alignSelf: 'center',
-                    zIndex: 999,
-                    height: height * 0.07,
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  },
-                ]}>
-                <Heading
-                  title={`${item?.Firstname} ${item?.Lastname}`}
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.04,
-                    textTransform: 'capitalize',
-                  }}
-                  fontType="regular"
-                />
-              </TouchableOpacity>
-            );
-          }}
-        />
+
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
+                  <View style={styles.filterLabelViewStyle}>
+                    <Heading
+                      title="Run Assessment"
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title={ITEM?.Name}
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title="Groups"
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                </ScrollView>
+                {/* Colors  */}
+                <ColoredFlatlist />
+              </>
+            }
+            data={groupMembers}
+            keyExtractor={({item, index}) => item?.id?.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation?.navigate('timeAssessment', {
+                      item: ITEM,
+                      childData: item,
+                      groupData: GROUP_DATA,
+                    })
+                  }
+                  style={[
+                    index !== groupMembers?.length - 1 && {
+                      borderBottomColor: 'silver',
+                      borderBottomWidth: 1,
+                    },
+                    {
+                      width: width * 0.9,
+                      alignSelf: 'center',
+                      zIndex: 999,
+                      height: height * 0.07,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    },
+                  ]}>
+                  <Heading
+                    title={`${item?.Firstname} ${item?.Lastname}`}
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.04,
+                      textTransform: 'capitalize',
+                    }}
+                    fontType="regular"
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
       </ImageBackground>
     </>
   );
@@ -183,6 +229,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'blue',
+  },
+  lottieStyle: {
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.098,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   btnStyle: {
     height: height * 0.06,
@@ -223,18 +274,21 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   headingStyles: {
-    width: width * 0.5,
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
     paddingVertical: height * 0.01,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  headingView: {
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.05,
+    width: width * 0.55,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
-    textTransform: 'uppercase',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
 });

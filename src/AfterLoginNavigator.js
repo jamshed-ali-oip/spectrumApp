@@ -1,5 +1,12 @@
 import React, {Component, useEffect, useState} from 'react';
-import {View, TouchableOpacity, Image, Text, Dimensions} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -37,14 +44,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -77,14 +86,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -117,14 +128,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -157,14 +170,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -197,14 +212,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -237,14 +254,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -277,14 +296,16 @@ const AfterLoginNavigator = ({navigation}) => {
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.09,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('home');
+              }}
               style={{padding: 10}}
               activeOpacity={0.9}>
               <Image
@@ -311,17 +332,32 @@ const AfterLoginNavigator = ({navigation}) => {
         })}
         component={TimeAssessment}
       />
-       <AfterLoginStack.Screen
+
+      <AfterLoginStack.Screen
         name="GradingSystem"
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.05,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
-         
+
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('home');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={require('./assets/images/round-icon.png')}
+              />
+            </TouchableOpacity>
+          ),
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
@@ -339,17 +375,32 @@ const AfterLoginNavigator = ({navigation}) => {
         })}
         component={GradingSystem}
       />
-           <AfterLoginStack.Screen
+
+      <AfterLoginStack.Screen
         name="ScaleScreen"
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
-            height: height * 0.05,
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
             backgroundColor: themeDarkBlue,
           },
           title: '',
-         
+
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('home');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={require('./assets/images/round-icon.png')}
+              />
+            </TouchableOpacity>
+          ),
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
@@ -368,7 +419,6 @@ const AfterLoginNavigator = ({navigation}) => {
         component={ScaleScreen}
       />
     </AfterLoginStack.Navigator>
-    
   );
 };
 
