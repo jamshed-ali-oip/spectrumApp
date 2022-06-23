@@ -9,6 +9,7 @@ import {
   StatusBar,
   ScrollView,
   Platform,
+  TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Heading from '../components/Heading';
@@ -23,11 +24,28 @@ import LottieView from 'lottie-react-native';
 
 const {width, height} = Dimensions.get('window');
 
-const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
+const ScaleScreen = ({
+  navigation,
+  route,
+  getColors,
+  userReducer,
+  getAssessmentDetails,
+  getGameInfo,
+  submitResult,
+}) => {
   const accessToken = userReducer?.accessToken;
+  const ITEM = route?.params?.item;
+  const CHILD_DATA = route.params.childData;
   const [isLoading, setIsLoading] = useState(false);
+  const [colors, setColors] = useState([]);
+  const [score, setScore] = useState('0');
+  const [ranges, setRanges] = useState([]);
+  const [ans, setAns] = useState(height * 0.01);
+  const [resultColor, setResultColor] = useState(
+    colors[0]?.WebColor || 'black',
+  );
 
-  const RESULT = 25;
+  // const RESULT = 25;
   const space1 = height * 0.01;
   const space2 = height * 0.045;
   const space3 = height * 0.08;
@@ -36,24 +54,41 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
   const space6 = height * 0.175;
   const space7 = height * 0.21;
   const space8 = height * 0.245;
-  const ans =
-    RESULT == 40
-      ? space1
-      : RESULT == 35
-      ? space2
-      : RESULT == 30
-      ? space3
-      : RESULT == 25
-      ? space4
-      : RESULT == 20
-      ? space5
-      : RESULT == 15
-      ? space6
-      : RESULT == 10
-      ? space7
-      : RESULT == 5
-      ? space8
-      : 0;
+
+  const findResult = () => {
+    if (score > parseInt(ranges[0]?.MaxValue)) {
+      setAns(space1);
+      setResultColor(colors[0]?.WebColor);
+    } else if (score > parseInt(ranges[1]?.MaxValue)) {
+      setResultColor(colors[0]?.WebColor);
+      setAns(space1);
+    } else if (score > parseInt(ranges[2]?.MaxValue)) {
+      setResultColor(colors[1]?.WebColor);
+      setAns(space2);
+    } else if (score > parseInt(ranges[3]?.MaxValue)) {
+      setResultColor(colors[2]?.WebColor);
+      setAns(space3);
+    } else if (score > parseInt(ranges[4]?.MaxValue)) {
+      setResultColor(colors[3]?.WebColor);
+      setAns(space4);
+    } else if (score > parseInt(ranges[5]?.MaxValue)) {
+      setResultColor(colors[4]?.WebColor);
+      setAns(space5);
+    } else if (score > parseInt(ranges[6]?.MaxValue)) {
+      setResultColor(colors[5]?.WebColor);
+      setAns(space6);
+    } else if (score > parseInt(ranges[7]?.MaxValue)) {
+      setResultColor(colors[6]?.WebColor);
+      setAns(space7);
+    } else {
+      setResultColor(colors[7]?.WebColor);
+      setAns(space8);
+    }
+  };
+
+  useEffect(() => {
+    findResult();
+  }, [score]);
 
   useEffect(() => {
     getAllColors();
@@ -61,10 +96,47 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
 
   const getAllColors = async () => {
     setIsLoading(true);
+    await getGameInfo(accessToken);
     await getColors(accessToken);
+    await getAssessmentDetails(ITEM?.id, accessToken);
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    setColors(userReducer?.colors);
+  }, [userReducer?.colors]);
+
+  useEffect(() => {
+    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+  }, [userReducer?.assessmentDetails]);
+
+  const _onPressSave = async () => {
+    let color_id = userReducer?.gameInfo[0]?.color_id;
+    for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
+      if (
+        userReducer?.gameInfo[i]?.MinValue <= score &&
+        userReducer?.gameInfo[i]?.MaxValue >= score
+      ) {
+        color_id = userReducer?.gameInfo[i]?.color_id;
+      }
+    }
+    const apiData = {
+      assessment_score_id: color_id,
+      participant_id: CHILD_DATA?.id,
+      Score: score,
+      grade_id: CHILD_DATA?.grades?.id,
+      assessment_id: ITEM?.id,
+      Distance: null,
+    };
+    setIsLoading(true);
+    console.log(JSON.stringify(apiData, null, 2));
+    await submitResult(apiData, accessToken, onSuccess);
+    setIsLoading(false);
+  };
+
+  const onSuccess = () => {
+    navigation.navigate('home');
+  };
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -95,13 +167,6 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
               style={styles.bgimage}
             />
 
-            {/* <TouchableOpacity style={styles.Button}>
-            <Text style={styles.Text}>Grade-6 Male</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.Button}>
-            <Text style={styles.Text}>Lalit Beahan</Text>
-          </TouchableOpacity> */}
-
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
               <Heading
@@ -130,11 +195,8 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                   style={{
                     flexDirection: 'row',
                     alignItems: 'flex-start',
-
                     justifyContent: 'space-between',
-
                     width: width * 0.65,
-
                     paddingRight: width * 0.05,
                   }}>
                   <Image
@@ -142,6 +204,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                     resizeMode="stretch"
                     style={{
                       marginLeft: width * 0.02,
+                      tintColor: colors[0]?.WebColor,
                       height: height * 0.032,
                       width: width * 0.5,
                     }}
@@ -154,7 +217,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       // alignSelf:'flex-start',
                       fontFamily: 'Montserrat-SemiBold',
                     }}>
-                    40
+                    {ranges[0]?.MaxValue}
                   </Text>
                 </View>
                 <View
@@ -162,10 +225,9 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                     flexDirection: 'row',
                     alignItems: 'flex-start',
                     justifyContent: 'space-between',
-
                     width: width * 0.65,
-
                     paddingRight: width * 0.05,
+                    // backgroundColor:'silver',
                   }}>
                   <Image
                     source={require('../assets/images/2.png')}
@@ -174,6 +236,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.055,
                       height: height * 0.032,
                       width: width * 0.43,
+                      tintColor: colors[1]?.WebColor,
                     }}
                   />
                   <Text
@@ -182,8 +245,9 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       color: 'white',
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
+                      marginBottom: height * 0.01,
                     }}>
-                    35
+                    {ranges[1]?.MaxValue}
                   </Text>
                 </View>
                 <View
@@ -201,6 +265,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.082,
                       height: height * 0.032,
                       width: width * 0.37,
+                      tintColor: colors[2]?.WebColor,
                     }}
                   />
                   <Text
@@ -209,7 +274,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
                     }}>
-                    30
+                    {ranges[2]?.MaxValue}
                   </Text>
                 </View>
 
@@ -229,6 +294,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                     style={{
                       marginLeft: width * 0.11,
                       height: height * 0.032,
+                      tintColor: colors[3]?.WebColor,
                       width: width * 0.313,
                     }}
                   />
@@ -238,7 +304,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
                     }}>
-                    25
+                    {ranges[3]?.MaxValue}
                   </Text>
                 </View>
 
@@ -259,6 +325,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.135,
                       height: height * 0.032,
                       width: width * 0.26,
+                      tintColor: colors[4]?.WebColor,
                     }}
                   />
                   <Text
@@ -267,7 +334,7 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
                     }}>
-                    20
+                    {ranges[4]?.MaxValue}
                   </Text>
                 </View>
                 <View
@@ -287,11 +354,12 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.165,
                       height: height * 0.032,
                       width: width * 0.205,
+                      tintColor: colors[5]?.WebColor,
                     }}
                   />
                   <Text
                     style={{color: 'white', fontFamily: 'Montserrat-SemiBold'}}>
-                    15
+                    {ranges[5]?.MaxValue}
                   </Text>
                 </View>
 
@@ -313,11 +381,12 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.19,
                       height: height * 0.032,
                       width: width * 0.15,
+                      tintColor: colors[6]?.WebColor,
                     }}
                   />
                   <Text
                     style={{color: 'white', fontFamily: 'Montserrat-SemiBold'}}>
-                    10
+                    {ranges[6]?.MaxValue}
                   </Text>
                 </View>
                 <View
@@ -338,11 +407,12 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                       marginLeft: width * 0.22,
                       height: height * 0.05,
                       width: width * 0.09,
+                      tintColor: colors[7]?.WebColor,
                     }}
                   />
                   <Text
                     style={{color: 'white', fontFamily: 'Montserrat-SemiBold'}}>
-                    05
+                    {ranges[7]?.MaxValue}
                   </Text>
                 </View>
               </View>
@@ -352,22 +422,19 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                   height: height * 0.006,
                   alignSelf: 'flex-end',
                   position: 'absolute',
-                  top: ans,
+                  top: ans || height * 0.01,
                   backgroundColor: 'white',
                 }}
               />
               {/* 0.01, 0.035, 0.06, 0.085,  0.11, 0.135 0.16 , 0.187*/}
             </View>
+
             <View
               style={{
                 marginTop: height * -0.1,
-                // position: 'absolute',
-                // top: height * 0.6,
-                // zIndex: 999,
-                // paddingBottom: 20,
               }}>
               <Heading
-                title={`31'`}
+                title={score == '0' || score == 0 ? '' : `${score}'`}
                 passedStyle={{
                   fontSize: width * 0.07,
                   color: 'white',
@@ -375,19 +442,48 @@ const ScaleScreen = ({navigation, route, getColors, userReducer}) => {
                 }}
                 fontType="semi-bold"
               />
-              <View>
-                <Image
-                  source={require('../assets/images/yellow.png')}
-                  style={styles.taskimage}
+
+              <Image
+                source={require('../assets/images/yellow.png')}
+                style={[
+                  styles.taskimage,
+                  {
+                    tintColor: resultColor || 'black',
+                  },
+                ]}
+              />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: height * 0.1,
+                }}>
+                <TextInput
+                  value={score}
+                  keyboardType="numeric"
+                  placeholder={'Enter Score 0-80'}
+                  placeholderTextColor={'grey'}
+                  style={styles.scoreFieldStyle}
+                  onChangeText={text => {
+                    // if (parseInt(text) <= 100) {
+                    setScore(text);
+                    // }
+                  }}
                 />
+
+                {
+                  <TouchableOpacity
+                    onPress={_onPressSave}
+                    style={styles.saveBtnStyle}>
+                    <Heading
+                      title={'SAVE'}
+                      passedStyle={styles.startBtnStyle}
+                      fontType="bold"
+                    />
+                  </TouchableOpacity>
+                }
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('GradingSystem');
-                }}
-                style={styles.savebtn}>
-                <Text style={styles.saveText}>Save</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         )}
@@ -405,6 +501,33 @@ const mapStateToProps = ({userReducer}) => {
 export default connect(mapStateToProps, actions)(ScaleScreen);
 
 const styles = StyleSheet.create({
+  startBtnStyle: {
+    color: 'white',
+    fontSize: width * 0.04,
+    paddingVertical: height * 0.02,
+    textAlign: 'center',
+  },
+  scoreFieldStyle: {
+    backgroundColor: 'white',
+    width: width * 0.5,
+    height: height * 0.06,
+    paddingHorizontal: width * 0.03,
+    marginLeft: width * 0.05,
+    // paddingBottom: height * 0.007,
+    marginVertical: height * 0.02,
+    fontFamily: 'Montserrat-Medium',
+    borderRadius: width * 0.1,
+    fontSize: width * 0.047,
+  },
+  saveBtnStyle: {
+    marginLeft: width * 0.05,
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.5,
+    // marginTop: width * 0.03,
+    width: width * 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: 'blue',
@@ -420,7 +543,7 @@ const styles = StyleSheet.create({
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
     marginTop: height * 0.098,
-    marginLeft: width * 0.07,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   headingStyles: {
     color: 'white',

@@ -9,6 +9,7 @@ import {
   GET_GAME_INFO,
   GET_PARTICIPANTS_REQUEST,
   GET_PAST_ASSESSMENT,
+  GET_ASSESSMENT_DETAILS,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl} from '../../config';
@@ -54,6 +55,10 @@ export const getAssessments = accessToken => async dispatch => {
         payload: response.data.data,
       });
     } else {
+      dispatch({
+        type: GET_ASSESSMENTS_REQUEST,
+        payload: [],
+      });
       showMessage({
         message:
           response.data.message || response.data.msg || 'Something went wrong',
@@ -101,7 +106,10 @@ export const getGroups = accessToken => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    console.log(
+      err?.response?.data?.msg || err?.response?.data?.message,
+      'GET_GROUPS_REQUEST',
+    );
   }
 };
 
@@ -128,7 +136,10 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }
@@ -137,7 +148,10 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    console.log(
+      err?.response?.data?.msg || err?.response?.data?.message,
+      'GET_GROUP_MEMBERS_REQUEST',
+    );
   }
 };
 
@@ -165,7 +179,10 @@ export const getColors = accessToken => async dispatch => {
       });
     }
   } catch (err) {
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    console.log(
+      err?.response?.data?.msg || err?.response?.data?.message,
+      'GET_COLORS_REQUEST',
+    );
   }
 };
 
@@ -264,6 +281,10 @@ export const getParticipants = accessToken => async dispatch => {
         payload: response.data.data,
       });
     } else {
+      dispatch({
+        type: GET_PARTICIPANTS_REQUEST,
+        payload: [],
+      });
       showMessage({
         message:
           response.data.message || response.data.msg || 'Something went wrong',
@@ -298,6 +319,10 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
         payload: response.data.data,
       });
     } else {
+      dispatch({
+        type: GET_PAST_ASSESSMENT,
+        payload: [],
+      });
       showMessage({
         message:
           response.data.message || response.data.msg || 'Something went wrong',
@@ -310,5 +335,158 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
       type: 'danger',
     });
     console.log(err?.response?.data?.msg || err?.response?.data?.message);
+  }
+};
+
+export const forgetPassword = (data, onFailed, onSuccess) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/request_otp`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await axios.post(URL, data, headers);
+
+    if (response.data.success) {
+      showMessage({
+        message: response?.data?.message || response?.data?.msg,
+        type: 'success',
+      });
+      onSuccess();
+    } else {
+      onFailed();
+      showMessage({
+        message:
+          response?.data?.data?.error ||
+          response?.data?.message ||
+          response?.data?.msg ||
+          'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    onFailed();
+    showMessage({
+      message: 'Network Error',
+      type: 'danger',
+    });
+    console.log(err?.response?.data?.msg || err?.response?.data?.message, err);
+  }
+};
+
+export const getAssessmentDetails = (id, accessToken) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/assessment/${id}`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.get(URL, headers);
+    if (response.data.success) {
+      dispatch({
+        type: GET_ASSESSMENT_DETAILS,
+        payload: response.data.data[0],
+      });
+    } else {
+      dispatch({
+        type: GET_ASSESSMENT_DETAILS,
+        payload: null,
+      });
+      showMessage({
+        message:
+          response.data.message || response.data.msg || 'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    showMessage({
+      message: 'Network Error',
+      type: 'danger',
+    });
+    console.log(
+      err?.response?.data?.msg || err?.response?.data?.message || err,
+    );
+  }
+};
+
+export const verifyOtp = (data, onFailed, onSuccess) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/verify_otp`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await axios.post(URL, data, headers);
+
+    if (response.data.success) {
+      showMessage({
+        message: response?.data?.message || response?.data?.msg,
+        type: 'success',
+      });
+      onSuccess();
+    } else {
+      onFailed();
+      showMessage({
+        message:
+          response?.data?.data?.error ||
+          response?.data?.message ||
+          response?.data?.msg ||
+          'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    onFailed();
+    showMessage({
+      message: 'Network Error',
+      type: 'danger',
+    });
+    console.log(err?.response?.data?.msg || err?.response?.data?.message, err);
+  }
+};
+
+
+export const resetPassword = (data, onFailed, onSuccess) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/reset-password`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await axios.post(URL, data, headers);
+
+    if (response.data.success) {
+      showMessage({
+        message: response?.data?.message || response?.data?.msg,
+        type: 'success',
+      });
+      onSuccess();
+    } else {
+      onFailed();
+      showMessage({
+        message:
+          response?.data?.data?.error ||
+          response?.data?.message ||
+          response?.data?.msg ||
+          'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    onFailed();
+    showMessage({
+      message: err?.response?.data?.msg || err?.response?.data?.message,
+      type: 'danger',
+    });
+    console.log(err?.response?.data?.msg || err?.response?.data?.message, err);
   }
 };

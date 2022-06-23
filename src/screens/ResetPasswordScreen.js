@@ -24,29 +24,47 @@ import {showMessage} from 'react-native-flash-message';
 
 const {width, height} = Dimensions.get('window');
 
-const LoginScreen = ({navigation, userReducer, loginRequest}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const ResetPasswordScreen = ({
+  navigation,
+  userReducer,
+  route,
+  resetPassword,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
-
-  const STATUS_BAR_HEIGHT =
-    Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+  const [password, setPassword] = useState('');
+  const [cnfrmPassword, setCnfrmPassword] = useState('');
 
   const _onPressLoginButton = async () => {
-    if (email.length == 0 || password.length == 0) {
+    const data = {
+      password: password,
+      password_confirmation: cnfrmPassword,
+      email: route?.params.data,
+    };
+    if (password.length == 0 || cnfrmPassword.length == 0) {
       showMessage({
-        message: 'Credentials Required!',
+        message: 'Both New Password and Confirm Password are required!',
         type: 'danger',
       });
-    } else {
+    }  else if (password !== cnfrmPassword) {
+      showMessage({
+        message: 'Both New Password and Confirm Password are should be same.',
+        type: 'danger',
+      });
+    }
+    
+    else {
       setIsLoading(true);
-      await loginRequest({email, password}, onLoginFailed);
+      await resetPassword(data, onFailed,onSuccess);
     }
   };
 
-  const onLoginFailed = () => {
+  const onFailed = () => {
     setIsLoading(false);
+  };
+
+  const onSuccess = () => {
+    navigation.navigate('login');
   };
   return (
     <>
@@ -60,34 +78,14 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
             <View style={{paddingBottom: height * 0.3}}>
               <Image
                 source={require('../assets/images/new-logo.png')}
-                style={{
-                  marginTop: height * 0.15,
-                  marginBottom: height * 0.05,
-                  width: width * 0.4,
-                  height: height * 0.2,
-                  alignSelf: 'center',
-                }}
+                style={styles.logoStyle}
                 resizeMode="contain"
               />
-              <TextInput
-                placeholder="Email Address"
-                placeholderTextColor="#565B66"
-                style={[
-                  styles.inputfield,
-                  {marginBottom: width * 0.04, marginTop: height * 0.1},
-                ]}
-                onChangeText={e => {
-                  if (e == ' ' || isLoading) {
-                    return;
-                  }
-                  setEmail(e);
-                }}
-                value={email}
-              />
 
+              {/* New Password  */}
               <View style={styles.passwordViewContainer}>
                 <TextInput
-                  placeholder="Password"
+                  placeholder="New Password"
                   placeholderTextColor="#565B66"
                   style={[
                     styles.inputfieldPassword,
@@ -99,6 +97,40 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                       return;
                     }
                     setPassword(e);
+                  }}
+                  secureTextEntry={showPassword}
+                />
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    setShowPassword(!showPassword);
+                  }}>
+                  <Icon
+                    name={showPassword ? 'eye-slash' : 'eye'}
+                    color="grey"
+                    style={{
+                      fontSize: width * 0.045,
+                      marginRight: width * 0.03,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Confirm Password  */}
+              <View style={styles.passwordViewContainer}>
+                <TextInput
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#565B66"
+                  style={[
+                    styles.inputfieldPassword,
+                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
+                  ]}
+                  value={setCnfrmPassword}
+                  onChangeText={e => {
+                    if (e == ' ' || isLoading) {
+                      return;
+                    }
+                    setCnfrmPassword(e);
                   }}
                   secureTextEntry={showPassword}
                 />
@@ -130,31 +162,16 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 </View>
               ) : (
                 <TouchableOpacity
+                  activeOpacity={0.9}
                   onPress={() => _onPressLoginButton()}
                   style={styles.loginBtnStyle}>
                   <Heading
-                    title="LOG IN"
+                    title="Reset Password Now"
                     passedStyle={styles.loginTextStyle}
                     fontType="semi-bold"
                   />
                 </TouchableOpacity>
               )}
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('forgetPassword');
-                }}
-                style={{marginTop: height * 0.03}}>
-                <Heading
-                  title="Forgot Password"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.037,
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
@@ -166,13 +183,20 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
 const mapStateToProps = ({userReducer}) => {
   return {userReducer};
 };
-export default connect(mapStateToProps, actions)(LoginScreen);
+export default connect(mapStateToProps, actions)(ResetPasswordScreen);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: width,
     height: height,
+  },
+  logoStyle: {
+    marginTop: height * 0.15,
+    marginBottom: height * 0.05,
+    width: width * 0.4,
+    height: height * 0.2,
+    alignSelf: 'center',
   },
   inputfield: {
     alignSelf: 'center',

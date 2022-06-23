@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
   nameStyle: {
     color: 'white',
     fontSize: width * 0.035,
+    width:width * 0.3,
+    alignSelf:'center',
     marginHorizontal: width * 0.02,
   },
   textBtnStyle: {

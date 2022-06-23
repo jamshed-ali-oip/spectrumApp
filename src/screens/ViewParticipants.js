@@ -29,7 +29,7 @@ import ParticipantsMapper from '../components/ParticipantsMapper';
 import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
-
+// sd
 const ViewParticipants = ({
   navigation,
   route,
@@ -125,7 +125,7 @@ const ViewParticipants = ({
                 <ColoredFlatlist />
 
                 {/* Age  */}
-                <TouchableOpacity
+                <View
                   style={{
                     backgroundColor: themeDarkBlue,
                     borderRadius: 25,
@@ -154,10 +154,10 @@ const ViewParticipants = ({
                     }}
                     fontType="regular"
                   />
-                </TouchableOpacity>
+                </View>
 
                 {/* Grade  */}
-                <TouchableOpacity
+                <View
                   style={{
                     backgroundColor: themeDarkBlue,
                     borderRadius: 25,
@@ -186,10 +186,10 @@ const ViewParticipants = ({
                     }}
                     fontType="regular"
                   />
-                </TouchableOpacity>
+                </View>
 
                 {/* Gender  */}
-                <TouchableOpacity
+                <View
                   style={{
                     backgroundColor: themeDarkBlue,
                     borderRadius: 25,
@@ -218,7 +218,7 @@ const ViewParticipants = ({
                     }}
                     fontType="regular"
                   />
-                </TouchableOpacity>
+                </View>
 
                 {/* <Heading
                 title={'PAST ASSESSMENTS'}
@@ -269,40 +269,11 @@ const ViewParticipants = ({
                 )
               );
             }}
-            // data={[
-            //   {
-            //     id: 2,
-            //     Name: '24 Meter Dash',
-            //     MaxParticipants: 1,
-            //     Image: 'sprinting_1655459240.png',
-            //     Sort: 3,
-            //     Status: 0,
-            //     created_at: '2022-06-10T15:07:13.000000Z',
-            //     updated_at: '2022-06-17T09:47:20.000000Z',
-            //     color_code: '#3528c3',
-            //     color_id: 2,
-            //   },
-            //   {
-            //     id: 3,
-            //     Name: 'Speed Octagon',
-            //     MaxParticipants: 15,
-            //     Image: 'hurdles_1655459445.png',
-            //     Sort: 5,
-            //     Status: 0,
-            //     created_at: '2022-06-10T15:11:02.000000Z',
-            //     updated_at: '2022-06-17T09:50:45.000000Z',
-            //     color_code: '#3528c3',
-            //     color_id: 2,
-            //   },
-            // ]}
             data={pastAssessments}
             keyExtractor={({item, index}) => item?.id?.toString()}
             contentContainerStyle={{paddingBottom: height * 0.1}}
             renderItem={({item, index}) => (
-              <ParticipantsMapper
-                item={item}
-                index={index}
-              />
+              <ParticipantsMapper item={item} index={index} />
             )}
           />
         )}

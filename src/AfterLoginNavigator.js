@@ -334,7 +334,7 @@ const AfterLoginNavigator = ({navigation}) => {
       />
 
       <AfterLoginStack.Screen
-        name="GradingSystem"
+        name="gradingScreen"
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {
@@ -377,7 +377,7 @@ const AfterLoginNavigator = ({navigation}) => {
       />
 
       <AfterLoginStack.Screen
-        name="ScaleScreen"
+        name="scaleScreen"
         options={({route, navigation}) => ({
           headerShown: true,
           headerStyle: {

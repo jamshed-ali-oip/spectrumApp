@@ -96,7 +96,7 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
                       width: width * 0.5,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop:height * 0.2,
+                      marginTop: height * 0.2,
                       alignSelf: 'center',
                     }}>
                     <Heading
@@ -160,12 +160,12 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
+                  onPress={() => {
                     navigation?.navigate('grades', {
                       item: ITEM,
                       groupData: item,
-                    })
-                  }
+                    });
+                  }}
                   style={[
                     index !== groups?.length - 1 && {
                       borderBottomColor: 'silver',

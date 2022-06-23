@@ -8,6 +8,7 @@ import {
   GET_GAME_INFO,
   GET_PARTICIPANTS_REQUEST,
   GET_PAST_ASSESSMENT,
+  GET_ASSESSMENT_DETAILS,
 } from '../actions/actionType';
 
 const INITIAL_STATE = {
@@ -21,6 +22,7 @@ const INITIAL_STATE = {
   gameInfo: [],
   participants: [],
   pastAssessment: [],
+  assessmentDetails: null,
 };
 
 export const userReducer = (state = INITIAL_STATE, action) => {
@@ -74,7 +76,13 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         pastAssessment: action.payload,
       };
-      
+
+    case GET_ASSESSMENT_DETAILS:
+      return {
+        ...state,
+        assessmentDetails: action.payload,
+      };
+
     case LOGOUT_REQUEST:
       return {
         isLogin: false,

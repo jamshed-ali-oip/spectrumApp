@@ -11,7 +11,7 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -21,14 +21,105 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {template} from '@babel/core';
-import IconComp from '../components/IconComp';
-import ColoredFlatlist from '../components/ColoredFlatlist';
-import Square from '../assets/svg/square.svg';
+import * as actions from '../store/actions';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-const GradingSystem = ({navigation, route}) => {
+const GradingSystem = ({
+  navigation,
+  route,
+  getColors,
+  userReducer,
+  getAssessmentDetails,
+  getGameInfo,
+  submitResult,
+}) => {
+  const accessToken = userReducer?.accessToken;
+  const ITEM = route?.params?.item;
+  const GROUP_DATA = route.params.groupData;
+  const CHILD_DATA = route.params.childData;
+  const [isLoading, setIsLoading] = useState(false);
+  const [colors, setColors] = useState([]);
+  const [score, setScore] = useState('0');
+  const [ranges, setRanges] = useState([]);
+  const [resultColor, setResultColor] = useState(
+    colors[0]?.WebColor || 'black',
+  );
+
+  useEffect(() => {
+    findResult();
+  }, [score]);
+
+  useEffect(() => {
+    getAllColors();
+  }, []);
+
+  const getAllColors = async () => {
+    setIsLoading(true);
+    await getGameInfo(accessToken);
+    await getColors(accessToken);
+    await getAssessmentDetails(ITEM?.id, accessToken);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    setColors(userReducer?.colors);
+  }, [userReducer?.colors]);
+
+  useEffect(() => {
+    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+  }, [userReducer?.assessmentDetails]);
+
+  const _onPressSave = async () => {
+    let color_id = userReducer?.gameInfo[0]?.color_id;
+    for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
+      if (
+        userReducer?.gameInfo[i]?.MinValue <= score &&
+        userReducer?.gameInfo[i]?.MaxValue >= score
+      ) {
+        color_id = userReducer?.gameInfo[i]?.color_id;
+      }
+    }
+    const apiData = {
+      assessment_score_id: color_id,
+      participant_id: CHILD_DATA?.id,
+      Score: score,
+      grade_id: CHILD_DATA?.grades?.id,
+      assessment_id: ITEM?.id,
+      Beep: null,
+    };
+    setIsLoading(true);
+    console.log(JSON.stringify(apiData, null, 2));
+    await submitResult(apiData, accessToken, onSuccess);
+    setIsLoading(false);
+  };
+
+  const onSuccess = () => {
+    navigation.navigate('home');
+  };
+
+  const findResult = () => {
+    if (score > parseInt(ranges[0]?.MaxValue)) {
+      setResultColor(colors[0]?.WebColor);
+    } else if (score > parseInt(ranges[1]?.MaxValue)) {
+      setResultColor(colors[0]?.WebColor);
+    } else if (score > parseInt(ranges[2]?.MaxValue)) {
+      setResultColor(colors[1]?.WebColor);
+    } else if (score > parseInt(ranges[3]?.MaxValue)) {
+      setResultColor(colors[2]?.WebColor);
+    } else if (score > parseInt(ranges[4]?.MaxValue)) {
+      setResultColor(colors[3]?.WebColor);
+    } else if (score > parseInt(ranges[5]?.MaxValue)) {
+      setResultColor(colors[4]?.WebColor);
+    } else if (score > parseInt(ranges[6]?.MaxValue)) {
+      setResultColor(colors[5]?.WebColor);
+    } else if (score > parseInt(ranges[7]?.MaxValue)) {
+      setResultColor(colors[6]?.WebColor);
+    } else {
+      setResultColor(colors[7]?.WebColor);
+    }
+  };
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -47,86 +138,184 @@ const GradingSystem = ({navigation, route}) => {
             source={require('../assets/images/logo.png')}
             style={styles.bgimage}
           />
-          {/* Grade  */}
-          <Heading
-            title={'Grade-6 Male'}
-            passedStyle={styles.headingStyles2}
-            fontType="regular"
-          />
 
+          {/* Grade  */}
+          <View style={styles.headingStyle2View}>
+            <Heading
+              title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+              passedStyle={styles.headingStyles2}
+              fontType="regular"
+            />
+          </View>
           {/* Child Name  */}
-          <Heading
-            title={'Lalit Beahan'}
-            passedStyle={styles.headingStyles2}
-            fontType="regular"
-          />
+          <View style={styles.headingStyle2View}>
+            <Heading
+              title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
+              passedStyle={styles.headingStyles2}
+              fontType="regular"
+            />
+          </View>
 
           <View style={styles.gradeContainer}>
             <Image
               source={require('../assets/images/black.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[0]?.WebColor || 'black'},
+              ]}
               resizeMode={'contain'}
             />
+
             <Image
               source={require('../assets/images/red.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[1]?.WebColor || 'red'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/yellow.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[2]?.WebColor || 'orange'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/pink.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[3]?.WebColor || 'yellow'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/lightblue.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[4]?.WebColor || 'lightgreen'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/orange.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[5]?.WebColor || 'darkgreen'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/darkblue.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[6]?.WebColor || 'blue'},
+              ]}
               resizeMode={'contain'}
             />
             <Image
               source={require('../assets/images/purple.png')}
-              style={styles.gradeimage}
+              style={[
+                styles.gradeimage,
+                {tintColor: colors[7]?.WebColor || 'purple'},
+              ]}
               resizeMode={'contain'}
             />
           </View>
+
           <Image
             source={require('../assets/images/yellow.png')}
-            style={styles.taskimage}
-            //   resizeMode={'contain'}
+            style={[
+              styles.gradeimage,
+              {
+                tintColor: resultColor || 'grey',
+                marginLeft: width * 0.08,
+                height: height * 0.1,
+                width: width * 0.25,
+              },
+            ]}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
-              alert("Finished Screens.")
+              _onPressSave();
             }}
             style={styles.savebtn}>
             <Text style={styles.saveText}>Save</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingBottom: height * 0.1,
+            }}>
+            <TextInput
+              value={score}
+              keyboardType="numeric"
+              placeholder={'Enter Score 0-80'}
+              placeholderTextColor={'grey'}
+              style={styles.scoreFieldStyle}
+              onChangeText={text => {
+                setScore(text);
+              }}
+            />
+
+            {
+              <TouchableOpacity
+                onPress={_onPressSave}
+                style={styles.saveBtnStyle}>
+                <Heading
+                  title={'SAVE'}
+                  passedStyle={styles.startBtnStyle}
+                  fontType="bold"
+                />
+              </TouchableOpacity>
+            }
+          </View>
         </ScrollView>
       </ImageBackground>
     </>
   );
 };
 
-export default GradingSystem;
+const mapStateToProps = ({userReducer}) => {
+  return {
+    userReducer,
+  };
+};
 
+export default connect(mapStateToProps, actions)(GradingSystem);
 const styles = StyleSheet.create({
+  startBtnStyle: {
+    color: 'white',
+    fontSize: width * 0.04,
+    paddingVertical: height * 0.02,
+    textAlign: 'center',
+  },
+  saveBtnStyle: {
+    marginLeft: width * 0.05,
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.5,
+    // marginTop: width * 0.03,
+    width: width * 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: 'blue',
+  },
+  scoreFieldStyle: {
+    backgroundColor: 'white',
+    width: width * 0.5,
+    height: height * 0.06,
+    paddingHorizontal: width * 0.03,
+    marginLeft: width * 0.05,
+    // paddingBottom: height * 0.007,
+    marginVertical: height * 0.02,
+    fontFamily: 'Montserrat-Medium',
+    borderRadius: width * 0.1,
+    fontSize: width * 0.047,
   },
   btnStyle: {
     height: height * 0.06,
@@ -152,15 +341,17 @@ const styles = StyleSheet.create({
   },
   headingStyles2: {
     color: 'white',
-    backgroundColor: themeDarkBlue,
     textAlign: 'center',
-    borderRadius: 25,
-    width: width * 0.9,
-    alignSelf: 'center',
     textTransform: 'capitalize',
     fontSize: width * 0.045,
-    marginTop: height * 0.02,
     paddingVertical: height * 0.02,
+  },
+  headingStyle2View: {
+    width: width * 0.9,
+    borderRadius: 25,
+    marginTop: height * 0.02,
+    backgroundColor: themeDarkBlue,
+    alignSelf: 'center',
   },
   btnTextStyle: {
     color: 'white',
@@ -208,7 +399,7 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.02,
     width: width * 0.07,
     height: height * 0.07,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     paddingHorizontal: 40,
   },
   taskimage: {
@@ -226,7 +417,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     elevation: 5,
-    marginBottom:50,
+    marginBottom: 50,
   },
   saveText: {
     textAlign: 'center',

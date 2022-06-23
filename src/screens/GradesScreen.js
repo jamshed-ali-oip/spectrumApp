@@ -179,13 +179,27 @@ const GradesScreen = ({
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation?.navigate('timeAssessment', {
-                      item: ITEM,
-                      childData: item,
-                      groupData: GROUP_DATA,
-                    })
-                  }
+                  onPress={() => {
+                    if (ITEM?.Type === 'Duration') {
+                      navigation?.navigate('timeAssessment', {
+                        item: ITEM,
+                        childData: item,
+                        groupData: GROUP_DATA,
+                      });
+                    } else if (ITEM?.Type === 'Distance') {
+                      navigation?.navigate('scaleScreen', {
+                        item: ITEM,
+                        childData: item,
+                        groupData: GROUP_DATA,
+                      });
+                    } else {
+                      navigation?.navigate('gradingScreen', {
+                        item: ITEM,
+                        childData: item,
+                        groupData: GROUP_DATA,
+                      });
+                    }
+                  }}
                   style={[
                     index !== groupMembers?.length - 1 && {
                       borderBottomColor: 'silver',

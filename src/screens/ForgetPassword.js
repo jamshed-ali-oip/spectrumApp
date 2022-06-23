@@ -21,33 +21,48 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import LottieView from 'lottie-react-native';
 import {showMessage} from 'react-native-flash-message';
+import {useEffect} from 'react';
 
 const {width, height} = Dimensions.get('window');
 
-const LoginScreen = ({navigation, userReducer, loginRequest}) => {
+const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(true);
-
-  const STATUS_BAR_HEIGHT =
-    Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
-
-  const _onPressLoginButton = async () => {
-    if (email.length == 0 || password.length == 0) {
+  const [wordCount, setWordCount] = useState(0);
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+  const _onPressButton = async () => {
+    if (email.length == 0) {
       showMessage({
-        message: 'Credentials Required!',
+        message: 'Email Required!',
         type: 'danger',
       });
     } else {
       setIsLoading(true);
-      await loginRequest({email, password}, onLoginFailed);
+      await forgetPassword({email}, onFailed, onSuccess);
     }
   };
 
-  const onLoginFailed = () => {
+  const onFailed = () => {
     setIsLoading(false);
   };
+
+  const onSuccess = async () => {
+    await setIsLoading(false);
+    navigation.navigate('otp', {data: email});
+  };
+
+  useEffect(() => {
+    console.log(wordCount);
+  }, [wordCount]);
+
+  useEffect(() => {
+    if (email?.length == 0) {
+      setWordCount(0);
+    }
+    // console.log(email);
+  }, [email]);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -77,46 +92,15 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                   {marginBottom: width * 0.04, marginTop: height * 0.1},
                 ]}
                 onChangeText={e => {
-                  if (e == ' ' || isLoading) {
-                    return;
-                  }
+                  // console.log(e[e.length-1],"---")
                   setEmail(e);
+                  // if (e[e.length - 1] == ' ') {
+                    setWordCount(wordCount + 1);
+                    // return;
+                  // }
                 }}
                 value={email}
               />
-
-              <View style={styles.passwordViewContainer}>
-                <TextInput
-                  placeholder="Password"
-                  placeholderTextColor="#565B66"
-                  style={[
-                    styles.inputfieldPassword,
-                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
-                  ]}
-                  value={password}
-                  onChangeText={e => {
-                    if (e == ' ' || isLoading) {
-                      return;
-                    }
-                    setPassword(e);
-                  }}
-                  secureTextEntry={showPassword}
-                />
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    setShowPassword(!showPassword);
-                  }}>
-                  <Icon
-                    name={showPassword ? 'eye-slash' : 'eye'}
-                    color="grey"
-                    style={{
-                      fontSize: width * 0.045,
-                      marginRight: width * 0.03,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
 
               {isLoading ? (
                 <View style={styles.loginBtnStyle}>
@@ -130,10 +114,10 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 </View>
               ) : (
                 <TouchableOpacity
-                  onPress={() => _onPressLoginButton()}
+                  onPress={() => _onPressButton()}
                   style={styles.loginBtnStyle}>
                   <Heading
-                    title="LOG IN"
+                    title="Request Password Reset"
                     passedStyle={styles.loginTextStyle}
                     fontType="semi-bold"
                   />
@@ -143,11 +127,13 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
-                  navigation.navigate('forgetPassword');
+                  if (!isLoading) {
+                    navigation.navigate('login');
+                  }
                 }}
                 style={{marginTop: height * 0.03}}>
                 <Heading
-                  title="Forgot Password"
+                  title="Sign In Now"
                   passedStyle={{
                     color: 'white',
                     fontSize: width * 0.037,
@@ -166,7 +152,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
 const mapStateToProps = ({userReducer}) => {
   return {userReducer};
 };
-export default connect(mapStateToProps, actions)(LoginScreen);
+export default connect(mapStateToProps, actions)(ForgetPassword);
 
 const styles = StyleSheet.create({
   container: {

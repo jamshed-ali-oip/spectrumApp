@@ -86,7 +86,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
                       width: width * 0.5,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop: height * 0.2,
+                      marginTop:height * 0.2,
                       alignSelf: 'center',
                     }}>
                     <Heading
@@ -112,9 +112,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
               </>
             }
             data={assessments}
-            keyExtractor={({item, index}) =>
-              item?.id?.toString() || index?.toString()
-            }
+            keyExtractor={({item, index}) => item?.id?.toString() || index?.toString()}
             renderItem={({item, index}) => (
               <AssessmentMapper
                 item={item}

@@ -17,11 +17,17 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
   console.log('Score: ', item?.Score);
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          width: width * 0.5,
+        }}>
         <Image
           source={{
             uri: `${imageUrl}/assessment_image/${item?.assessments[0]?.Image}`,
           }}
+          resizeMode="contain"
           style={styles.imageStyles}
         />
         <Heading
@@ -37,7 +43,7 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
 
         <Heading
           title={moment(item?.assessments[0]?.created_at).format('DD MMMM')}
-          passedStyle={styles.nameStyle}
+          passedStyle={styles.dateStyle}
           fontType="regular"
         />
       </View>
@@ -92,17 +98,27 @@ const styles = StyleSheet.create({
   },
   imageStyles: {
     width: width * 0.072,
+    // backgroundColor: 'green',
     height: height * 0.032,
   },
   nameStyle: {
     color: 'white',
     fontSize: width * 0.033,
-    marginHorizontal: width * 0.02,
-    width:width * 0.25,
+    marginHorizontal: width * 0.01,
+    width: width * 0.25,
+    // backgroundColor: 'purple',
+  },
+  dateStyle: {
+    color: 'white',
+    fontSize: width * 0.033,
+    marginHorizontal: width * 0.01,
+    width: width * 0.15,
+    // backgroundColor: 'red',
   },
   colorsViewStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor:'red'
   },
 });

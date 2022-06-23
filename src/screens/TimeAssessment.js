@@ -459,10 +459,10 @@ const TimeAssessment = ({
                 placeholderTextColor={'grey'}
                 style={styles.scoreFieldStyle}
                 onChangeText={text => {
-                  if (parseInt(text) <= 100) {
+                  // if (parseInt(text) <= 100) {
                     setScore(text);
                     setMeterValue(text);
-                  }
+                  // }
                 }}
               />
             )}
