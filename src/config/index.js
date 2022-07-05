@@ -1,4 +1,4 @@
-// export const baseUrl = `https://2418-110-93-244-255.in.ngrok.io`;
+// export const baseUrl = `https://6857-103-244-176-173.in.ngrok.io`;
 export const baseUrl = `https://webprojectmockup.com/custom/spectrum-8/public`;
 
 export const apiUrl = `${baseUrl}/api`;

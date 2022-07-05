@@ -90,13 +90,16 @@ const styles = StyleSheet.create({
   nameStyle: {
     color: 'white',
     fontSize: width * 0.035,
-    width:width * 0.3,
-    alignSelf:'center',
+    width: width * 0.3,
+    alignSelf: 'center',
     marginHorizontal: width * 0.02,
   },
   textBtnStyle: {
     color: 'white',
     fontSize: width * 0.04,
   },
-  imageStyles: {width: width * 0.072, height: height * 0.032},
+  imageStyles: {
+    width: width * 0.072,
+    height: height * 0.045,
+  },
 });

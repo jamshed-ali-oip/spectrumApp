@@ -10,11 +10,49 @@ import {
   GET_PARTICIPANTS_REQUEST,
   GET_PAST_ASSESSMENT,
   GET_ASSESSMENT_DETAILS,
+  GET_FACILIATOR_INSTRUCTIONS,
+  GET_FILTERED_PARTICIPANTS,
+  CHECK_GAME,SAVE_SOCKET_REF
 } from './actionType';
 import axios from 'axios';
 import {apiUrl} from '../../config';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 
+export const checkGame = bool => dispatch => {
+  try {
+    dispatch({
+      type: CHECK_GAME,
+      payload: bool,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const saveSocketRef = socketRef => dispatch => {
+  dispatch({
+    type: SAVE_SOCKET_REF,
+    payload: socketRef,
+  });
+};
+
+
+export const sendFCMToken = (data, accessToken) => async dispatch => {
+  try {
+    const URL = `${apiUrl}/get-fcm-token`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.post(URL, data, headers);
+    console.log(response.data)
+  } catch (err) {
+    console.log(err?.response?.data?.message);
+  }
+};
 export const loginRequest = (data, onLoginFailed) => async dispatch => {
   try {
     const URL = `${apiUrl}/login`;
@@ -24,6 +62,7 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
         type: LOGIN_REQUEST,
         payload: response.data.data,
       });
+      
     } else {
       onLoginFailed();
       showMessage({
@@ -76,7 +115,7 @@ export const getAssessments = accessToken => async dispatch => {
 
 export const getGroups = accessToken => async dispatch => {
   try {
-    const URL = `${apiUrl}/grade`;
+    const URL = `${apiUrl}/group`;
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -154,6 +193,53 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
     );
   }
 };
+
+export const getFilteredParticipants =
+  (data, accessToken, onSuccess) => async dispatch => {
+    // console.log(data, '===', accessToken);
+    try {
+      const URL = `${apiUrl}/participants/filter`;
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.post(URL, data, headers);
+      console.log(response.data);
+      if (response.data.success) {
+        dispatch({
+          type: GET_FILTERED_PARTICIPANTS,
+          payload: response.data.data,
+        });
+      } else {
+        dispatch({
+          type: GET_FILTERED_PARTICIPANTS,
+          payload: [],
+        });
+        showMessage({
+          message:
+            response?.data.data?.error ||
+            response.data.message ||
+            response.data.msg ||
+            'Something went wrong',
+          type: 'danger',
+        });
+      }
+      onSuccess();
+    } catch (err) {
+      showMessage({
+        message: 'Network Error',
+        type: 'danger',
+      });
+      console.log(
+        err?.response?.data?.msg || err?.response?.data?.message,
+        'GET_FILTERED_PARTICIPANTS',
+        err,
+      );
+    }
+  };
 
 export const getColors = accessToken => async dispatch => {
   try {
@@ -296,7 +382,10 @@ export const getParticipants = accessToken => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    console.log(
+      'Participants Screen Error: ',
+      err?.response?.data?.msg || err?.response?.data?.message,
+    );
   }
 };
 
@@ -452,7 +541,6 @@ export const verifyOtp = (data, onFailed, onSuccess) => async dispatch => {
   }
 };
 
-
 export const resetPassword = (data, onFailed, onSuccess) => async dispatch => {
   try {
     const URL = `${apiUrl}/reset-password`;
@@ -488,5 +576,41 @@ export const resetPassword = (data, onFailed, onSuccess) => async dispatch => {
       type: 'danger',
     });
     console.log(err?.response?.data?.msg || err?.response?.data?.message, err);
+  }
+};
+
+export const getFaciliatorInstructions = accessToken => async dispatch => {
+  try {
+    const URL = `${apiUrl}/facilitator/instruction`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.get(URL, headers);
+    if (response.data.success) {
+      dispatch({
+        type: GET_FACILIATOR_INSTRUCTIONS,
+        payload: response.data.data,
+      });
+    } else {
+      dispatch({
+        type: GET_FACILIATOR_INSTRUCTIONS,
+        payload: [],
+      });
+      showMessage({
+        message:
+          response.data.message || response.data.msg || 'Something went wrong',
+        type: 'danger',
+      });
+    }
+  } catch (err) {
+    showMessage({
+      message: 'Network Error',
+      type: 'danger',
+    });
+    console.log(err?.response?.data?.msg || err?.response?.data?.message);
   }
 };

@@ -9,7 +9,7 @@ import {
   ImageBackground,
   StatusBar,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -22,8 +22,26 @@ import * as actions from '../store/actions';
 import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
+import messaging from '@react-native-firebase/messaging';
 
-const HomeScreen = ({navigation, logoutRequest}) => {
+const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
+  const accessToken = userReducer?.accessToken;
+  useEffect(() => {
+    sendFCM();
+  }, []);
+
+  const sendFCM = () => {
+    messaging()
+      .getToken()
+      .then(fcmtoken => {
+        console.log('TOKEN: : : : :  :', fcmtoken);
+        const data = {
+          id: userReducer?.userData?.id,
+          token: fcmtoken,
+        };
+        sendFCMToken(data, accessToken);
+      });
+  };
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -75,8 +93,10 @@ const HomeScreen = ({navigation, logoutRequest}) => {
     </>
   );
 };
-
-export default connect(null, actions)(HomeScreen);
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -120,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: width * 0.34,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     marginRight: width * 0.05,
   },
 });

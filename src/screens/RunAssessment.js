@@ -23,7 +23,7 @@ import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
-import { imageUrl } from '../config';
+import {imageUrl} from '../config';
 const {width, height} = Dimensions.get('window');
 
 const RunAssessment = ({navigation, route}) => {
@@ -131,6 +131,7 @@ const RunAssessment = ({navigation, route}) => {
            </TouchableOpacity> */}
           <TouchableOpacity
             activeOpacity={0.9}
+            onPress={() => navigation.navigate('faciliator', {data: ITEM})}
             style={[
               styles.buttonContainerStyles,
               {backgroundColor: themePink},

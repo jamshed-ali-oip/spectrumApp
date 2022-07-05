@@ -45,8 +45,14 @@ const ViewParticipants = ({
   const apiData = {
     id: DATA?.id,
   };
-
+  const socketRef = userReducer?.socket;
+console.log(socketRef)
   useEffect(() => {
+    // socketRef.emit('addUser', userId);
+
+    // socketRef.on('getMessage', data => {
+    //   console.log(data, 'Text Recieved========');
+    // });
     getDetail();
   }, []);
 

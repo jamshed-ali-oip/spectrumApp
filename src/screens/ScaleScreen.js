@@ -21,6 +21,7 @@ import {
 } from '../assets/colors/colors';
 import {connect} from 'react-redux';
 import LottieView from 'lottie-react-native';
+import {showMessage} from 'react-native-flash-message';
 
 const {width, height} = Dimensions.get('window');
 
@@ -36,13 +37,14 @@ const ScaleScreen = ({
   const accessToken = userReducer?.accessToken;
   const ITEM = route?.params?.item;
   const CHILD_DATA = route.params.childData;
+  const GROUP_DATA = route.params.groupData;
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [score, setScore] = useState('0');
   const [ranges, setRanges] = useState([]);
   const [ans, setAns] = useState(height * 0.01);
   const [resultColor, setResultColor] = useState(
-    colors[0]?.WebColor || 'black',
+    colors[7]?.WebColor || 'black',
   );
 
   // const RESULT = 25;
@@ -58,30 +60,30 @@ const ScaleScreen = ({
   const findResult = () => {
     if (score > parseInt(ranges[0]?.MaxValue)) {
       setAns(space1);
-      setResultColor(colors[0]?.WebColor);
+      setResultColor(colors[7]?.WebColor);
     } else if (score > parseInt(ranges[1]?.MaxValue)) {
-      setResultColor(colors[0]?.WebColor);
+      setResultColor(colors[7]?.WebColor);
       setAns(space1);
     } else if (score > parseInt(ranges[2]?.MaxValue)) {
-      setResultColor(colors[1]?.WebColor);
+      setResultColor(colors[6]?.WebColor);
       setAns(space2);
     } else if (score > parseInt(ranges[3]?.MaxValue)) {
-      setResultColor(colors[2]?.WebColor);
+      setResultColor(colors[5]?.WebColor);
       setAns(space3);
     } else if (score > parseInt(ranges[4]?.MaxValue)) {
-      setResultColor(colors[3]?.WebColor);
+      setResultColor(colors[4]?.WebColor);
       setAns(space4);
     } else if (score > parseInt(ranges[5]?.MaxValue)) {
-      setResultColor(colors[4]?.WebColor);
+      setResultColor(colors[3]?.WebColor);
       setAns(space5);
     } else if (score > parseInt(ranges[6]?.MaxValue)) {
-      setResultColor(colors[5]?.WebColor);
+      setResultColor(colors[2]?.WebColor);
       setAns(space6);
     } else if (score > parseInt(ranges[7]?.MaxValue)) {
-      setResultColor(colors[6]?.WebColor);
+      setResultColor(colors[1]?.WebColor);
       setAns(space7);
     } else {
-      setResultColor(colors[7]?.WebColor);
+      setResultColor(colors[0]?.WebColor);
       setAns(space8);
     }
   };
@@ -111,27 +113,40 @@ const ScaleScreen = ({
   }, [userReducer?.assessmentDetails]);
 
   const _onPressSave = async () => {
-    let color_id = userReducer?.gameInfo[0]?.color_id;
-    for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
-      if (
-        userReducer?.gameInfo[i]?.MinValue <= score &&
-        userReducer?.gameInfo[i]?.MaxValue >= score
-      ) {
-        color_id = userReducer?.gameInfo[i]?.color_id;
+    if (score > 80) {
+      showMessage({
+        type: 'danger',
+        message: 'Score is exceeding the scale values.',
+      });
+    } else if (score < 0) {
+      showMessage({
+        type: 'danger',
+        message: 'Score cant be less than zero.',
+      });
+    } else {
+      let color_id = userReducer?.gameInfo[0]?.color_id;
+      for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
+        if (
+          userReducer?.gameInfo[i]?.MinValue <= score &&
+          userReducer?.gameInfo[i]?.MaxValue >= score
+        ) {
+          color_id = userReducer?.gameInfo[i]?.color_id;
+        }
       }
+      const apiData = {
+        assessment_score_id: color_id,
+        participant_id: CHILD_DATA?.id,
+        Score: score,
+        grade_id: CHILD_DATA?.grades?.id,
+        assessment_id: ITEM?.id,
+        group_id: GROUP_DATA?.id,
+        Distance: null,
+      };
+      setIsLoading(true);
+      console.log(JSON.stringify(apiData, null, 2));
+      await submitResult(apiData, accessToken, onSuccess);
+      setIsLoading(false);
     }
-    const apiData = {
-      assessment_score_id: color_id,
-      participant_id: CHILD_DATA?.id,
-      Score: score,
-      grade_id: CHILD_DATA?.grades?.id,
-      assessment_id: ITEM?.id,
-      Distance: null,
-    };
-    setIsLoading(true);
-    console.log(JSON.stringify(apiData, null, 2));
-    await submitResult(apiData, accessToken, onSuccess);
-    setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -155,7 +170,7 @@ const ScaleScreen = ({
           <ScrollView>
             <View style={styles.headingView}>
               <Heading
-                title={`LONG JUMP`}
+                title={ITEM?.Name}
                 passedStyle={styles.headingStyles}
                 fontType="semi-bold"
               />
@@ -170,7 +185,7 @@ const ScaleScreen = ({
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
               <Heading
-                title={'Grade-6 Male'}
+              title={`${GROUP_DATA?.Name}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
@@ -178,7 +193,7 @@ const ScaleScreen = ({
             {/* Child Name  */}
             <View style={styles.headingStyle2View}>
               <Heading
-                title={'Lalit Beahan'}
+              title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
@@ -204,7 +219,7 @@ const ScaleScreen = ({
                     resizeMode="stretch"
                     style={{
                       marginLeft: width * 0.02,
-                      tintColor: colors[0]?.WebColor,
+                      tintColor: colors[7]?.WebColor,
                       height: height * 0.032,
                       width: width * 0.5,
                     }}
@@ -236,7 +251,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.055,
                       height: height * 0.032,
                       width: width * 0.43,
-                      tintColor: colors[1]?.WebColor,
+                      tintColor: colors[6]?.WebColor,
                     }}
                   />
                   <Text
@@ -265,7 +280,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.082,
                       height: height * 0.032,
                       width: width * 0.37,
-                      tintColor: colors[2]?.WebColor,
+                      tintColor: colors[5]?.WebColor,
                     }}
                   />
                   <Text
@@ -294,7 +309,7 @@ const ScaleScreen = ({
                     style={{
                       marginLeft: width * 0.11,
                       height: height * 0.032,
-                      tintColor: colors[3]?.WebColor,
+                      tintColor: colors[4]?.WebColor,
                       width: width * 0.313,
                     }}
                   />
@@ -325,7 +340,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.135,
                       height: height * 0.032,
                       width: width * 0.26,
-                      tintColor: colors[4]?.WebColor,
+                      tintColor: colors[3]?.WebColor,
                     }}
                   />
                   <Text
@@ -354,7 +369,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.165,
                       height: height * 0.032,
                       width: width * 0.205,
-                      tintColor: colors[5]?.WebColor,
+                      tintColor: colors[2]?.WebColor,
                     }}
                   />
                   <Text
@@ -381,7 +396,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.19,
                       height: height * 0.032,
                       width: width * 0.15,
-                      tintColor: colors[6]?.WebColor,
+                      tintColor: colors[1]?.WebColor,
                     }}
                   />
                   <Text
@@ -407,7 +422,7 @@ const ScaleScreen = ({
                       marginLeft: width * 0.22,
                       height: height * 0.05,
                       width: width * 0.09,
-                      tintColor: colors[7]?.WebColor,
+                      tintColor: colors[0]?.WebColor,
                     }}
                   />
                   <Text
@@ -466,9 +481,14 @@ const ScaleScreen = ({
                   placeholderTextColor={'grey'}
                   style={styles.scoreFieldStyle}
                   onChangeText={text => {
-                    // if (parseInt(text) <= 100) {
+                    if (parseInt(text) > 100) {
+                      showMessage({
+                        type: 'danger',
+                        message: 'Score is exceeding the scale values.',
+                      });
+                      return;
+                    }
                     setScore(text);
-                    // }
                   }}
                 />
 
@@ -504,7 +524,7 @@ const styles = StyleSheet.create({
   startBtnStyle: {
     color: 'white',
     fontSize: width * 0.04,
-    paddingVertical: height * 0.02,
+    paddingVertical: height * 0.015,
     textAlign: 'center',
   },
   scoreFieldStyle: {

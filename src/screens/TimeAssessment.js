@@ -14,7 +14,7 @@ import {
 import React, {useState, useRef, useEffect} from 'react';
 import RNSpeedometer from 'react-native-speedometer';
 import Heading from '../components/Heading';
-import {Timer, Countdown} from 'react-native-element-timer';
+// import {Timer, Countdown} from 'react-native-element-timer';
 import {
   themeBlue,
   themeDarkBlue,
@@ -30,7 +30,8 @@ import {
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
-
+import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
+import { showMessage } from 'react-native-flash-message';
 const {width, height} = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -40,6 +41,7 @@ const TimeAssessment = ({
   getColors,
   submitResult,
   getGameInfo,
+  checkGame,
 }) => {
   const ITEM = route.params.item;
   const CHILD_DATA = route.params.childData;
@@ -58,19 +60,27 @@ const TimeAssessment = ({
     winnerIndex: null,
     started: false,
   });
+  // console.log(JSON.stringify(CHILD_DATA,null,2))
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
-
   const apiData = {
     assessment_score_id: assessmentScoreid,
     participant_id: CHILD_DATA?.id,
     Score: score,
-    grade_id: CHILD_DATA?.grades?.id,
+    grade_id: CHILD_DATA?.id,
+    group_id: GROUP_DATA?.id,
     assessment_id: ITEM?.id,
     Duration: secs,
   };
+  const [timer, setTimer] = useState({
+    timerStart: false,
+    stopwatchStart: false,
+    totalDuration: 90000,
+    timerReset: false,
+    stopwatchReset: false,
+  });
 
   const wheelOptions = {
     rewards: participants,
@@ -121,7 +131,7 @@ const TimeAssessment = ({
   };
 
   useEffect(() => {
-    console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
+    // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
   }, [secs]);
 
   const findScoreNow = () => {
@@ -177,7 +187,7 @@ const TimeAssessment = ({
 
   const _onPressSave = async () => {
     setIsLoading(true);
-    console.log(JSON.stringify(apiData, null, 2));
+    console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -185,6 +195,51 @@ const TimeAssessment = ({
   const onSuccess = () => {
     navigation.navigate('home');
   };
+
+  // const toggleTimer = () => {
+  //   setTimer(prev => {
+  //     return {
+  //       ...prev,
+  //       timerStart: !timer.timerStart,
+  //       timerReset: false,
+  //     };
+  //   });
+  // };
+
+  // const resetTimer = () => {
+  //   setTimer(prev => {
+  //     return {...prev, timerStart: false, timerReset: true};
+  //   });
+  // };
+
+  const toggleStopwatch = () => {
+    setTimer(prev => {
+      return {
+        ...prev,
+        stopwatchStart: !timer.stopwatchStart,
+        stopwatchReset: false,
+      };
+    });
+  };
+
+  const resetStopwatch = () => {
+    setTimer(prev => {
+      return {
+        ...prev,
+        stopwatchStart: false,
+        stopwatchReset: true,
+      };
+    });
+  };
+
+  const handleTimerComplete = () => alert('custom completion function');
+
+  const getFormattedTime = time => {
+    currentTime = time;
+    console.log(currentTime.substring(6, 8));
+    setSecs(currentTime.substring(6, 8));
+  };
+  // console.log(GROUP_DATA?.Name);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -200,7 +255,7 @@ const TimeAssessment = ({
             source={require('../assets/lottie/color-loader.json')}
           />
         ) : (
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {/* Heading  */}
             <View style={styles.headingView}>
               <Heading
@@ -234,15 +289,6 @@ const TimeAssessment = ({
                 fontType="regular"
               />
             </View>
-            {/* <WheelOfFortune
-              style={{width: 100, height: 100}}
-              options={wheelOptions}
-              getWinner={(value, index) => {
-                setWheelState(prev => {
-                  return {...prev, winnerValue: value, winnerIndex: index};
-                });
-              }}
-            /> */}
 
             {/* Meter and Button View Container  */}
             <View style={styles.configurations}>
@@ -250,28 +296,52 @@ const TimeAssessment = ({
               <View style={styles.innerLeftConfigView}>
                 {/* Start Button  */}
                 {!hasTimerStarted ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (!hasTimerStarted) {
-                        timerRef.current.start();
-                        setHasTimerStarted(true);
-                        setSecs(0);
-                        setMeterValue(0);
-                        setShowTextField(false);
-                      }
-                    }}
-                    style={styles.startBtnContainer}>
-                    <Heading
-                      title={'START'}
-                      passedStyle={styles.startBtnStyle}
-                      fontType="semi-bold"
-                    />
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (!hasTimerStarted) {
+                          // timerRef.current.start();
+                          checkGame(true);
+                          toggleStopwatch();
+                          setHasTimerStarted(true);
+                          setSecs(0);
+                          setMeterValue(0);
+                          setShowTextField(false);
+                        }
+                      }}
+                      style={styles.startBtnContainer}>
+                      <Heading
+                        title={'START'}
+                        passedStyle={styles.startBtnStyle}
+                        fontType="semi-bold"
+                      />
+                    </TouchableOpacity>
+
+                    {secs > 0 && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          resetStopwatch();
+                          checkGame(false);
+                          setSecs(0);
+                          setScore('0');
+                          setShowTextField(false);
+                        }}
+                        style={styles.resetBtnContainer}>
+                        <Heading
+                          title={'RESET'}
+                          passedStyle={styles.startBtnStyle}
+                          fontType="semi-bold"
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </>
                 ) : (
                   // Stop Button
                   <TouchableOpacity
                     onPress={() => {
-                      timerRef.current.pause();
+                      // timerRef.current.pause();
+                      checkGame(false);
+                      toggleStopwatch();
                       setHasTimerStarted(false);
                       findScoreNow();
                       setShowTextField(true);
@@ -285,18 +355,28 @@ const TimeAssessment = ({
                   </TouchableOpacity>
                 )}
 
-                {/* Timer  */}
-                <Heading
-                  title="Timer"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.07,
-                    marginLeft: width * 0.1,
-                    marginTop: height * 0.03,
+                {/* <Timer
+                  totalDuration={timer.totalDuration}
+                  msecs
+                  start={timer.timerStart}
+                  reset={timer.timerReset}
+                  options={{
+                    container: {
+                      backgroundColor: '#000',
+                      padding: 5,
+                      borderRadius: 5,
+                      width: 220,
+                    },
+                    text: {
+                      fontSize: 30,
+                      color: '#FFF',
+                      marginLeft: 7,
+                    },
                   }}
-                  fontType="bold"
-                />
-                <Timer
+                  handleFinish={handleTimerComplete}
+                  getTime={(time) => getFormattedTime(timer)}
+                /> */}
+                {/* <Timer
                   initialSeconds={0}
                   ref={timerRef}
                   style={{
@@ -310,9 +390,9 @@ const TimeAssessment = ({
                   onTimes={e => {
                     setSecs(e);
                   }}
-                  formatTime={'hh:mm:ss'}
+                  formatTime={'hh:mm:ss:ssss'}
                   onEnd={e => {}}
-                />
+                /> */}
               </View>
 
               {/* Game Meter  */}
@@ -411,44 +491,42 @@ const TimeAssessment = ({
                 }
               />
             </View>
-            {/* <TextInput
-              placeholder="Speedometer Value"
+
+            <View
               style={{
-                borderBottomWidth: 0.3,
-                borderBottomColor: 'black',
-                height: height * 0.08,
-                fontSize: 16,
-                backgroundColor: 'white',
-                marginVertical: 50,
-                marginHorizontal: 20,
-              }}
-              value={meterValue}
-              onChangeText={e => setMeterValue(parseInt(e))}
-            /> */}
-
-            {/* {!wheelState.started && ( */}
-
-            {/* ) : (
-            <Heading
-              title="00:00"
-              passedStyle={{
-                color: 'white',
-                fontSize: width * 0.07,
-                marginLeft: width * 0.1,
+                alignSelf: 'center',
                 marginTop: height * 0.03,
-              }}
-              fontType="bold"
-            />
-          )} */}
-            {/* <Countdown
-            ref={countdownRef}
-            style={styles.timer}
-            textStyle={styles.timerText}
-            initialSeconds={5}
-            onTimes={e => {}}
-            onPause={e => {}}
-            onEnd={e => {}}
-          /> */}
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {/* Timer  */}
+              <Heading
+                title="Timer"
+                passedStyle={{
+                  color: 'white',
+                  fontSize: width * 0.07,
+                }}
+                fontType="bold"
+              />
+
+              <Stopwatch
+                laps
+                msecs
+                start={timer.stopwatchStart}
+                reset={timer.stopwatchReset}
+                options={{
+                  container: {},
+                  text: {
+                    fontSize: 30,
+                    color: '#FFF',
+                    marginLeft: 7,
+                    fontFamily: 'Montserrat-SemiBold',
+                  },
+                }}
+                getTime={time => getFormattedTime(time)}
+              />
+            </View>
+
             {showTextField && (
               <TextInput
                 value={score}
@@ -460,9 +538,20 @@ const TimeAssessment = ({
                 style={styles.scoreFieldStyle}
                 onChangeText={text => {
                   // if (parseInt(text) <= 100) {
-                    setScore(text);
-                    setMeterValue(text);
+                  // setScore(text);
+                  // setMeterValue(text);
                   // }
+
+                  if (parseInt(text) > 100) {
+                    showMessage({
+                      type: 'danger',
+                      message: 'Score is exceeding the meter values.',
+                    });
+                    return;
+                  }
+                  setScore(text);
+
+
                 }}
               />
             )}
@@ -516,24 +605,23 @@ const styles = StyleSheet.create({
   configurations: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    marginTop: height * 0.05,
     justifyContent: 'space-between',
   },
   stopBtnStyle: {
+    marginTop: height * 0.05,
     marginLeft: width * 0.05,
     backgroundColor: themeRed,
     borderRadius: width * 0.5,
     width: width * 0.3,
     justifyContent: 'center',
-    marginTop: height * 0.1,
     alignItems: 'center',
     marginVertical: height * 0.02,
   },
   startBtnStyle: {
     color: 'white',
-
     fontSize: width * 0.04,
     paddingVertical: height * 0.02,
-
     textAlign: 'center',
   },
   timer: {
@@ -553,8 +641,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  resetBtnContainer: {
+    // marginTop: height * 0.1,
+    marginLeft: width * 0.05,
+    backgroundColor: themePurple,
+    borderRadius: width * 0.5,
+    width: width * 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: height * 0.02,
+  },
   startBtnContainer: {
-    marginTop: height * 0.1,
+    marginTop: height * 0.05,
     marginLeft: width * 0.05,
     backgroundColor: themeGreen,
     borderRadius: width * 0.5,

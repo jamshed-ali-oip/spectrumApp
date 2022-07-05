@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useRef} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -12,7 +12,9 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ParticipantsScreen from './screens/ParticipantsScreen';
 import ViewParticipants from './screens/ViewParticipants';
+import PushNotification from 'react-native-push-notification';
 
+import messaging from '@react-native-firebase/messaging';
 import Button from './components/Button';
 import IconComp from './components/IconComp';
 import {themeDarkBlue} from './assets/colors/colors';
@@ -23,12 +25,89 @@ import GradesScreen from './screens/GradesScreen';
 import TimeAssessment from './screens/TimeAssessment';
 import GradingSystem from './screens/GradingSystem';
 import ScaleScreen from './screens/ScaleScreen';
+import FaciliatorInstructionsScreen from './screens/FaciliatorInstructionsScreen';
+import {connect} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
+import {io} from 'socket.io-client';
+import * as actions from './store/actions/index';
 
 const {width, height} = Dimensions.get('window');
 
 const AfterLoginStack = createStackNavigator();
 
-const AfterLoginNavigator = ({navigation}) => {
+const requestUserPermission = async () => {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('FCM Authorization:', authStatus);
+  }
+};
+
+const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io('http://webprojectmockup.com:9444');
+    saveSocketRef(socket.current);
+    requestUserPermission();
+    messaging()
+      .subscribeToTopic('spectrum' + userReducer?.userData?.id?.toString())
+      .then(() => {
+        console.log('NOTIFICATIONS SUBSCRIBED');
+      });
+
+    try {
+      // messaging()
+      //   .getToken()
+      //   .then(token => {
+      //     console.log('TOKEN: : : : :  :', token);
+      //     // setFCMToken(token);
+      //   });
+      messaging().onNotificationOpenedApp(remoteMessage => {
+        console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification,
+        );
+      });
+      messaging()
+        .getInitialNotification()
+        .then(remoteMessage => {
+          if (remoteMessage) {
+            console.log(
+              'Notification caused app to open from quit state:',
+              remoteMessage.notification,
+            );
+          }
+        });
+
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        console.log(remoteMessage, 'notification');
+
+        // Call api to get notifications data
+        // if (remoteMessage?.data?.type == 'likePost') {
+        //   getNotifications(USER_ID);
+        //   await showNotificationsBadge();
+        // }
+
+        if (remoteMessage.notification) {
+          PushNotification.localNotification({
+            channelId: 'channel-id',
+            channelName: 'My channel',
+            message: remoteMessage.notification.body,
+            playSound: true,
+            title: remoteMessage.notification.title,
+            priority: 'high',
+            soundName: 'default',
+          });
+        }
+      });
+      return unsubscribe;
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
   return (
     <AfterLoginStack.Navigator
       screenOptions={{headerShown: false}}
@@ -304,7 +383,15 @@ const AfterLoginNavigator = ({navigation}) => {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('home');
+                if (!userReducer?.hasStartedGame) {
+                  navigation.navigate('home');
+                } else {
+                  showMessage({
+                    type: 'danger',
+                    message: 'Stop game to navigate.',
+                  });
+                }
+                console.log(userReducer?.hasStartedGame);
               }}
               style={{padding: 10}}
               activeOpacity={0.9}>
@@ -318,7 +405,14 @@ const AfterLoginNavigator = ({navigation}) => {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
-                navigation.goBack();
+                if (!userReducer?.hasStartedGame) {
+                  navigation.goBack();
+                } else {
+                  showMessage({
+                    type: 'danger',
+                    message: 'Stop game to navigate.',
+                  });
+                }
               }}
               style={{padding: 10}}
               activeOpacity={0.9}>
@@ -418,8 +512,55 @@ const AfterLoginNavigator = ({navigation}) => {
         })}
         component={ScaleScreen}
       />
+
+      <AfterLoginStack.Screen
+        name="faciliator"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          headerStyle: {
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('home');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={require('./assets/images/round-icon.png')}
+              />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        component={FaciliatorInstructionsScreen}
+      />
     </AfterLoginStack.Navigator>
   );
 };
 
-export default AfterLoginNavigator;
+const mapStateToProps = ({userReducer}) => {
+  return {
+    userReducer,
+  };
+};
+export default connect(mapStateToProps, actions)(AfterLoginNavigator);

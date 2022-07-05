@@ -42,7 +42,7 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
         />
 
         <Heading
-          title={moment(item?.assessments[0]?.created_at).format('DD MMMM')}
+          title={moment(item?.created_at).format('DD MMMM')}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />

@@ -9,7 +9,8 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
-  Platform, RefreshControl,
+  Platform,
+  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import Heading from '../components/Heading';
@@ -27,14 +28,22 @@ import ColoredFlatlist from '../components/ColoredFlatlist';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
+import ParticipantFilterModal from '../components/ParticipantFilterModal';
 
 const {width, height} = Dimensions.get('window');
 
-const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
+const ParticipantsScreen = ({
+  navigation,
+  userReducer,
+  getParticipants,
+  getFilteredParticipants,
+  getGroups,
+}) => {
   const accessToken = userReducer.accessToken;
   const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   useEffect(() => {
     getAllParticipants();
@@ -47,6 +56,7 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
   const getAllParticipants = async () => {
     setIsLoading(true);
     await getParticipants(accessToken);
+    await getGroups(accessToken);
     setIsLoading(false);
   };
 
@@ -61,6 +71,28 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
       getAllParticipants();
     });
   }, []);
+
+  const filterParticipants = async data => {
+    const apiData = {
+      age: data?.age,
+      gender: data?.gender?.map(ele => {
+        if (ele?.id === 1) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }),
+      group_id: data?.group_id,
+    };
+    // console.log(apiData);
+    setIsLoading(true);
+    await getFilteredParticipants(apiData, accessToken, onSuccess);
+    setIsLoading(false);
+  };
+
+  const onSuccess = () => {
+    setShowFilterModal(false);
+  };
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -90,7 +122,7 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
                       width: width * 0.5,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop:height * 0.2,
+                      marginTop: height * 0.2,
                       alignSelf: 'center',
                     }}>
                     <Heading
@@ -112,7 +144,9 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
                   />
                 </View>
 
-                <View style={styles.selectFilterStyle}>
+                <TouchableOpacity
+                  style={styles.selectFilterStyle}
+                  onPress={() => setShowFilterModal(true)}>
                   <Heading
                     title="Select Filter"
                     passedStyle={styles.selectFilterTextStyle}
@@ -123,7 +157,7 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
                     type="Feather"
                     passedStyle={styles.rightIconStyle}
                   />
-                </View>
+                </TouchableOpacity>
 
                 <View style={styles.filterLabelViewStyle}>
                   <Heading
@@ -158,7 +192,6 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
             data={participants}
             keyExtractor={({item, index}) => item?.id?.toString()}
             renderItem={({item, index}) => {
-         
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -186,9 +219,11 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <TouchableOpacity onPress={() =>
-                    navigation?.navigate('viewParticipants', {data: item})
-                  } activeOpacity={0.9}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation?.navigate('viewParticipants', {data: item})
+                      }
+                      activeOpacity={0.9}>
                       <Image
                         source={require('../assets/images/cut-eye.png')}
                         style={{
@@ -214,6 +249,13 @@ const ParticipantsScreen = ({navigation, userReducer, getParticipants}) => {
             }}
           />
         )}
+
+        <ParticipantFilterModal
+          isModalVisible={showFilterModal}
+          setIsModalVisible={setShowFilterModal}
+          onPress={filterParticipants}
+          showLoader={isLoading}
+        />
       </ImageBackground>
     </>
   );

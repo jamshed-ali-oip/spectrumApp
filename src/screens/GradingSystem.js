@@ -10,6 +10,7 @@ import {
   StatusBar,
   FlatList,
   ScrollView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Heading from '../components/Heading';
@@ -22,7 +23,9 @@ import {
   themePurple,
 } from '../assets/colors/colors';
 import * as actions from '../store/actions';
+import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 
 const {width, height} = Dimensions.get('window');
 
@@ -88,6 +91,7 @@ const GradingSystem = ({
       grade_id: CHILD_DATA?.grades?.id,
       assessment_id: ITEM?.id,
       Beep: null,
+      group_id: GROUP_DATA?.id,
     };
     setIsLoading(true);
     console.log(JSON.stringify(apiData, null, 2));
@@ -126,153 +130,170 @@ const GradingSystem = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Heading
-            title={`LONG JUMP`}
-            passedStyle={styles.headingStyles}
-            fontType="semi-bold"
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
           />
-
-          <Image
-            resizeMode="contain"
-            source={require('../assets/images/logo.png')}
-            style={styles.bgimage}
-          />
-
-          {/* Grade  */}
-          <View style={styles.headingStyle2View}>
+        ) : (
+          <ScrollView showsVerticalScrollIndicator={false}>
             <Heading
-              title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
-              passedStyle={styles.headingStyles2}
-              fontType="regular"
-            />
-          </View>
-          {/* Child Name  */}
-          <View style={styles.headingStyle2View}>
-            <Heading
-              title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
-              passedStyle={styles.headingStyles2}
-              fontType="regular"
-            />
-          </View>
-
-          <View style={styles.gradeContainer}>
-            <Image
-              source={require('../assets/images/black.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[0]?.WebColor || 'black'},
-              ]}
-              resizeMode={'contain'}
+               title={ITEM?.Name}
+              passedStyle={styles.headingStyles}
+              fontType="semi-bold"
             />
 
             <Image
-              source={require('../assets/images/red.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[1]?.WebColor || 'red'},
-              ]}
-              resizeMode={'contain'}
+              resizeMode="contain"
+              source={require('../assets/images/logo.png')}
+              style={styles.bgimage}
             />
+
+            {/* Grade  */}
+            <View style={styles.headingStyle2View}>
+              <Heading
+                title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                passedStyle={styles.headingStyles2}
+                fontType="regular"
+              />
+            </View>
+            {/* Child Name  */}
+            <View style={styles.headingStyle2View}>
+              <Heading
+                title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
+                passedStyle={styles.headingStyles2}
+                fontType="regular"
+              />
+            </View>
+
+            <View style={styles.gradeContainer}>
+              <Image
+                source={require('../assets/images/black.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[0]?.WebColor || 'black'},
+                ]}
+                resizeMode={'contain'}
+              />
+
+              <Image
+                source={require('../assets/images/red.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[1]?.WebColor || 'red'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/yellow.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[2]?.WebColor || 'orange'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/pink.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[3]?.WebColor || 'yellow'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/lightblue.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[4]?.WebColor || 'lightgreen'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/orange.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[5]?.WebColor || 'darkgreen'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/darkblue.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[6]?.WebColor || 'blue'},
+                ]}
+                resizeMode={'contain'}
+              />
+              <Image
+                source={require('../assets/images/purple.png')}
+                style={[
+                  styles.gradeimage,
+                  {tintColor: colors[7]?.WebColor || 'purple'},
+                ]}
+                resizeMode={'contain'}
+              />
+            </View>
+
             <Image
               source={require('../assets/images/yellow.png')}
               style={[
                 styles.gradeimage,
-                {tintColor: colors[2]?.WebColor || 'orange'},
+                {
+                  tintColor: resultColor || 'grey',
+                  marginLeft: width * 0.08,
+                  height: height * 0.1,
+                  width: width * 0.25,
+                },
               ]}
-              resizeMode={'contain'}
             />
-            <Image
-              source={require('../assets/images/pink.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[3]?.WebColor || 'yellow'},
-              ]}
-              resizeMode={'contain'}
-            />
-            <Image
-              source={require('../assets/images/lightblue.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[4]?.WebColor || 'lightgreen'},
-              ]}
-              resizeMode={'contain'}
-            />
-            <Image
-              source={require('../assets/images/orange.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[5]?.WebColor || 'darkgreen'},
-              ]}
-              resizeMode={'contain'}
-            />
-            <Image
-              source={require('../assets/images/darkblue.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[6]?.WebColor || 'blue'},
-              ]}
-              resizeMode={'contain'}
-            />
-            <Image
-              source={require('../assets/images/purple.png')}
-              style={[
-                styles.gradeimage,
-                {tintColor: colors[7]?.WebColor || 'purple'},
-              ]}
-              resizeMode={'contain'}
-            />
-          </View>
-
-          <Image
-            source={require('../assets/images/yellow.png')}
-            style={[
-              styles.gradeimage,
-              {
-                tintColor: resultColor || 'grey',
-                marginLeft: width * 0.08,
-                height: height * 0.1,
-                width: width * 0.25,
-              },
-            ]}
-          />
-          {/* <TouchableOpacity
+            {/* <TouchableOpacity
             onPress={() => {
               _onPressSave();
             }}
             style={styles.savebtn}>
             <Text style={styles.saveText}>Save</Text>
           </TouchableOpacity> */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingBottom: height * 0.1,
-            }}>
-            <TextInput
-              value={score}
-              keyboardType="numeric"
-              placeholder={'Enter Score 0-80'}
-              placeholderTextColor={'grey'}
-              style={styles.scoreFieldStyle}
-              onChangeText={text => {
-                setScore(text);
-              }}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingBottom: height * 0.1,
+              }}>
+              <TextInput
+                value={score}
+                keyboardType="numeric"
+                placeholder={'Enter Score 0-80'}
+                placeholderTextColor={'grey'}
+                style={styles.scoreFieldStyle}
+                onChangeText={text => {
+                  if (parseInt(text) > 80) {
+                    showMessage({
+                      type: 'danger',
+                      message: 'Score is exceeding the scale values.',
+                    });
+                    return;
+                  }
+                  setScore(text);
+                }}
+              />
 
-            {
-              <TouchableOpacity
-                onPress={_onPressSave}
-                style={styles.saveBtnStyle}>
-                <Heading
-                  title={'SAVE'}
-                  passedStyle={styles.startBtnStyle}
-                  fontType="bold"
-                />
-              </TouchableOpacity>
-            }
-          </View>
-        </ScrollView>
+              {
+                <TouchableOpacity
+                  onPress={_onPressSave}
+                  style={styles.saveBtnStyle}>
+                  <Heading
+                    title={'SAVE'}
+                    passedStyle={styles.startBtnStyle}
+                    fontType="bold"
+                  />
+                </TouchableOpacity>
+              }
+            </View>
+          </ScrollView>
+        )}
       </ImageBackground>
     </>
   );
@@ -431,5 +452,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: 30,
+  },
+  lottieStyle: {
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.098,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
 });

@@ -9,6 +9,10 @@ import {
   GET_PARTICIPANTS_REQUEST,
   GET_PAST_ASSESSMENT,
   GET_ASSESSMENT_DETAILS,
+  GET_FACILIATOR_INSTRUCTIONS,
+  GET_FILTERED_PARTICIPANTS,
+  CHECK_GAME,
+  SAVE_SOCKET_REF,
 } from '../actions/actionType';
 
 const INITIAL_STATE = {
@@ -23,16 +27,37 @@ const INITIAL_STATE = {
   participants: [],
   pastAssessment: [],
   assessmentDetails: null,
+  faciliatorInstructions: [],
+  hasStartedGame: false,
+  socket: null,
 };
 
 export const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case SAVE_SOCKET_REF:
+      return {
+        ...state,
+        socket: action.payload,
+      };
+
+    case CHECK_GAME:
+      return {
+        ...state,
+        hasStartedGame: action.payload,
+      };
+
     case LOGIN_REQUEST:
       return {
         ...state,
         isLogin: true,
         accessToken: action.payload.token,
         userData: action.payload,
+      };
+
+    case GET_FILTERED_PARTICIPANTS:
+      return {
+        ...state,
+        participants: action.payload,
       };
 
     case GET_ASSESSMENTS_REQUEST:
@@ -90,6 +115,11 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         accessToken: '',
       };
 
+    case GET_FACILIATOR_INSTRUCTIONS:
+      return {
+        ...state,
+        faciliatorInstructions: action.payload,
+      };
     default:
       return state;
   }

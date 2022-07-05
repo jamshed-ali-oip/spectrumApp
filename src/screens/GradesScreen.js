@@ -43,7 +43,7 @@ const GradesScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const apiData = {
-    grade_id: GROUP_DATA?.id,
+    group_id: GROUP_DATA?.id,
   };
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const GradesScreen = ({
                       passedStyle={styles.rightIconStyle}
                     />
                     <Heading
-                      title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                      title={`${GROUP_DATA?.Name} -  ${GROUP_DATA?.Abbr}`}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   headingView: {
     backgroundColor: themeFerozi,
-    borderRadius: width * 0.05,
+    borderRadius: width * 0.1,
     width: width * 0.55,
     marginBottom: height * 0.1,
     alignSelf: 'center',

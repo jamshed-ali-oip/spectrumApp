@@ -11,6 +11,7 @@ import {
   FlatList,
   RefreshControl,
   Platform,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
@@ -37,7 +38,7 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+console.log(ITEM?.Name?.length)
   useEffect(() => {
     getAllGroups();
   }, []);
@@ -118,39 +119,47 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
                 <View style={styles.headingView}>
                   <Heading
                     title={ITEM?.Name}
-                    passedStyle={styles.headingStyles}
+                    passedStyle={[
+                      styles.headingStyles,
+                      // {
+                      //   paddingVertical:
+                      //     ITEM?.Name?.length <= 20 ? height * 0.01 : 0, 
+                      // },
+                    ]}
                     fontType="semi-bold"
                   />
                 </View>
-
-                <View style={styles.filterLabelViewStyle}>
-                  <Heading
-                    title="Run Assessment"
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title={ITEM?.Name}
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Groups"
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                </View>
-
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
+                  <View style={styles.filterLabelViewStyle}>
+                    <Heading
+                      title="Run Assessment"
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title={ITEM?.Name}
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title="Groups"
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                </ScrollView>
                 {/* Colors  */}
                 <ColoredFlatlist />
               </>
@@ -236,6 +245,7 @@ const styles = StyleSheet.create({
   selectFilterTextStyle: {
     fontSize: width * 0.04,
     color: 'white',
+    paddingRight: 20,
   },
   rightIconStyle: {
     color: 'white',
@@ -256,15 +266,16 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    paddingVertical: height * 0.01,
+
     textTransform: 'uppercase',
     textAlign: 'center',
   },
   headingView: {
     backgroundColor: themeFerozi,
-    borderRadius: width * 0.05,
+    borderRadius: width * 0.1,
     width: width * 0.55,
     marginBottom: height * 0.1,
+    paddingVertical:8,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
