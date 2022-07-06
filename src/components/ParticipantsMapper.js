@@ -14,7 +14,7 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
     userReducer?.colors[0]?.id == 1
       ? userReducer?.colors
       : userReducer?.colors.reverse();
-  console.log('Score: ', item?.Score);
+// console.log(item)
   return (
     <View style={styles.container}>
       <View
@@ -25,18 +25,20 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
         }}>
         <Image
           source={{
-            uri: `${imageUrl}/assessment_image/${item?.assessments[0]?.Image}`,
+            uri: `${imageUrl}/assessment_image/${
+              item?.assessments?.length > 0 && item?.assessments[0]?.Image
+            }`,
           }}
           resizeMode="contain"
           style={styles.imageStyles}
         />
         <Heading
           // title={
-          //   item?.assessments[0]?.Name?.length > 11
-          //     ? `${item?.assessments[0]?.Name?.substring(0, 11)}...`
-          //     : item?.assessments[0]?.Name
+          //   item?.assessments?.length > 0 && item?.assessments[0]?.Name?.length > 11
+          //     ? `${item?.assessments?.length > 0 && item?.assessments[0]?.Name?.substring(0, 11)}...`
+          //     : item?.assessments?.length > 0 && item?.assessments[0]?.Name
           // }
-          title={item?.assessments[0]?.Name}
+          title={item?.assessments?.length > 0 && item?.assessments[0]?.Name}
           passedStyle={styles.nameStyle}
           fontType="regular"
         />
@@ -49,31 +51,32 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
       </View>
 
       <View style={styles.colorsViewStyle}>
-        {item?.assessments[0]?.assessment_scoring?.map((ele, index) => {
-          let color_id = ele?.color_id;
-          let minValue = ele?.MinValue;
-          let maxValue = ele?.MaxValue;
-          // console.log(color_id, minValue, maxValue);
-          return (
-            <View
-              key={index}
-              style={{
-                // backgroundColor:'red',
-                // alignSelf:'flex-end',
-                backgroundColor:
-                  parseInt(item?.Score) >= parseInt(minValue) &&
-                  (parseInt(item?.Score) >= parseInt(maxValue) ||
-                    parseInt(item?.Score) <= parseInt(maxValue))
-                    ? userReducer?.colors[color_id]?.WebColor
-                    : 'white',
-                borderRadius: 9,
-                padding: width * 0.02,
-                marginLeft: 3,
-              }}>
-              {/* <Text>{color_id}</Text> */}
-            </View>
-          );
-        })}
+        {item?.assessments?.length > 0 &&
+          item?.assessments[0]?.assessment_scoring?.map((ele, index) => {
+            let color_id = ele?.color_id;
+            let minValue = ele?.MinValue;
+            let maxValue = ele?.MaxValue;
+            // console.log(color_id, minValue, maxValue);
+            return (
+              <View
+                key={index}
+                style={{
+                  // backgroundColor:'red',
+                  // alignSelf:'flex-end',
+                  backgroundColor:
+                    parseInt(item?.Score) >= parseInt(minValue) &&
+                    (parseInt(item?.Score) >= parseInt(maxValue) ||
+                      parseInt(item?.Score) <= parseInt(maxValue))
+                      ? userReducer?.colors[color_id]?.WebColor
+                      : 'white',
+                  borderRadius: 9,
+                  padding: width * 0.02,
+                  marginLeft: 3,
+                }}>
+                {/* <Text>{color_id}</Text> */}
+              </View>
+            );
+          })}
       </View>
     </View>
   );

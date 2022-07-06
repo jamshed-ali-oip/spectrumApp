@@ -12,7 +12,8 @@ import {
   GET_ASSESSMENT_DETAILS,
   GET_FACILIATOR_INSTRUCTIONS,
   GET_FILTERED_PARTICIPANTS,
-  CHECK_GAME,SAVE_SOCKET_REF
+  CHECK_GAME,
+  SAVE_SOCKET_REF,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl} from '../../config';
@@ -36,7 +37,6 @@ export const saveSocketRef = socketRef => dispatch => {
   });
 };
 
-
 export const sendFCMToken = (data, accessToken) => async dispatch => {
   try {
     const URL = `${apiUrl}/get-fcm-token`;
@@ -48,7 +48,7 @@ export const sendFCMToken = (data, accessToken) => async dispatch => {
     };
 
     const response = await axios.post(URL, data, headers);
-    console.log(response.data)
+    console.log(response.data);
   } catch (err) {
     console.log(err?.response?.data?.message);
   }
@@ -62,7 +62,6 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
         type: LOGIN_REQUEST,
         payload: response.data.data,
       });
-      
     } else {
       onLoginFailed();
       showMessage({
@@ -100,7 +99,10 @@ export const getAssessments = accessToken => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }
@@ -136,7 +138,10 @@ export const getGroups = accessToken => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }
@@ -373,7 +378,10 @@ export const getParticipants = accessToken => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }
@@ -414,7 +422,10 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }
@@ -488,7 +499,10 @@ export const getAssessmentDetails = (id, accessToken) => async dispatch => {
       });
       showMessage({
         message:
-          response.data.message || response.data.msg || 'Something went wrong',
+          response?.data.data?.error ||
+          response.data.message ||
+          response.data.msg ||
+          'Something went wrong',
         type: 'danger',
       });
     }

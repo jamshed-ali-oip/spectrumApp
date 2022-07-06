@@ -27,7 +27,7 @@ import messaging from '@react-native-firebase/messaging';
 const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
   const accessToken = userReducer?.accessToken;
   useEffect(() => {
-    sendFCM();
+    // sendFCM();
   }, []);
 
   const sendFCM = () => {

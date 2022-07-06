@@ -25,7 +25,7 @@ import {
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const {width, height} = Dimensions.get('window');
 
@@ -88,7 +88,7 @@ const GradingSystem = ({
       assessment_score_id: color_id,
       participant_id: CHILD_DATA?.id,
       Score: score,
-      grade_id: CHILD_DATA?.grades?.id,
+      grade_id: CHILD_DATA?.id,
       assessment_id: ITEM?.id,
       Beep: null,
       group_id: GROUP_DATA?.id,
@@ -141,7 +141,7 @@ const GradingSystem = ({
         ) : (
           <ScrollView showsVerticalScrollIndicator={false}>
             <Heading
-               title={ITEM?.Name}
+              title={ITEM?.Name}
               passedStyle={styles.headingStyles}
               fontType="semi-bold"
             />
@@ -291,6 +291,7 @@ const GradingSystem = ({
                   />
                 </TouchableOpacity>
               }
+               <View style={{paddingBottom: 150}} />
             </View>
           </ScrollView>
         )}
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
     width: width * 0.41,
   },
   headingStyles: {
-    width: width * 0.6,
+    maxWidth: width * 0.9,
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
@@ -356,10 +357,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    textTransform: 'uppercase',
     textAlign: 'center',
     marginTop: height * 0.02,
     marginBottom: height * 0.03,
+    paddingHorizontal:width * 0.05,
   },
+
   headingStyles2: {
     color: 'white',
     textAlign: 'center',

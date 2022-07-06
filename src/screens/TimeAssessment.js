@@ -31,7 +31,7 @@ import {connect} from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 const {width, height} = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -550,8 +550,6 @@ const TimeAssessment = ({
                     return;
                   }
                   setScore(text);
-
-
                 }}
               />
             )}
@@ -567,7 +565,7 @@ const TimeAssessment = ({
                 />
               </TouchableOpacity>
             )}
-            <View style={{paddingBottom: 50}} />
+            <View style={{paddingBottom: 150}} />
           </ScrollView>
         )}
       </ImageBackground>
@@ -668,18 +666,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'blue',
   },
+
   headingStyles: {
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    paddingVertical: height * 0.01,
+    // paddingVertical: height * 0.01,
     textTransform: 'uppercase',
     textAlign: 'center',
   },
   headingView: {
     backgroundColor: themeFerozi,
     borderRadius: width * 0.05,
-    width: width * 0.55,
+    // width: width * 0.55,
+    maxWidth: width * 0.95,
+    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.01,
     marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',

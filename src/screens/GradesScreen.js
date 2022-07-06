@@ -291,14 +291,18 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    paddingVertical: height * 0.01,
+
     textTransform: 'uppercase',
     textAlign: 'center',
+    
   },
   headingView: {
     backgroundColor: themeFerozi,
     borderRadius: width * 0.1,
-    width: width * 0.55,
+    paddingHorizontal:width * 0.05,
+    maxWidth: width * 0.95,
+    // width: width * 0.55,
+    paddingVertical:8,
     marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',

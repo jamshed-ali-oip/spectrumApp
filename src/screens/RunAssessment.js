@@ -6,6 +6,7 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import React from 'react';
 import Button from '../components/Button';
@@ -54,22 +55,33 @@ const RunAssessment = ({navigation, route}) => {
         </View>
 
         {/* Participants Head View  */}
-        <View style={styles.participantsViewStyle}>
-          <Heading
-            title="Run Assessment"
-            passedStyle={styles.participantsLabelStyle}
-            fontType="regular"
-          />
-          <IconComp
-            iconName={'chevron-right'}
-            type="Feather"
-            passedStyle={styles.iconStyle}
-          />
-          <Heading
-            title={ITEM.Name}
-            passedStyle={styles.participantsLabelStyle}
-            fontType="semi-bold"
-          />
+        {/* <ScrollView>
+          
+        </ScrollView> */}
+        <View
+          style={{
+            marginVertical: 10,
+            // marginLeft: width * 0.05,
+          }}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View style={styles.participantsViewStyle}>
+              <Heading
+                title="Run Assessment"
+                passedStyle={styles.participantsLabelStyle}
+                fontType="regular"
+              />
+              <IconComp
+                iconName={'chevron-right'}
+                type="Feather"
+                passedStyle={styles.iconStyle}
+              />
+              <Heading
+                title={ITEM.Name}
+                passedStyle={styles.participantsLabelStyle}
+                fontType="semi-bold"
+              />
+            </View>
+          </ScrollView>
         </View>
 
         {/* Colors  */}
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: width * 0.05,
+    paddingLeft: width * 0.05,
   },
   participantsLabelStyle: {
     fontSize: width * 0.04,

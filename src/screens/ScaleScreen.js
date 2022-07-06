@@ -137,11 +137,12 @@ const ScaleScreen = ({
         assessment_score_id: color_id,
         participant_id: CHILD_DATA?.id,
         Score: score,
-        grade_id: CHILD_DATA?.grades?.id,
+        grade_id: CHILD_DATA?.id,
         assessment_id: ITEM?.id,
         group_id: GROUP_DATA?.id,
         Distance: null,
       };
+
       setIsLoading(true);
       console.log(JSON.stringify(apiData, null, 2));
       await submitResult(apiData, accessToken, onSuccess);
@@ -185,7 +186,7 @@ const ScaleScreen = ({
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
               <Heading
-              title={`${GROUP_DATA?.Name}`}
+                title={`${GROUP_DATA?.Name}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
@@ -193,7 +194,7 @@ const ScaleScreen = ({
             {/* Child Name  */}
             <View style={styles.headingStyle2View}>
               <Heading
-              title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
+                title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
@@ -503,6 +504,7 @@ const ScaleScreen = ({
                     />
                   </TouchableOpacity>
                 }
+                 <View style={{paddingBottom: 150}} />
               </View>
             </View>
           </ScrollView>
@@ -569,14 +571,17 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    paddingVertical: height * 0.01,
+    // paddingVertical: height * 0.01,
     textTransform: 'uppercase',
     textAlign: 'center',
   },
   headingView: {
     backgroundColor: themeFerozi,
     borderRadius: width * 0.05,
-    width: width * 0.55,
+    // width: width * 0.55,
+    maxWidth: width * 0.95,
+    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.01,
     marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',

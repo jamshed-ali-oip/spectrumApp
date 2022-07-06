@@ -14,6 +14,9 @@ import {
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import Heading from '../components/Heading';
+import Echo from 'laravel-echo';
+import * as Ably from 'ably';
+// import Pusher from 'pusher-js';
 import LottieView from 'lottie-react-native';
 import {
   themeBlue,
@@ -42,11 +45,11 @@ const ViewParticipants = ({
   const [pastAssessments, setPastAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [record, setRecord] = useState(null);
   const apiData = {
     id: DATA?.id,
   };
   const socketRef = userReducer?.socket;
-console.log(socketRef)
   useEffect(() => {
     // socketRef.emit('addUser', userId);
 
@@ -55,7 +58,7 @@ console.log(socketRef)
     // });
     getDetail();
   }, []);
-
+  // console.log(DATA)
   useEffect(() => {
     setPastAssessments(userReducer?.pastAssessment);
   }, [userReducer?.pastAssessment]);
@@ -79,6 +82,93 @@ console.log(socketRef)
     });
   }, []);
 
+  // useEffect(() => {
+  //   // 2
+  //   // Axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
+  //   // 3
+  //   const echo = new Echo({
+  //     broadcaster: 'ably',
+  //     key: 'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
+  //     wsHost: 'realtime-pusher.ably.io',
+  //     wsPort: 443,
+  //     disableStats: true,
+  //     enÇcrypted: true,
+  //   });
+  //   // 4
+  //   echo
+  //     .channel('public.room')
+  //     .subscribed(() => {
+  //       console.log('You are subscribed');
+  //     })
+  //     // 5
+  //     // .listen('.message.new', data => {
+  //     //   console.log(data,"...///")
+  //     // });
+  // }, []);
+  useEffect(() => {
+    var ably = new Ably.Realtime(
+      'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
+    );
+    ably.connection.on('connected', function () {
+      // alert('Connected, that was easy');
+    });
+    var channel = ably.channels.get('test');
+    // console.log(channel,)
+    channel.subscribe(function (message) {
+      let NewRecord = JSON.parse(message.data);
+      setRecord(NewRecord);
+    });
+  }, []);
+
+  const appendRecordToArray = data => {
+    // if (DATA?.id == data?.participant_id) {
+    const DATAA = JSON.parse(data);
+    // console.log(DATAA,'DATAAA')
+    const created_at = JSON.parse(DATAA?.created_at);
+    const assessments = [...JSON.parse(DATAA?.assessments)];
+    const assessCopy = [
+      ...JSON.parse({
+        created_at: created_at,
+        // assessments: assessments?.map(ele => {
+        //   let id = JSON.parse(ele?.id);
+        //   let Name = JSON.parse(ele?.Name);
+        //   let Abbr = JSON.parse(ele?.Abbr);
+        //   let Image = JSON.parse(ele?.Image);
+        //   return {
+        //     id: id,
+        //     Name: Name,
+        //     Abbr: Abbr,
+        //     Image: Image,
+        //     assessment_scoring: [...JSON.parse(ele?.assessment_scoring)]?.map(
+        //       el => {
+        //         return {
+        //           id: JSON.parse(el?.id),
+        //           assessment_id: JSON.parse(el?.assessment_id),
+        //           color_id: JSON.parse(el?.color_id),
+        //           MinValue: JSON.parse(el?.MinValue),
+        //           MaxValue: JSON.parse(el?.MaxValue),
+        //         };
+        //       },
+        //     ),
+        //   };
+        // }),
+      }),
+      ...pastAssessments,
+    ];
+    console.log(assessments, '======');
+    // setPastAssessments(assessCopy);
+    // }
+  };
+
+  useEffect(() => {
+    if (record !== null) {
+      const assessCopy = [record, ...pastAssessments];
+      // console.log(userReducer?.pastAssessment);
+      console.log(JSON.stringify(assessCopy?.length, null, 2), ' length');
+      setPastAssessments(assessCopy);
+      setRecord(null);
+    }
+  }, [record]);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />

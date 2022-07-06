@@ -273,7 +273,8 @@ const styles = StyleSheet.create({
   headingView: {
     backgroundColor: themeFerozi,
     borderRadius: width * 0.1,
-    width: width * 0.55,
+    maxWidth: width * 0.95,
+    paddingHorizontal:width * 0.05,
     marginBottom: height * 0.1,
     paddingVertical:8,
     alignSelf: 'center',
