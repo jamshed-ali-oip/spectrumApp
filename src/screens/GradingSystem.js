@@ -12,6 +12,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+
 import React, {useState, useEffect} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
@@ -22,10 +23,13 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
+import {Svg, Polygon, Rect, Styles, G, Path} from 'react-native-svg';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import {connect} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
+import {Shadow} from 'react-native-shadow-2';
+import OctIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const {width, height} = Dimensions.get('window');
 
@@ -44,12 +48,18 @@ const GradingSystem = ({
   const CHILD_DATA = route.params.childData;
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
-  const [score, setScore] = useState('0');
+  const [score, setScore] = useState('');
   const [ranges, setRanges] = useState([]);
+  const [Resultvalue,setResultvalue]=useState([]);
+  // const [Res, setRes] = useState(Res);
   const [resultColor, setResultColor] = useState(
     colors[0]?.WebColor || 'black',
   );
-
+//  useEffect(() => {
+//     setRes(ranges[0]?.MaxValue);
+//   }, []);
+const Resulting =userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue
+console.log("Areaaa",Resulting)
   useEffect(() => {
     findResult();
   }, [score]);
@@ -70,6 +80,7 @@ const GradingSystem = ({
     setColors(userReducer?.colors);
   }, [userReducer?.colors]);
 
+ 
   useEffect(() => {
     setRanges(userReducer?.assessmentDetails?.assessment_scoring);
   }, [userReducer?.assessmentDetails]);
@@ -85,11 +96,11 @@ const GradingSystem = ({
       }
     }
     const apiData = {
-      assessment_score_id: color_id,
+      assessment_score_id: Resultvalue.id,
       participant_id: CHILD_DATA?.id,
-      Score: score,
+      Score: Resultvalue.MaxValue,
       grade_id: CHILD_DATA?.id,
-      assessment_id: ITEM?.id,
+      assessment_id: Resultvalue.assessment_id,
       Beep: null,
       group_id: GROUP_DATA?.id,
     };
@@ -102,28 +113,45 @@ const GradingSystem = ({
   const onSuccess = () => {
     navigation.navigate('home');
   };
+  // var RangeValue = parseInt(ranges[0]?.MaxValue);
+
+  // console.log("first",ranges[0].MaxValue)
 
   const findResult = () => {
     if (score > parseInt(ranges[0]?.MaxValue)) {
       setResultColor(colors[0]?.WebColor);
     } else if (score > parseInt(ranges[1]?.MaxValue)) {
-      setResultColor(colors[0]?.WebColor);
-    } else if (score > parseInt(ranges[2]?.MaxValue)) {
-      setResultColor(colors[1]?.WebColor);
-    } else if (score > parseInt(ranges[3]?.MaxValue)) {
-      setResultColor(colors[2]?.WebColor);
-    } else if (score > parseInt(ranges[4]?.MaxValue)) {
-      setResultColor(colors[3]?.WebColor);
-    } else if (score > parseInt(ranges[5]?.MaxValue)) {
-      setResultColor(colors[4]?.WebColor);
-    } else if (score > parseInt(ranges[6]?.MaxValue)) {
-      setResultColor(colors[5]?.WebColor);
-    } else if (score > parseInt(ranges[7]?.MaxValue)) {
-      setResultColor(colors[6]?.WebColor);
-    } else {
       setResultColor(colors[7]?.WebColor);
+    } else if (score > parseInt(ranges[2]?.MaxValue)) {
+      setResultColor(colors[6]?.WebColor);
+    } else if (score > parseInt(ranges[3]?.MaxValue)) {
+      setResultColor(colors[5]?.WebColor);
+    } else if (score > parseInt(ranges[4]?.MaxValue)) {
+      setResultColor(colors[4]?.WebColor);
+    } else if (score > parseInt(ranges[5]?.MaxValue)) {
+      setResultColor(colors[3]?.WebColor);
+    } else if (score > parseInt(ranges[6]?.MaxValue)) {
+      setResultColor(colors[2]?.WebColor);
+    } else if (score > parseInt(ranges[7]?.MaxValue)) {
+      setResultColor(colors[1]?.WebColor);
+    } else {
+      setResultColor(colors[0]?.WebColor);
     }
   };
+  const RenderimageDAta = ({item}) => (
+    <TouchableOpacity onPress={()=>{setResultvalue(item)}} style={{width:100,flexDirection:"row"}}>
+      <Image
+       style={{height: 70, width: 70}}
+       source={{
+         uri:
+           item.image=== null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png":`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+       }}
+     />
+     {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
+       {item.image == null?"":item.MaxValue}
+     </Text> */}
+    </TouchableOpacity>
+   );
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -146,11 +174,11 @@ const GradingSystem = ({
               fontType="semi-bold"
             />
 
-            <Image
+            {/* <Image
               resizeMode="contain"
               source={require('../assets/images/logo.png')}
               style={styles.bgimage}
-            />
+            /> */}
 
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
@@ -168,108 +196,41 @@ const GradingSystem = ({
                 fontType="regular"
               />
             </View>
+            
 
-            <View style={styles.gradeContainer}>
-              <Image
-                source={require('../assets/images/black.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[0]?.WebColor || 'black'},
-                ]}
-                resizeMode={'contain'}
+            <FlatList
+              style={{marginLeft:20}}
+                data={ranges}
+                renderItem={RenderimageDAta}
+                keyExtractor={item => item.id}
+                numColumns={4}
               />
-
+               <View>
               <Image
-                source={require('../assets/images/red.png')}
+                source={ Resultvalue?.image ? {uri:`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${Resultvalue.image}`} : require('../assets/images/black.png' )}
                 style={[
-                  styles.gradeimage,
-                  {tintColor: colors[1]?.WebColor || 'red'},
+                  styles.taskimage,
+                
                 ]}
-                resizeMode={'contain'}
               />
-              <Image
-                source={require('../assets/images/yellow.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[2]?.WebColor || 'orange'},
-                ]}
-                resizeMode={'contain'}
-              />
-              <Image
-                source={require('../assets/images/pink.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[3]?.WebColor || 'yellow'},
-                ]}
-                resizeMode={'contain'}
-              />
-              <Image
-                source={require('../assets/images/lightblue.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[4]?.WebColor || 'lightgreen'},
-                ]}
-                resizeMode={'contain'}
-              />
-              <Image
-                source={require('../assets/images/orange.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[5]?.WebColor || 'darkgreen'},
-                ]}
-                resizeMode={'contain'}
-              />
-              <Image
-                source={require('../assets/images/darkblue.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[6]?.WebColor || 'blue'},
-                ]}
-                resizeMode={'contain'}
-              />
-              <Image
-                source={require('../assets/images/purple.png')}
-                style={[
-                  styles.gradeimage,
-                  {tintColor: colors[7]?.WebColor || 'purple'},
-                ]}
-                resizeMode={'contain'}
-              />
-            </View>
-
-            <Image
-              source={require('../assets/images/yellow.png')}
-              style={[
-                styles.gradeimage,
-                {
-                  tintColor: resultColor || 'grey',
-                  marginLeft: width * 0.08,
-                  height: height * 0.1,
-                  width: width * 0.25,
-                },
-              ]}
-            />
-            {/* <TouchableOpacity
-            onPress={() => {
-              _onPressSave();
-            }}
-            style={styles.savebtn}>
-            <Text style={styles.saveText}>Save</Text>
-          </TouchableOpacity> */}
+              {/* <Text style={{position:"absolute",marginLeft:65,color:"white",marginTop:50}}>
+                {Resultvalue.MaxValue}
+              </Text> */}
+              </View>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingBottom: height * 0.1,
               }}>
-              <TextInput
+              {/* <TextInput
                 value={score}
                 keyboardType="numeric"
-                placeholder={'Enter Score 0-80'}
+                placeholder={`Enter Score 0-${Resulting} `}
                 placeholderTextColor={'grey'}
                 style={styles.scoreFieldStyle}
                 onChangeText={text => {
-                  if (parseInt(text) > 80) {
+                  if (parseInt(text) > parseInt(Resulting)) {
                     showMessage({
                       type: 'danger',
                       message: 'Score is exceeding the scale values.',
@@ -278,7 +239,7 @@ const GradingSystem = ({
                   }
                   setScore(text);
                 }}
-              />
+              /> */}
 
               {
                 <TouchableOpacity
@@ -291,7 +252,7 @@ const GradingSystem = ({
                   />
                 </TouchableOpacity>
               }
-               <View style={{paddingBottom: 150}} />
+              <View style={{paddingBottom: 150}} />
             </View>
           </ScrollView>
         )}
@@ -338,6 +299,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     borderRadius: width * 0.1,
     fontSize: width * 0.047,
+    // textAlign:"center"
   },
   btnStyle: {
     height: height * 0.06,
@@ -361,7 +323,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: height * 0.02,
     marginBottom: height * 0.03,
-    paddingHorizontal:width * 0.05,
+    paddingHorizontal: width * 0.05,
   },
 
   headingStyles2: {
@@ -422,10 +384,12 @@ const styles = StyleSheet.create({
   },
   gradeimage: {
     marginBottom: height * 0.02,
-    width: width * 0.07,
-    height: height * 0.07,
+    // width: width * 0.07,
+    // height: height * 0.07,
     // alignSelf: 'center',
-    paddingHorizontal: 40,
+    paddingHorizontal: 5,
+    // borderWidth: 1,
+    // borderColor: 'white',
   },
   taskimage: {
     height: height * 0.12,

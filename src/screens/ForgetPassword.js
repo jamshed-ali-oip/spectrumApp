@@ -73,7 +73,7 @@ const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={{paddingBottom: height * 0.3}}>
-              <Image
+              {/* <Image
                 source={require('../assets/images/new-logo.png')}
                 style={{
                   marginTop: height * 0.15,
@@ -83,7 +83,7 @@ const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
                   alignSelf: 'center',
                 }}
                 resizeMode="contain"
-              />
+              /> */}
               <TextInput
                 placeholder="Email Address"
                 placeholderTextColor="#565B66"

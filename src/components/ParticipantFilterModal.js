@@ -22,7 +22,8 @@ import {
 import IconComp from './IconComp';
 import {useEffect} from 'react';
 import {connect} from 'react-redux';
-
+import axios from 'axios';
+import { baseUrl } from '../config';
 const {width, height} = Dimensions.get('window');
 
 const ParticipantFilterModal = ({
@@ -34,8 +35,10 @@ const ParticipantFilterModal = ({
   userReducer,
 }) => {
   const [age, setAge] = useState(7);
-  const [grade, setGrade] = useState(null);
+  const [grade, setGrade] = useState()
+  const [gradeCounter, setGradeCounter] = useState()
   const [counter, setCounter] = useState(0);
+  const [gradeData, setGradeData] = useState();
   const [selectedGenders, setSelectedGenders] = useState([
     {id: 1, gender: 'Boys'},
   ]);
@@ -62,10 +65,42 @@ const ParticipantFilterModal = ({
     setSelectedGenders(copyArr);
   };
   useEffect(() => {
-    if (userReducer?.groups?.length > 0) {
-      setGrade(userReducer?.groups[counter]);
-    }
-  }, [counter]);
+    fetchCall();
+    console.log(userReducer?.groups[counter])
+      if (userReducer?.groups?.length > 0) {
+       
+        setGrade(userReducer?.groups[counter]);
+      }
+  },[counter]);
+  const fetchCall = async ()=>{
+    const URL = `${baseUrl}/api/grade`;
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer 22|lNXltijPdHHOyVPYSxlmgiym5OLPjenZOFZcRYhO`,
+      },
+    };
+
+    const response = await axios.get(URL, headers);
+    console.log(response)
+    setGradeCounter(response.data.data)
+  }
+  const gradeHandler = (param)=>{
+    if (param == "decrease")
+      if(age > 1){
+        setAge(age - 1);
+        console.log(gradeCounter.find(o => o.id === age-1));
+        setGradeData(gradeCounter.find(o => o.id === age-1))
+      }
+      // else if(param == "increase") {
+      //   console.log("increse")
+      //   if(age < 8){
+      //     setAge(age + 1);
+      //     console.log(age)
+      //     console.log(grade.find(o => o.id === age));
+      //   }
+      // }
+  }
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
@@ -134,16 +169,17 @@ const ParticipantFilterModal = ({
             <View style={styles.filterContainer}>
               <Heading
                 passedStyle={styles.label}
-                title={'Age'}
+                title={'Grade'}
                 fontType="medium"
               />
 
               <View style={styles.rowView}>
                 <TouchableOpacity
                   onPress={() => {
-                    if (age > 1) {
-                      setAge(age - 1);
-                    }
+                    
+                      gradeHandler('decrease')
+                      
+                    
                   }}>
                   <IconComp
                     type={'Feather'}
@@ -159,8 +195,11 @@ const ParticipantFilterModal = ({
 
                 <TouchableOpacity
                   onPress={() => {
-                    if (age < 20) {
+                    if(age < 8){
                       setAge(age + 1);
+                      console.log(age)
+                      console.log(gradeCounter.find(o => o.id === age+1));
+                      setGradeCounter(gradeCounter.find(o => o.id === age+1))
                     }
                   }}>
                   <IconComp
@@ -238,7 +277,7 @@ const ParticipantFilterModal = ({
                   onBtnPress={() => {
                     if (onPress) {
                       onPress({
-                        age: age,
+                        grade: gradeData?.Name,
                         gender: selectedGenders,
                         group_id: grade?.id,
                       });

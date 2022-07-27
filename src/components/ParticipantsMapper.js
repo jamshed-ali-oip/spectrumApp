@@ -33,12 +33,12 @@ const ParticipantsMapper = ({item, index, userReducer}) => {
           style={styles.imageStyles}
         />
         <Heading
-          // title={
-          //   item?.assessments?.length > 0 && item?.assessments[0]?.Name?.length > 11
-          //     ? `${item?.assessments?.length > 0 && item?.assessments[0]?.Name?.substring(0, 11)}...`
-          //     : item?.assessments?.length > 0 && item?.assessments[0]?.Name
-          // }
-          title={item?.assessments?.length > 0 && item?.assessments[0]?.Name}
+          title={
+            item?.assessments?.length > 0 && item?.assessments[0]?.Name?.length > 20
+              ? `${item?.assessments?.length > 0 && item?.assessments[0]?.Name?.substring(0, 20)}...`
+              : item?.assessments?.length > 0 && item?.assessments[0]?.Name
+          }
+          // title={item?.assessments?.length > 0 && item?.assessments[0]?.Name}
           passedStyle={styles.nameStyle}
           fontType="regular"
         />

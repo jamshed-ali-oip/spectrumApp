@@ -12,6 +12,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
+import Sound from 'react-native-sound';
 import {
   themeDarkBlue,
   themeFerozi,
@@ -29,6 +30,10 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
   useEffect(() => {
     // sendFCM();
   }, []);
+  const sound = new Sound('beep.mp3');
+  const playSound = () => {
+    sound.play()
+ }
 
   const sendFCM = () => {
     messaging()
@@ -70,15 +75,17 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
           isBgColor={false}
         />
 
-        <Button
+        {/* <Button
           title={'RUN AN ASSESSMENT'}
           btnStyle={styles.runAssessmentStyle}
           onBtnPress={() => {
+            playSound()
             // navigation.navigate('runAssessment');
+
           }}
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
-        />
+        /> */}
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={logoutRequest}

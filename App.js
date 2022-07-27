@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet,View} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import MainNavigator from './src/MainNavigator';
@@ -26,16 +26,16 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <MainNavigator />
-        <FlashMessage
-          position="top"
-          statusBarHeight="10"
-          style={styles.flashMessage}
-        />
-      </PersistGate>
-    </Provider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <MainNavigator />
+          <FlashMessage
+            position="top"
+            statusBarHeight="10"
+            style={styles.flashMessage}
+          />
+        </PersistGate>
+      </Provider>
   );
 };
 

@@ -165,7 +165,7 @@ const ViewParticipants = ({
       const assessCopy = [record, ...pastAssessments];
       // console.log(userReducer?.pastAssessment);
       console.log(JSON.stringify(assessCopy?.length, null, 2), ' length');
-      setPastAssessments(assessCopy);
+      setPastAssessmenkts(assessCopy);
       setRecord(null);
     }
   }, [record]);

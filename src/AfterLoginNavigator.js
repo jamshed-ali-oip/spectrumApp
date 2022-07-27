@@ -45,7 +45,11 @@ const requestUserPermission = async () => {
     console.log('FCM Authorization:', authStatus);
   }
 };
-
+const forFade = ({ current, closing }) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
 const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
   const socket = useRef();
   useEffect(() => {
@@ -114,7 +118,8 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
       initialRouteName="home">
       <AfterLoginStack.Screen
         name="home"
-        options={{headerShown: false}}
+        options={{headerShown: false,cardStyleInterpolator:forFade,}}
+        
         component={HomeScreen}
       />
 
@@ -122,6 +127,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="participants"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -164,6 +170,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="viewParticipants"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -206,6 +213,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="assessments"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -248,6 +256,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="runAssessment"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -290,6 +299,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="groups"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -332,6 +342,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="grades"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -374,6 +385,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="timeAssessment"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -431,6 +443,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="gradingScreen"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -474,6 +487,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="scaleScreen"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,
@@ -517,6 +531,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         name="faciliator"
         options={({route, navigation}) => ({
           headerShown: true,
+          cardStyleInterpolator:forFade,
           headerStyle: {
             height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
             borderColor: themeDarkBlue,

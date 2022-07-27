@@ -9,6 +9,7 @@ import {
   ScrollView,
   Platform,
   RefreshControl,
+  Text,
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
@@ -25,6 +26,7 @@ import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
+import ParticipantFilterModal from '../components/ParticipantFilterModal';
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,6 +36,7 @@ const GradesScreen = ({
   getGroupMembers,
   userReducer,
   getColors,
+  getFilteredParticipants,
 }) => {
   const ITEM = route.params.item;
   const GROUP_DATA = route.params.groupData;
@@ -42,6 +45,8 @@ const GradesScreen = ({
   const [groupMembers, setGroupMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedGender, setSelectedGender] = useState('Boys');
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
@@ -49,6 +54,8 @@ const GradesScreen = ({
   useEffect(() => {
     getAllGroupsMembers();
   }, []);
+
+
 
   useEffect(() => {
     setGroupMembers(userReducer?.groupMembers);
@@ -63,6 +70,35 @@ const GradesScreen = ({
 
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+  const filterParticipants = async data => {
+
+    // setSelectedGender()
+    if (data?.gender.length > 1) {
+      setSelectedGender('Boys-Girls');
+    } else {
+      setSelectedGender(data?.gender[0].gender);
+    }
+
+    const apiData = {
+      age: data?.age,
+      gender: data?.gender?.map(ele => {
+        if (ele?.id === 1) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }),
+      group_id: data?.group_id,
+    };
+    // console.log(apiData);
+    setIsLoading(true);
+    await getFilteredParticipants(apiData, accessToken, onSuccess);
+    setIsLoading(false);
+  };
+
+  const onSuccess = () => {
+    setShowFilterModal(false);
   };
 
   const onRefresh = useCallback(() => {
@@ -127,6 +163,30 @@ const GradesScreen = ({
                     fontType="semi-bold"
                   />
                 </View>
+                {/* <TouchableOpacity
+                  style={{backgroundColor: 'red'}}
+                  onPress={() => {
+                    setShowFilterModal(true)
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginLeft: 20,
+                      
+                    }}>
+                    <Heading
+                      title="Filter Gender"
+                      passedStyle={styles.filterLabelStyles}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                  </View>
+                </TouchableOpacity> */}
 
                 <ScrollView
                   horizontal={true}
@@ -164,7 +224,7 @@ const GradesScreen = ({
                       passedStyle={styles.rightIconStyle}
                     />
                     <Heading
-                      title={`${GROUP_DATA?.Name} -  ${GROUP_DATA?.Abbr}`}
+                      title={`${GROUP_DATA?.Name} - ${selectedGender}`}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -229,6 +289,12 @@ const GradesScreen = ({
             }}
           />
         )}
+        <ParticipantFilterModal
+          isModalVisible={showFilterModal}
+          setIsModalVisible={setShowFilterModal}
+          onPress={filterParticipants}
+          showLoader={isLoading}
+        />
       </ImageBackground>
     </>
   );
@@ -287,6 +353,12 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04,
     color: 'white',
   },
+
+  filterLabelStyles: {
+    fontSize: width * 0.04,
+    color: 'white',
+    // fontWeight:"700"
+  },
   headingStyles: {
     color: 'white',
     backgroundColor: themeFerozi,
@@ -294,15 +366,14 @@ const styles = StyleSheet.create({
 
     textTransform: 'uppercase',
     textAlign: 'center',
-    
   },
   headingView: {
     backgroundColor: themeFerozi,
     borderRadius: width * 0.1,
-    paddingHorizontal:width * 0.05,
+    paddingHorizontal: width * 0.05,
     maxWidth: width * 0.95,
     // width: width * 0.55,
-    paddingVertical:8,
+    paddingVertical: 8,
     marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',

@@ -10,7 +10,6 @@ import {
   ScrollView,
   StatusBar,
   Platform,
-  Button,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import RNSpeedometer from 'react-native-speedometer';
@@ -33,8 +32,6 @@ import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
 import {showMessage} from 'react-native-flash-message';
-import RNBeep from 'react-native-a-beep';
-import Sound from 'react-native-sound';
 const {width, height} = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -46,9 +43,7 @@ const TimeAssessment = ({
   getGameInfo,
   checkGame,
 }) => {
-
   const ITEM = route.params.item;
-  console.log("Mydata",ITEM.id)
   const CHILD_DATA = route.params.childData;
   const GROUP_DATA = route.params.groupData;
   const [hasTimerStarted, setHasTimerStarted] = useState(false);
@@ -65,14 +60,12 @@ const TimeAssessment = ({
     winnerIndex: null,
     started: false,
   });
- 
-const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id);
+
   // console.log(JSON.stringify(CHILD_DATA,null,2))
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
-  
   const apiData = {
     assessment_score_id: assessmentScoreid,
     participant_id: CHILD_DATA?.id,
@@ -139,9 +132,8 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
   };
   console.log(
     'colors',
-    Value[7]?.MaxValue
-    // colors[0],
-    // userReducer?.gameInfo?.filter(game => game.assessment_id == 8)
+    colors[0]
+    // userReducer?.gameInfo?.filter(game => game.assessment_id == 8),
   );
   useEffect(() => {
     // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
@@ -223,26 +215,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
   const onSuccess = () => {
     navigation.navigate('home');
   };
-  console.log("faizan", Value[0]?.assessment_id,Value)
-  const meterController = (text) => {
-    if(text > parseInt(Value[0]?.MinValue) && text <= parseInt(Value[0]?.MaxValue)){
-      setMeterValue(100);
-    }else if(text >= parseInt(Value[1]?.MinValue) && text <= parseInt(Value[1]?.MaxValue)){
-      setMeterValue(200);
-    }else if(text >= parseInt(Value[2]?.MinValue) && text <= parseInt(Value[2]?.MaxValue)){
-      setMeterValue(300);
-    }else if(text >= parseInt(Value[3]?.MinValue) && text <= parseInt(Value[3]?.MaxValue)){
-      setMeterValue(400);
-    }else if(text >= parseInt(Value[4]?.MinValue) && text <= parseInt(Value[4]?.MaxValue)){
-      setMeterValue(500);
-    }else if(text >= parseInt(Value[5]?.MinValue) && text <= parseInt(Value[5]?.MaxValue)){
-      setMeterValue(600);
-    }else if(text >= parseInt(Value[6]?.MinValue) && text <= parseInt(Value[6]?.MaxValue)){
-      setMeterValue(700);
-    }else if(text >= parseInt(Value[7]?.MinValue) && text <= parseInt(Value[7]?.MaxValue)){
-      setMeterValue(800);
-    }
-  }
+
   // const toggleTimer = () => {
   //   setTimer(prev => {
   //     return {
@@ -287,30 +260,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
     setSecs(currentTime.substring(6, 8));
   };
   // console.log(GROUP_DATA?.Name);
-  
-  const playSound = () => {
-    // const sound = new Sound('beep.mp3');
-    // alert("call")
-    var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
-      if (error) {
-        console.log('failed to load the sound', error);
-        return;
-      }
-      // loaded successfully
-      console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-    
-      // Play the sound with an onEnd callback
-      whoosh.play((success) => {
-        if (success) {
-          console.log('successfully finished playing');
-        } else {
-          console.log('playback failed due to audio decoding errors');
-        }
-      });
-    });
- }
   return (
-    
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
@@ -371,15 +321,12 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                       onPress={() => {
                         if (!hasTimerStarted) {
                           // timerRef.current.start();
-                         
                           checkGame(true);
                           toggleStopwatch();
                           setHasTimerStarted(true);
                           setSecs(0);
                           setMeterValue(0);
-                          playSound();
                           setShowTextField(false);
-                          
                         }
                       }}
                       style={styles.startBtnContainer}>
@@ -413,14 +360,11 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                   <TouchableOpacity
                     onPress={() => {
                       // timerRef.current.pause();
-                      playSound()
                       checkGame(false);
                       toggleStopwatch();
                       setHasTimerStarted(false);
                       findScoreNow();
                       setShowTextField(true);
-                      
-                      
                     }}
                     style={styles.stopBtnStyle}>
                     <Heading
@@ -472,13 +416,10 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
               </View>
 
               {/* Game Meter  */}
-         
-              {/* <Button title='sound' onPress={()=>{playSound()}} /> */}
               <RNSpeedometer
                 wrapperStyle={{marginRight: width * 0.05}}
                 value={parseInt(meterValue)}
-                minValue={100}
-                maxValue={800}
+                minValue
                 size={200}
                 labelStyle={{color: 'transparent'}}
                 labelNoteStyle={{color: 'transparent'}}
@@ -614,17 +555,16 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                 // value={parseInt(score)}
                 keyboardType="numeric"
                 textContentType="numeric"
-                placeholder={`Enter Score 1- ${Value[7]?.MaxValue}`}
+                placeholder={'Enter Score 0-100'}
                 placeholderTextColor={'grey'}
                 style={styles.scoreFieldStyle}
                 onChangeText={text => {
                   // if (parseInt(text) <= 100) {
                   setScore(text);
-                  meterController(text);
-                  // setMeterValue(text == 110 ? 200 : 100);
+                  setMeterValue(text);
                   // }
 
-                  if (parseInt(text) > Value[7]?.MaxValue) {
+                  if (parseInt(text) > userReducer?.gameInfo[8]?.MaxValue) {
                     showMessage({
                       type: 'danger',
                       message: 'Score is exceeding the meter values.',

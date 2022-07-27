@@ -44,6 +44,7 @@ const ParticipantsScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedGender, setSelectedGender] = useState("Boys");
 
   useEffect(() => {
     getAllParticipants();
@@ -73,6 +74,15 @@ const ParticipantsScreen = ({
   }, []);
 
   const filterParticipants = async data => {
+    // setSelectedGender()
+    if (data?.gender.length > 1) {
+      setSelectedGender("Boys-Girls")
+    } else {
+      setSelectedGender(data?.gender[0].gender)
+    }
+    // alert(JSON.stringify(data?.gender[0].gender));
+    // data?.gender?.map((gender) => {
+    // })
     const apiData = {
       age: data?.age,
       gender: data?.gender?.map(ele => {
@@ -176,7 +186,7 @@ const ParticipantsScreen = ({
                     fontType="regular"
                   />
                   <Heading
-                    title="Male"
+                    title={selectedGender}
                     passedStyle={styles.selectFilterTextStyle}
                     fontType="semi-bold"
                   />

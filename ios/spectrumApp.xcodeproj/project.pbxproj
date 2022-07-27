@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-spectrumApp-spectrumAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-spectrumApp-spectrumAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C528993A288AFF740088E583 /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C5289939288AFF740088E583 /* beep.mp3 */; };
 		C55B33BE286DB7E4002B3DDE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C55B33BD286DB7E4002B3DDE /* GoogleService-Info.plist */; };
 		C5EE5E2A285B0EA6009282B8 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5EE5E1C285B0E86009282B8 /* Montserrat-Black.ttf */; };
 		C5EE5E2B285B0EA6009282B8 /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5EE5E23285B0E87009282B8 /* Montserrat-BlackItalic.ttf */; };
@@ -76,6 +77,7 @@
 		A8664C4CC4A241309AE17879 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		B05AD726B19147D49D7D0845 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		BEAABB5B80CC4A6F91CDAD15 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		C5289939288AFF740088E583 /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = beep.mp3; path = ../android/app/src/main/res/raw/beep.mp3; sourceTree = "<group>"; };
 		C55B33BB286D9D7D002B3DDE /* spectrumApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = spectrumApp.entitlements; path = spectrumApp/spectrumApp.entitlements; sourceTree = "<group>"; };
 		C55B33BD286DB7E4002B3DDE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "spectrumApp/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C5EE5E18285B0E86009282B8 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Medium.ttf"; path = "../src/assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C5289939288AFF740088E583 /* beep.mp3 */,
 				C55B33BD286DB7E4002B3DDE /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* spectrumApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -344,6 +347,7 @@
 			files = (
 				C5EE5E2A285B0EA6009282B8 /* Montserrat-Black.ttf in Resources */,
 				C5EE5E2B285B0EA6009282B8 /* Montserrat-BlackItalic.ttf in Resources */,
+				C528993A288AFF740088E583 /* beep.mp3 in Resources */,
 				C5EE5E2C285B0EA6009282B8 /* Montserrat-Bold.ttf in Resources */,
 				C5EE5E2D285B0EA6009282B8 /* Montserrat-BoldItalic.ttf in Resources */,
 				C5EE5E2E285B0EA6009282B8 /* Montserrat-ExtraBold.ttf in Resources */,
@@ -563,6 +567,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-spectrumApp-spectrumAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = UZ4THV58BR;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -591,6 +596,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = UZ4THV58BR;
 				INFOPLIST_FILE = spectrumAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -616,7 +622,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = spectrumApp/spectrumApp.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = UZ4THV58BR;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = spectrumApp/Info.plist;
@@ -646,7 +652,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = spectrumApp/spectrumApp.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = UZ4THV58BR;
 				INFOPLIST_FILE = spectrumApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

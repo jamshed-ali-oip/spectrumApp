@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
   TextInput,
+  FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Heading from '../components/Heading';
@@ -43,6 +44,8 @@ const ScaleScreen = ({
   const [score, setScore] = useState('0');
   const [ranges, setRanges] = useState([]);
   const [ans, setAns] = useState(height * 0.01);
+  const [Resultvalue,setResultvalue]=useState([]);
+  // console.log("clikc data",Resultvalue)
   const [resultColor, setResultColor] = useState(
     colors[7]?.WebColor || 'black',
   );
@@ -51,10 +54,10 @@ const ScaleScreen = ({
   const space1 = height * 0.01;
   const space2 = height * 0.045;
   const space3 = height * 0.08;
-  const space4 = height * 0.105;
-  const space5 = height * 0.14;
+  const space4 = height * 0.115;
+  const space5 = height * 0.145;
   const space6 = height * 0.175;
-  const space7 = height * 0.21;
+  const space7 = height * 0.215;
   const space8 = height * 0.245;
 
   const findResult = () => {
@@ -134,17 +137,18 @@ const ScaleScreen = ({
         }
       }
       const apiData = {
-        assessment_score_id: color_id,
+        assessment_score_id: Resultvalue.id,
         participant_id: CHILD_DATA?.id,
-        Score: score,
+        Score: Resultvalue.MaxValue,
         grade_id: CHILD_DATA?.id,
-        assessment_id: ITEM?.id,
+        assessment_id: Resultvalue.assessment_id,
         group_id: GROUP_DATA?.id,
         Distance: null,
       };
 
       setIsLoading(true);
-      console.log(JSON.stringify(apiData, null, 2));
+      // console.log("Resultvalue", JSON.stringify(Resultvalue, null, 2));
+      // console.log("API body", JSON.stringify(apiData, null, 2));
       await submitResult(apiData, accessToken, onSuccess);
       setIsLoading(false);
     }
@@ -153,9 +157,24 @@ const ScaleScreen = ({
   const onSuccess = () => {
     navigation.navigate('home');
   };
+  const RenderimageDAta = ({item}) => (
+   <TouchableOpacity onPress={()=>{setResultvalue(item)}} style={{width:100,flexDirection:"row"}}>
+     <Image
+      style={{height: 70, width: 70}}
+      source={{
+        uri:
+          item.image=== null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png":`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+      }}
+    />
+    <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
+      {item.image == null?"":item.MaxValue}
+    </Text>
+   </TouchableOpacity>
+  );
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
+      {/* {console.log("datdtatdatdta",ranges[0].image)} */}
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
@@ -177,11 +196,11 @@ const ScaleScreen = ({
               />
             </View>
             {/* </View> */}
-            <Image
+            {/* <Image
               resizeMode="contain"
               source={require('../assets/images/new-logo.png')}
               style={styles.bgimage}
-            />
+            /> */}
 
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
@@ -207,15 +226,27 @@ const ScaleScreen = ({
                   borderRightWidth: 6,
                   borderRightColor: 'white',
                 }}>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'flex-start',
                     justifyContent: 'space-between',
                     width: width * 0.65,
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
+                     source={{
+                      uri: 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png',
+                    }}
+                    resizeMode="stretch"
+                    style={{
+                      marginLeft: width * 0.02,
+                      // tintColor: colors[7]?.WebColor,
+                      height: height * 0.032,
+                      width: width * 0.5,
+                    }} */}
+                {/* /> */}
+                {/* <Image
                     source={require('../assets/images/1.png')}
                     resizeMode="stretch"
                     style={{
@@ -236,6 +267,7 @@ const ScaleScreen = ({
                     {ranges[0]?.MaxValue}
                   </Text>
                 </View>
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -244,8 +276,8 @@ const ScaleScreen = ({
                     width: width * 0.65,
                     paddingRight: width * 0.05,
                     // backgroundColor:'silver',
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/2.png')}
                     resizeMode="stretch"
                     style={{
@@ -265,16 +297,17 @@ const ScaleScreen = ({
                     }}>
                     {ranges[1]?.MaxValue}
                   </Text>
-                </View>
-                <View
+                </View> */}
+
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
                     width: width * 0.65,
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/3.png')}
                     resizeMode="stretch"
                     style={{
@@ -284,15 +317,15 @@ const ScaleScreen = ({
                       tintColor: colors[5]?.WebColor,
                     }}
                   />
-                  <Text
+                  {/* <Text
                     style={{
                       color: 'white',
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
                     }}>
                     {ranges[2]?.MaxValue}
-                  </Text>
-                </View>
+                  </Text> */}
+                {/* </View>
 
                 <View
                   style={{
@@ -303,8 +336,8 @@ const ScaleScreen = ({
                     width: width * 0.65,
 
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/4.png')}
                     resizeMode="stretch"
                     style={{
@@ -333,8 +366,8 @@ const ScaleScreen = ({
                     // backgroundColor: 'red',
                     width: width * 0.65,
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/5.png')}
                     resizeMode="stretch"
                     style={{
@@ -349,10 +382,12 @@ const ScaleScreen = ({
                       color: 'white',
                       fontSize: width * 0.033,
                       fontFamily: 'Montserrat-SemiBold',
+                      textAlignVertical:"top"
                     }}>
                     {ranges[4]?.MaxValue}
                   </Text>
                 </View>
+/
                 <View
                   style={{
                     flexDirection: 'row',
@@ -362,8 +397,8 @@ const ScaleScreen = ({
                     // backgroundColor: 'red',
                     width: width * 0.65,
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/6.png')}
                     resizeMode="stretch"
                     style={{
@@ -372,8 +407,8 @@ const ScaleScreen = ({
                       width: width * 0.205,
                       tintColor: colors[2]?.WebColor,
                     }}
-                  />
-                  <Text
+                  /> */}
+                {/* <Text
                     style={{color: 'white', fontFamily: 'Montserrat-SemiBold'}}>
                     {ranges[5]?.MaxValue}
                   </Text>
@@ -389,8 +424,8 @@ const ScaleScreen = ({
                     width: width * 0.65,
 
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/7.png')}
                     resizeMode="stretch"
                     style={{
@@ -405,6 +440,7 @@ const ScaleScreen = ({
                     {ranges[6]?.MaxValue}
                   </Text>
                 </View>
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -415,8 +451,8 @@ const ScaleScreen = ({
                     width: width * 0.65,
 
                     paddingRight: width * 0.05,
-                  }}>
-                  <Image
+                  }}> */}
+                {/* <Image
                     source={require('../assets/images/8.png')}
                     resizeMode="stretch"
                     style={{
@@ -429,21 +465,21 @@ const ScaleScreen = ({
                   <Text
                     style={{color: 'white', fontFamily: 'Montserrat-SemiBold'}}>
                     {ranges[7]?.MaxValue}
-                  </Text>
-                </View>
+                  </Text> */}
               </View>
-              <View
-                style={{
-                  width: width * 0.15,
-                  height: height * 0.006,
-                  alignSelf: 'flex-end',
-                  position: 'absolute',
-                  top: ans || height * 0.01,
-                  backgroundColor: 'white',
-                }}
-              />
-              {/* 0.01, 0.035, 0.06, 0.085,  0.11, 0.135 0.16 , 0.187*/}
             </View>
+            {/* <View
+              style={{
+                width: width * 0.15,
+                height: height * 0.006,
+                alignSelf: 'flex-end',
+                position: 'absolute',
+                top: ans || height * 0.01,
+                backgroundColor: 'white',
+              }}
+            /> */}
+            {/* 0.01, 0.035, 0.06, 0.085,  0.11, 0.135 0.16 , 0.187*/}
+            {/* </View> */}
 
             <View
               style={{
@@ -459,15 +495,26 @@ const ScaleScreen = ({
                 fontType="semi-bold"
               />
 
+              <FlatList
+              style={{marginLeft:20}}
+                data={ranges}
+                renderItem={RenderimageDAta}
+                keyExtractor={item => item.id}
+                numColumns={4}
+              />
+
+              <View>
               <Image
-                source={require('../assets/images/yellow.png')}
+                source={ Resultvalue?.image ? {uri:`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${Resultvalue.image}`} : require('../assets/images/black.png' )}
                 style={[
                   styles.taskimage,
-                  {
-                    tintColor: resultColor || 'black',
-                  },
+                
                 ]}
               />
+              <Text style={{position:"absolute",marginLeft:65,color:"white",marginTop:25}}>
+                {Resultvalue.MaxValue}
+              </Text>
+              </View>
 
               <View
                 style={{
@@ -475,14 +522,14 @@ const ScaleScreen = ({
                   alignItems: 'center',
                   paddingBottom: height * 0.1,
                 }}>
-                <TextInput
+                {/* <TextInput
                   value={score}
                   keyboardType="numeric"
-                  placeholder={'Enter Score 0-80'}
+                  placeholder={`Enter Score 1-${ranges[0]?.MaxValue}`}
                   placeholderTextColor={'grey'}
                   style={styles.scoreFieldStyle}
                   onChangeText={text => {
-                    if (parseInt(text) > 100) {
+                    if (parseInt(text) > ranges[0]?.MaxValue) {
                       showMessage({
                         type: 'danger',
                         message: 'Score is exceeding the scale values.',
@@ -491,7 +538,7 @@ const ScaleScreen = ({
                     }
                     setScore(text);
                   }}
-                />
+                /> */}
 
                 {
                   <TouchableOpacity
@@ -504,7 +551,7 @@ const ScaleScreen = ({
                     />
                   </TouchableOpacity>
                 }
-                 <View style={{paddingBottom: 150}} />
+                <View style={{paddingBottom: 150}} />
               </View>
             </View>
           </ScrollView>
@@ -649,6 +696,7 @@ const styles = StyleSheet.create({
     height: height * 0.05,
     backgroundColor: '#16c4bc',
     marginTop: 10,
+
     alignSelf: 'flex-start',
     marginLeft: 20,
     borderRadius: 100,
@@ -670,7 +718,7 @@ const styles = StyleSheet.create({
   },
   triangleContainer: {
     alignSelf: 'center',
-    marginTop: height * 0.04,
+    marginTop: height * 0.06,
     marginLeft: width * 0.15,
   },
   headingStyles2: {

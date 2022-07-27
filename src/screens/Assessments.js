@@ -27,6 +27,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
 
   const _onPressRunAssessment = item => {
     navigation.navigate('runAssessment', {item: item});
+    console.log("ljdkahsilh",item)
   };
 
   useEffect(() => {
