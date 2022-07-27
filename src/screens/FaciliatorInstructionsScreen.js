@@ -40,21 +40,21 @@ const FaciliatorInstructionsScreen = ({
   userReducer,
   getFaciliatorInstructions,
 }) => {
-  const accessToken = userReducer.accessToken;
+  // const accessToken = userReducer.accessToken;
   const DATA = route.params.data;
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [instructions, setInstructions] = useState(false);
+  // const [instructions, setInstructions] = useState(false);
 
-  useEffect(() => {
-    getInstructions();
-  }, []);
+  // useEffect(() => {
+  //   getInstructions();
+  // }, []);
 
-  const getInstructions = async () => {
-    setIsLoading(true);
-    await getFaciliatorInstructions(accessToken);
-    setIsLoading(false);
-  };
+  // const getInstructions = async () => {
+  //   setIsLoading(true);
+  //   await getFaciliatorInstructions(accessToken);
+  //   setIsLoading(false);
+  // };
 
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -64,17 +64,20 @@ const FaciliatorInstructionsScreen = ({
     setRefreshing(true);
     wait(1500).then(() => {
       setRefreshing(false);
-      getInstructions();
+      // getInstructions();
     });
   }, []);
 
-  useEffect(() => {
-    userReducer?.faciliatorInstructions?.map(ele => {
-      if (ele?.assessment_id == DATA?.id) {
-        setInstructions(ele);
-      }
-    });
-  }, [userReducer?.faciliatorInstructions]);
+  // useEffect(() => {
+  //   userReducer?.faciliatorInstructions?.map(ele => {
+  //     if (ele?.assessment_id == DATA?.id) {
+  //       setInstructions(ele);
+  //     }
+  //   });
+  // }, [userReducer?.faciliatorInstructions]);
+  // console.log('====================================');
+  // console.log(DATA.Instructions);
+  // console.log('====================================');
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -115,7 +118,7 @@ const FaciliatorInstructionsScreen = ({
             />
 
             <Heading
-              title={instructions?.instructions}
+              title={DATA?.Instructions}
               fontType="medium"
               passedStyle={{
                 fontSize: width * 0.04,
