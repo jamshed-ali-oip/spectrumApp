@@ -44,7 +44,7 @@ const ParticipantsScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [selectedGender, setSelectedGender] = useState("Boys");
+  const [selectedGender, setSelectedGender] = useState("Boys-Girls");
 
   useEffect(() => {
     getAllParticipants();
@@ -73,13 +73,17 @@ const ParticipantsScreen = ({
     });
   }, []);
 
-  const filterParticipants = async data => {
+  const filterParticipants = async (data) => {
     // setSelectedGender()
-    if (data?.gender.length > 1) {
-      setSelectedGender("Boys-Girls")
-    } else {
-      setSelectedGender(data?.gender[0].gender)
-    }
+
+      if (data?.gender.length>1) {
+        setSelectedGender("Boys-Girls")
+      }
+      else if(data?.gender[0]==0){
+        setSelectedGender("Boys")
+      }else{
+        setSelectedGender("Girls")
+      }
     // alert(JSON.stringify(data?.gender[0].gender));
     // data?.gender?.map((gender) => {
     // })
@@ -96,12 +100,12 @@ const ParticipantsScreen = ({
     };
     // console.log(apiData);
     setIsLoading(true);
-    await getFilteredParticipants(apiData, accessToken, onSuccess);
-    setIsLoading(false);
+    await getFilteredParticipants(data, accessToken, onSuccess);
   };
 
   const onSuccess = () => {
     setShowFilterModal(false);
+    setIsLoading(false);
   };
   return (
     <>

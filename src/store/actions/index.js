@@ -202,6 +202,7 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
 export const getFilteredParticipants =
   (data, accessToken, onSuccess) => async dispatch => {
     // console.log(data, '===', accessToken);
+    // alert(JSON.stringify(data))
     try {
       const URL = `${apiUrl}/participants/filter`;
       const headers = {
@@ -213,6 +214,8 @@ export const getFilteredParticipants =
 
       const response = await axios.post(URL, data, headers);
       console.log(response.data);
+      // alert(JSON.stringify(response.data))
+      onSuccess();
       if (response.data.success) {
         dispatch({
           type: GET_FILTERED_PARTICIPANTS,
@@ -232,7 +235,6 @@ export const getFilteredParticipants =
           type: 'danger',
         });
       }
-      onSuccess();
     } catch (err) {
       showMessage({
         message: 'Network Error',

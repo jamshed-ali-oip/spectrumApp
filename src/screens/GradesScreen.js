@@ -11,7 +11,7 @@ import {
   RefreshControl,
   Text,
 } from 'react-native';
-import React, {useState, useCallback, useEffect} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Heading from '../components/Heading';
 import LottieView from 'lottie-react-native';
 import {
@@ -21,14 +21,14 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {template} from '@babel/core';
+import { template } from '@babel/core';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../store/actions';
-import ParticipantFilterModal from '../components/ParticipantFilterModal';
+import ParticipantFilterModal from '../components/GradeModal';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const GradesScreen = ({
   navigation,
@@ -46,20 +46,49 @@ const GradesScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [gender, setGender]=useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
+  const [participants,setParticipants]=useState([])
+  console.log("first",participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
 
+  useEffect(()=>{
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer 25|AQ3o57RsL9c4Xw453pHNb7BGbiejmMah3689WeKa");
+    
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+    
+    let data = fetch("https://webprojectmockup.com/custom/spectrum-8/public/api/participant/data", requestOptions)
+      .then(response => response.json())
+      .then((result) => {
+        setParticipants(result.data)
+      })
+      .catch(error => console.log('error', error));
+
+  },)
   useEffect(() => {
     getAllGroupsMembers();
   }, []);
 
-
+console.log("iiohihioiouioup",userReducer?.getGroupMembers)
 
   useEffect(() => {
-    setGroupMembers(userReducer?.groupMembers);
-  }, [userReducer?.groupMembers]);
+    if(userReducer?.groupMembers){
+      if(gender=="all"){
+        setGroupMembers(userReducer?.groupMembers)
+      }else{
+        const filteredData=[...userReducer?.groupMembers].filter(it=>it.Gender==gender)
+        setGroupMembers(filteredData)
+      }
+    }
+  }, [userReducer?.groupMembers,gender]);
+  console.log(gender)
 
   const getAllGroupsMembers = async () => {
     setIsLoading(true);
@@ -127,7 +156,7 @@ const GradesScreen = ({
           />
         ) : (
           <FlatList
-            contentContainerStyle={{paddingBottom: height * 0.1}}
+            contentContainerStyle={{ paddingBottom: height * 0.1 }}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
@@ -147,7 +176,7 @@ const GradesScreen = ({
                     }}>
                     <Heading
                       title="No Record, Swipe Down To Refresh"
-                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      passedStyle={{ fontSize: width * 0.045, color: 'white' }}
                       fontType="semi-bold"
                     />
                   </View>
@@ -187,10 +216,24 @@ const GradesScreen = ({
                     />
                   </View>
                 </TouchableOpacity> */}
-
+                <TouchableOpacity
+                  style={styles.selectFilterStyle}
+                  onPress={() => setShowFilterModal(true)}>
+                  <Heading
+                    title="Select Filter"
+                    passedStyle={styles.selectFilterTextStyle}
+                    fontType="semi-bold"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.rightIconStyle}
+                  />
+                </TouchableOpacity>
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
+
                   <View style={styles.filterLabelViewStyle}>
                     <Heading
                       title="Run Assessment"
@@ -234,29 +277,32 @@ const GradesScreen = ({
                 <ColoredFlatlist />
               </>
             }
-            data={groupMembers}
-            keyExtractor={({item, index}) => item?.id?.toString()}
-            renderItem={({item, index}) => {
+            data={participants}
+            keyExtractor={({ item, index }) => item?.id?.toString()}
+            renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
                     if (ITEM?.Type === 'Duration') {
                       navigation?.navigate('timeAssessment', {
                         item: ITEM,
-                        childData: item,
+                        childData: {...item,index},
                         groupData: GROUP_DATA,
+                        memberData:groupMembers
                       });
                     } else if (ITEM?.Type === 'Distance') {
                       navigation?.navigate('scaleScreen', {
                         item: ITEM,
-                        childData: item,
+                        childData: {...item,index},
                         groupData: GROUP_DATA,
+                        memberData:groupMembers
                       });
                     } else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
-                        childData: item,
+                        childData: {...item,index},
                         groupData: GROUP_DATA,
+                        memberData:groupMembers
                       });
                     }
                   }}
@@ -294,14 +340,15 @@ const GradesScreen = ({
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}
           showLoader={isLoading}
+          setGender={setGender}
         />
       </ImageBackground>
     </>
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(GradesScreen);
 

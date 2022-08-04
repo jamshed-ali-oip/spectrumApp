@@ -69,7 +69,9 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     case GET_GROUPS_REQUEST:
       return {
         ...state,
-        groups: action.payload,
+        groups: action?.payload?.map(group => {
+          return { ...group, grade_id: group.grade_id.split('|') }
+        })
       };
 
     case GET_GROUP_MEMBERS_REQUEST:

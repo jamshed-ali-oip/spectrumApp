@@ -6,14 +6,14 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
-  ImageBackground,
+  ImageBackground, 
   StatusBar,
   FlatList,
   ScrollView,
   Platform,
 } from 'react-native';
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useLayoutEffect} from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -46,25 +46,42 @@ const GradingSystem = ({
   const ITEM = route?.params?.item;
   const GROUP_DATA = route.params.groupData;
   const CHILD_DATA = route.params.childData;
+  const [Memebers,setMembers] = useState([]);
+  console.log('hkhklahksdhakhdskl;ahkld', Memebers);
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [score, setScore] = useState('');
   const [ranges, setRanges] = useState([]);
-  const [Resultvalue,setResultvalue]=useState([]);
-  // const [Res, setRes] = useState(Res);
+  const [Resultvalue, setResultvalue] = useState([]);
+  const [assessment_id,setassessment_id]=useState([]);
+  console.log("clicked adata",Resultvalue)
+  const [Uservalue, setUservalue] = useState({});
+  console.log('=======>', Uservalue);
   const [resultColor, setResultColor] = useState(
     colors[0]?.WebColor || 'black',
   );
-//  useEffect(() => {
-//     setRes(ranges[0]?.MaxValue);
-//   }, []);
-const Resulting =userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue
-console.log("Areaaa",Resulting)
+  //  useEffect(() => {
+  //     setRes(ranges[0]?.MaxValue);
+  //   }, []);
+  useLayoutEffect(()=>{
+    setMembers(route.params?.memberData)
+ 
+  },[])
+  console.log("firsttttttttttttttttttttttttt",userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id)
+  // useEffect=(()=>{
+  //   setassessment_id(userReducer?.assessmentDetails.assessment_scoring[0]?.assessment_id)
+  // },[assessment_id])
+
+ 
+  const Resulting =
+    userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue;
+  console.log('Areaaa', userReducer?.assessmentDetails?.assessment_scoring);
   useEffect(() => {
     findResult();
   }, [score]);
 
   useEffect(() => {
+    setUservalue(route.params.childData)
     getAllColors();
   }, []);
 
@@ -80,7 +97,6 @@ console.log("Areaaa",Resulting)
     setColors(userReducer?.colors);
   }, [userReducer?.colors]);
 
- 
   useEffect(() => {
     setRanges(userReducer?.assessmentDetails?.assessment_scoring);
   }, [userReducer?.assessmentDetails]);
@@ -96,11 +112,11 @@ console.log("Areaaa",Resulting)
       }
     }
     const apiData = {
-      assessment_score_id: Resultvalue.id,
-      participant_id: CHILD_DATA?.id,
-      Score: Resultvalue.MaxValue,
+      assessment_score_id: Resultvalue? Resultvalue.id : null,
+      participant_id: Uservalue.id,
+      Score: Resultvalue? Resultvalue.MaxValue:0,
       grade_id: CHILD_DATA?.id,
-      assessment_id: Resultvalue.assessment_id,
+      assessment_id: Resultvalue.length !== 0? Resultvalue.assessment_id:assessment_id,
       Beep: null,
       group_id: GROUP_DATA?.id,
     };
@@ -111,7 +127,23 @@ console.log("Areaaa",Resulting)
   };
 
   const onSuccess = () => {
-    navigation.navigate('home');
+    if((Uservalue.index+1)< Memebers.length){
+      const updatedMembers=[...Memebers].map((it)=>{
+        if(it.id==Uservalue.id){
+          return {
+            ...it,
+            disable:true
+          }
+        }else{
+          return it
+        }
+      })
+      setMembers(updatedMembers)
+      const newIndex=Memebers[Uservalue.index + 1].disable?(Uservalue.index + 2):Uservalue.index + 1
+      setUservalue({...Memebers[newIndex],index:newIndex})
+    }else{
+      navigation.navigate('home');
+    }
   };
   // var RangeValue = parseInt(ranges[0]?.MaxValue);
 
@@ -138,37 +170,57 @@ console.log("Areaaa",Resulting)
       setResultColor(colors[0]?.WebColor);
     }
   };
+
+  const RenderMembersData = ({item,index}) => (
+    <View style={{flexDirection: 'row', paddingVertical: 3}}>
+      {/* {console.log(Memebers)} */}
+      <TouchableOpacity
+      disabled={item.disable}
+        onPress={() => {
+          setUservalue({...item,index});
+        }}>
+        <Text
+          style={{
+            fontSize: 20,
+            alignSelf: 'center',
+            color: item.disable?'gray':(Uservalue.id == item.id ? 'green' : 'white'),
+            // textAlign: 'center',
+            // textAlignVertical: 'center',
+            letterSpacing:1
+          }}>
+          {`${item.Firstname} ${item.Lastname}`}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   const RenderimageDAta = ({item}) => (
-    <TouchableOpacity onPress={()=>{setResultvalue(item)}} style={{width:100,flexDirection:"row"}}>
+    <TouchableOpacity
+      onPress={() => {
+        setResultvalue(item);
+      }}
+      style={{width: 100, flexDirection: 'row'}}>
       <Image
-       style={{height: 70, width: 70}}
-       source={{
-         uri:
-           item.image=== null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png":`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
-       }}
-     />
-     {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
+        style={{height:height*.1, width:width*.185,marginTop:height*.02,opacity:Resultvalue.image ==item.image?1:.5}}
+        source={{
+          uri:
+            item.image === null
+              ? 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png'
+              : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`,
+        }}
+      />
+      {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
        {item.image == null?"":item.MaxValue}
      </Text> */}
     </TouchableOpacity>
-   );
+  );
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        {isLoading ? (
-          <LottieView
-            speed={1}
-            style={styles.lottieStyle}
-            autoPlay
-            loop
-            source={require('../assets/lottie/color-loader.json')}
-          />
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Heading
+                      <Heading
               title={ITEM?.Name}
               passedStyle={styles.headingStyles}
               fontType="semi-bold"
@@ -181,49 +233,89 @@ console.log("Areaaa",Resulting)
             /> */}
 
             {/* Grade  */}
-            <View style={styles.headingStyle2View}>
-              <Heading
-                title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
-                passedStyle={styles.headingStyles2}
-                fontType="regular"
+            <View
+              style={{
+                height: height *0.20,
+                width: width * 0.9,
+                backgroundColor: themeDarkBlue,
+                borderRadius: 10,
+                paddingLeft: 20,
+                alignSelf:"center"
+              }}>
+              <FlatList
+            
+                data={Memebers}
+                renderItem={RenderMembersData}
+                keyExtractor={item => item.id}
+                // scrollEnabled={false}
+                // contentContainerStyle={{
+                //   flexGrow: 1,
+                // }}
               />
             </View>
-            {/* Child Name  */}
-            <View style={styles.headingStyle2View}>
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
+          />
+        ) : (
+          <View showsVerticalScrollIndicator={false}>
+            <ScrollView>
+              <View style={[styles.headingStyle2View,{marginBottom:20}]}>
+                <Heading
+                  title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                  passedStyle={styles.headingStyles2}
+                  fontType="regular"
+                />
+              </View>
+              {/* Child Name  */}
+              {/* <View style={styles.headingStyle2View}>
               <Heading
                 title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
-            </View>
-            
+            </View> */}
 
-            <FlatList
-              style={{marginLeft:20}}
-                data={ranges}
-                renderItem={RenderimageDAta}
-                keyExtractor={item => item.id}
-                numColumns={4}
-              />
-               <View>
-              <Image
-                source={ Resultvalue?.image ? {uri:`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${Resultvalue.image}`} : require('../assets/images/black.png' )}
-                style={[
-                  styles.taskimage,
-                
-                ]}
-              />
-              {/* <Text style={{position:"absolute",marginLeft:65,color:"white",marginTop:50}}>
+              <View style={{width: width * 1}}>
+                <FlatList
+                  style={{marginLeft: 20}}
+                  data={ranges}
+                  renderItem={RenderimageDAta}
+                  keyExtractor={item => item.id}
+                  numColumns={4}
+                />
+              </View>
+              {/* <Text>haz,a</Text> */}
+              <TouchableOpacity onPress={()=>{setResultvalue([
+
+              ])}}>
+                <Image
+                  source={
+                    require('../assets/images/black.png')
+                  }
+                  style={{
+                    height: height * 0.12,
+                    width: width * 0.2,
+                    marginLeft: width * 0.09,
+                    marginTop: 20,
+                    opacity:Resultvalue.length == 0 ?1:.5
+                  }}
+                />
+                {/* <Text style={{position:"absolute",marginLeft:65,color:"white",marginTop:50}}>
                 {Resultvalue.MaxValue}
               </Text> */}
-              </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingBottom: height * 0.1,
-              }}>
-              {/* <TextInput
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: height * 0.1,
+                }}>
+                {/* <TextInput
                 value={score}
                 keyboardType="numeric"
                 placeholder={`Enter Score 0-${Resulting} `}
@@ -241,20 +333,21 @@ console.log("Areaaa",Resulting)
                 }}
               /> */}
 
-              {
-                <TouchableOpacity
-                  onPress={_onPressSave}
-                  style={styles.saveBtnStyle}>
-                  <Heading
-                    title={'SAVE'}
-                    passedStyle={styles.startBtnStyle}
-                    fontType="bold"
-                  />
-                </TouchableOpacity>
-              }
-              <View style={{paddingBottom: 150}} />
-            </View>
-          </ScrollView>
+                {
+                  <TouchableOpacity
+                    onPress={_onPressSave}
+                    style={styles.saveBtnStyle}>
+                    <Heading
+                      title={'SAVE'}
+                      passedStyle={styles.startBtnStyle}
+                      fontType="bold"
+                    />
+                  </TouchableOpacity>
+                }
+                <View style={{paddingBottom: 150}} />
+              </View>
+            </ScrollView>
+          </View>
         )}
       </ImageBackground>
     </>
@@ -279,7 +372,7 @@ const styles = StyleSheet.create({
     marginLeft: width * 0.05,
     backgroundColor: themeFerozi,
     borderRadius: width * 0.5,
-    // marginTop: width * 0.03,
+    marginTop: width * -0.03,
     width: width * 0.3,
     justifyContent: 'center',
     alignItems: 'center',
@@ -423,7 +516,7 @@ const styles = StyleSheet.create({
   },
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    marginTop: height * 0.098,
+    marginTop: height * 0.038,
     marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
 });

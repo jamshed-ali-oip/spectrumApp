@@ -100,7 +100,7 @@ const RunAssessment = ({navigation, route}) => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.buttonContainerStyles}
-            onPress={() => navigation.navigate('groups', {item: ITEM})}>
+            onPress={() => navigation.navigate('grades', {item: ITEM})}>
             <Heading
               title={'START'}
               passedStyle={[

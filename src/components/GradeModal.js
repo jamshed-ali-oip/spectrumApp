@@ -97,6 +97,7 @@ const ParticipantFilterModal = ({
     }
     setSelectedGenders(copyArr);
   };
+  
   // console.log("first gender",selectedGenders)
   useEffect(() => {
     fetchCall();

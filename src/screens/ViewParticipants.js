@@ -306,7 +306,7 @@ const ViewParticipants = ({
                     fontType="semi-bold"
                   />
                   <Heading
-                    title={DATA?.Gender == '0' ? 'Male' : 'Female'}
+                    title={DATA?.Gender}
                     passedStyle={{
                       color: 'white',
                       marginLeft: width * 0.1,

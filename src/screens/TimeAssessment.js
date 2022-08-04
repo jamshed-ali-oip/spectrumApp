@@ -11,8 +11,9 @@ import {
   StatusBar,
   Platform,
   Button,
+  FlatList,
 } from 'react-native';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect,useLayoutEffect} from 'react';
 import RNSpeedometer from 'react-native-speedometer';
 import Heading from '../components/Heading';
 // import {Timer, Countdown} from 'react-native-element-timer';
@@ -35,6 +36,7 @@ import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
 import {showMessage} from 'react-native-flash-message';
 import RNBeep from 'react-native-a-beep';
 import Sound from 'react-native-sound';
+import moment from 'moment';
 const {width, height} = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -46,9 +48,8 @@ const TimeAssessment = ({
   getGameInfo,
   checkGame,
 }) => {
-
   const ITEM = route.params.item;
-  console.log("Mydata",ITEM.id)
+  const [Memebers,setMembers] = useState([]);
   const CHILD_DATA = route.params.childData;
   const GROUP_DATA = route.params.groupData;
   const [hasTimerStarted, setHasTimerStarted] = useState(false);
@@ -59,27 +60,31 @@ const TimeAssessment = ({
   const [score, setScore] = useState(0);
   const [assessmentScoreid, setAssessmentScoreId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [Uservalue, setUservalue] = useState({});
   const [showTextField, setShowTextField] = useState(false);
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
     winnerIndex: null,
     started: false,
   });
- 
-const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id);
-  // console.log(JSON.stringify(CHILD_DATA,null,2))
+  const [scoring,setscoring]=useState(0);
+  const Value = userReducer?.gameInfo?.filter(
+    game => game.assessment_id == ITEM.id,
+  );
+  // console.log("gameindo",userReducer?.gameInfo)
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
-  
+  // console.log("seconds", secs)
+  console.log("first",meterValue)
   const apiData = {
-    assessment_score_id: assessmentScoreid,
+    assessment_score_id: scoring.id,
     participant_id: CHILD_DATA?.id,
-    Score: score,
+    Score: scoring.MaxValue,
     grade_id: CHILD_DATA?.id,
     group_id: GROUP_DATA?.id,
-    assessment_id: ITEM?.id,
+    assessment_id: scoring.assessment_id,
     Duration: secs,
   };
   const [timer, setTimer] = useState({
@@ -89,7 +94,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
     timerReset: false,
     stopwatchReset: false,
   });
-
+  // console.log("time", timer)
   const wheelOptions = {
     rewards: participants,
     knobSize: 30,
@@ -137,12 +142,12 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
     //   child._onPress();
     // }
   };
-  console.log(
-    'colors',
-    Value[7]?.MaxValue
-    // colors[0],
-    // userReducer?.gameInfo?.filter(game => game.assessment_id == 8)
-  );
+  // console.log(
+  //   'colors',
+  //   Value[7]?.MaxValue
+  //   // colors[0],
+  //   // userReducer?.gameInfo?.filter(game => game.assessment_id == 8)
+  // );
   useEffect(() => {
     // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
   }, [secs]);
@@ -154,7 +159,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
     );
     let color_id = thisGameScorePeers[0]?.color_id;
     for (const thisGame of thisGameScorePeers) {
-      console.log('YYYYYYY', thisGame, color_id);
+      // console.log('YYYYYYY', thisGame, color_id);
       if (thisGame?.MinValue <= secs && thisGame?.MaxValue >= secs) {
         color_id = thisGame?.color_id;
         setAssessmentScoreId(thisGame?.id);
@@ -192,7 +197,11 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
     // }
   };
 
+  useLayoutEffect(()=>{
+    setMembers(route.params?.memberData)
+  },[])
   useEffect(() => {
+    setUservalue(route.params.childData);
     getAllColors();
     setMeterValue(0);
     setShowTextField(false);
@@ -215,34 +224,91 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
 
   const _onPressSave = async () => {
     setIsLoading(true);
-    console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
+    // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
 
   const onSuccess = () => {
-    navigation.navigate('home');
-  };
-  console.log("faizan", Value[0]?.assessment_id,Value)
-  const meterController = (text) => {
-    if(text > parseInt(Value[0]?.MinValue) && text <= parseInt(Value[0]?.MaxValue)){
-      setMeterValue(100);
-    }else if(text >= parseInt(Value[1]?.MinValue) && text <= parseInt(Value[1]?.MaxValue)){
-      setMeterValue(200);
-    }else if(text >= parseInt(Value[2]?.MinValue) && text <= parseInt(Value[2]?.MaxValue)){
-      setMeterValue(300);
-    }else if(text >= parseInt(Value[3]?.MinValue) && text <= parseInt(Value[3]?.MaxValue)){
-      setMeterValue(400);
-    }else if(text >= parseInt(Value[4]?.MinValue) && text <= parseInt(Value[4]?.MaxValue)){
-      setMeterValue(500);
-    }else if(text >= parseInt(Value[5]?.MinValue) && text <= parseInt(Value[5]?.MaxValue)){
-      setMeterValue(600);
-    }else if(text >= parseInt(Value[6]?.MinValue) && text <= parseInt(Value[6]?.MaxValue)){
-      setMeterValue(700);
-    }else if(text >= parseInt(Value[7]?.MinValue) && text <= parseInt(Value[7]?.MaxValue)){
-      setMeterValue(800);
+    if (Uservalue.index + 1 < Memebers.length) {
+    const updatedMembers=[...Memebers].map((it)=>{
+      if(it.id==Uservalue.id){
+        return {
+          ...it,
+          disable:true
+        }
+      }else{
+        return it
+      }
+    })
+    setMembers(updatedMembers)
+    const newIndex=Memebers[Uservalue.index + 1].disable?(Uservalue.index + 2):Uservalue.index + 1
+      setUservalue({
+        ...Memebers[newIndex],
+        index: newIndex,
+      });
+    } else {
+      navigation.navigate('home');
     }
-  }
+  };
+
+  useEffect(() => {
+    meterController();
+  }, [secs]);
+console.log("scoring",scoring)
+  const meterController = () => {
+    console.log('faozannnnnn', secs);
+    console.log('..//....//',Value[0]);
+    if (
+      parseInt(secs) > Number(Value[0]?.minTime) &&
+      Number(secs) <= Number(Value[0]?.maxTime)
+    ) {
+      setMeterValue(100);
+      setscoring(Value[0])
+    } else if (
+      Number(secs) >= Number(Value[1]?.minTime) &&
+      Number(secs) <= Number(Value[1]?.maxTime)
+    ) {
+      setMeterValue(200);
+      setscoring(Value[1])
+    } else if (
+      Number(secs) >= Number(Value[2]?.minTime) &&
+      Number(secs) <= Number(Value[2]?.maxTime)
+    ) {
+      setMeterValue(300);
+      setscoring(Value[2])
+    } else if (
+      Number(secs) >= Number(Value[3]?.minTime) &&
+      Number(secs) <= Number(Value[3]?.maxTime)
+    ) {
+      setMeterValue(400);
+      setscoring(Value[3])
+    } else if (
+      Number(secs) >= Number(Value[4]?.minTime) &&
+      Number(secs) <= Number(Value[4]?.maxTime)
+    ) {
+      setMeterValue(500);
+      setscoring(Value[4])
+    } else if (
+      Number(secs) >= Number(Value[5]?.minTime) &&
+      Number(secs) <= Number(Value[5]?.maxTime)
+    ) {
+      setMeterValue(600);
+      setscoring(Value[5])
+    } else if (
+      Number(secs) >= Number(Value[6]?.minTime) &&
+      Number(secs) <= Number(Value[6]?.maxTime)
+    ) {
+      setMeterValue(700);
+      setscoring(Value[6])
+    } else if (
+      Number(secs) >= Number(Value[7]?.minTime) &&
+      Number(secs) <= Number(Value[7]?.maxTime)
+    ) {
+      setMeterValue(800);
+      setscoring(Value[7])
+    }
+  };
   // const toggleTimer = () => {
   //   setTimer(prev => {
   //     return {
@@ -283,39 +349,110 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
 
   const getFormattedTime = time => {
     currentTime = time;
-    console.log(currentTime.substring(6, 8));
-    setSecs(currentTime.substring(6, 8));
+    setSecs(
+      Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
+    );
   };
+
   // console.log(GROUP_DATA?.Name);
-  
+
   const playSound = () => {
     // const sound = new Sound('beep.mp3');
     // alert("call")
-    var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
+    var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
-        console.log('failed to load the sound', error);
+        // console.log('failed to load the sound', error);
         return;
       }
       // loaded successfully
-      console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-    
+      // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+
       // Play the sound with an onEnd callback
-      whoosh.play((success) => {
+      whoosh.play(success => {
         if (success) {
-          console.log('successfully finished playing');
+          // console.log('successfully finished playing');
         } else {
-          console.log('playback failed due to audio decoding errors');
+          // console.log('playback failed due to audio decoding errors');
         }
       });
     });
- }
-  return (
-    
-    <>
-      <StatusBar backgroundColor={themeDarkBlue} />
-      <ImageBackground
-        source={require('../assets/images/bg.jpg')}
-        style={styles.container}>
+  };
+  const RenderMembersData = ({item, index}) => (
+    <View style={{flexDirection: 'row', paddingVertical: 3}}>
+      {/* {console.log(Memebers)} */}
+      <TouchableOpacity
+        onPress={() => {
+          setUservalue({...item, index});
+        }}>
+        <Text
+          style={{
+            fontSize: 20,
+            alignSelf: 'center',
+            color: Uservalue.id == item.id ? 'green' : 'white',
+            // textAlign: 'center',
+            // textAlignVertical: 'center',
+            letterSpacing: 1,
+          }}>
+          {`${item.Firstname} ${item.Lastname}`}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  function renderHeader() {
+    return (
+      <>
+        <View style={styles.headingView}>
+          <Heading
+            title={ITEM?.Name}
+            passedStyle={styles.headingStyles}
+            fontType="semi-bold"
+          />
+        </View>
+        <ScrollView
+        nestedScrollEnabled={true}
+          style={{
+            height: height * 0.2,
+            width: width * 0.9,
+            backgroundColor: themeDarkBlue,
+            borderRadius: 10,
+            paddingLeft: 20,
+            alignSelf: 'center',
+          }}>
+          {Memebers.map((item, index) => {
+            return (
+              <View
+                key={index}
+                style={{flexDirection: 'row', paddingVertical: 3}}>
+                {/* {console.log(Memebers)} */}
+                <TouchableOpacity
+                disabled={item.disable}
+                  onPress={() => {
+                    setUservalue({...item, index});
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      alignSelf: 'center',
+                      color: item.disable?'gray':(Uservalue.id == item.id ? 'green' : 'white'),
+                      // textAlign: 'center',
+                      // textAlignVertical: 'center',
+                      letterSpacing: 1,
+                    }}>
+                    {`${item.Firstname} ${item.Lastname}`}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </>
+    );
+  }
+
+  function renderData() {
+    return (
+      <>
         {isLoading || colors?.length === 0 ? (
           <LottieView
             speed={1}
@@ -325,22 +462,15 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
             source={require('../assets/lottie/color-loader.json')}
           />
         ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <>
             {/* Heading  */}
-            <View style={styles.headingView}>
-              <Heading
-                title={ITEM?.Name}
-                passedStyle={styles.headingStyles}
-                fontType="semi-bold"
-              />
-            </View>
 
             {/* Image Logo  */}
-            <Image
+            {/* <Image
               resizeMode="contain"
               source={require('../assets/images/new-logo.png')}
               style={styles.logoStyles}
-            />
+            /> */}
 
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
@@ -352,13 +482,13 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
             </View>
 
             {/* Child Name  */}
-            <View style={styles.headingStyle2View}>
+            {/* <View style={styles.headingStyle2View}>
               <Heading
                 title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
-            </View>
+            </View> */}
 
             {/* Meter and Button View Container  */}
             <View style={styles.configurations}>
@@ -371,7 +501,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                       onPress={() => {
                         if (!hasTimerStarted) {
                           // timerRef.current.start();
-                         
+
                           checkGame(true);
                           toggleStopwatch();
                           setHasTimerStarted(true);
@@ -379,7 +509,6 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                           setMeterValue(0);
                           playSound();
                           setShowTextField(false);
-                          
                         }
                       }}
                       style={styles.startBtnContainer}>
@@ -413,14 +542,12 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                   <TouchableOpacity
                     onPress={() => {
                       // timerRef.current.pause();
-                      playSound()
+                      playSound();
                       checkGame(false);
                       toggleStopwatch();
                       setHasTimerStarted(false);
                       findScoreNow();
                       setShowTextField(true);
-                      
-                      
                     }}
                     style={styles.stopBtnStyle}>
                     <Heading
@@ -472,7 +599,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
               </View>
 
               {/* Game Meter  */}
-         
+
               {/* <Button title='sound' onPress={()=>{playSound()}} /> */}
               <RNSpeedometer
                 wrapperStyle={{marginRight: width * 0.05}}
@@ -483,7 +610,6 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                 labelStyle={{color: 'transparent'}}
                 labelNoteStyle={{color: 'transparent'}}
                 labels={
-                  
                   colors?.length > 0
                     ? [
                         {
@@ -596,7 +722,9 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                 start={timer.stopwatchStart}
                 reset={timer.stopwatchReset}
                 options={{
-                  container: {},
+                  container: {
+                    width:220
+                  },
                   text: {
                     fontSize: 30,
                     color: '#FFF',
@@ -607,7 +735,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                 getTime={time => getFormattedTime(time)}
               />
             </View>
-
+            {/* 
             {showTextField && (
               <TextInput
                 value={score}
@@ -634,7 +762,7 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
                   setScore(text);
                 }}
               />
-            )}
+            )} */}
 
             {showTextField && (
               <TouchableOpacity
@@ -648,8 +776,29 @@ const Value= userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id
               </TouchableOpacity>
             )}
             <View style={{paddingBottom: 150}} />
-          </ScrollView>
+          </>
         )}
+      </>
+    );
+  }
+  return (
+    <>
+      <StatusBar backgroundColor={themeDarkBlue} />
+      <ImageBackground
+        source={require('../assets/images/bg.jpg')}
+        style={styles.container}>
+        <FlatList
+          nestedScrollEnabled={true}
+          data={[1,2]}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => {
+            if (index == 0) {
+              return renderHeader();
+            } else {
+              return renderData();
+            }
+          }}
+        />
       </ImageBackground>
     </>
   );
@@ -709,7 +858,7 @@ const styles = StyleSheet.create({
   },
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    marginTop: height * 0.098,
+    marginTop: height * 0.038,
     marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   saveBtnStyle: {
@@ -758,17 +907,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   headingView: {
+    maxWidth: width * 0.9,
+    color: 'white',
     backgroundColor: themeFerozi,
-    borderRadius: width * 0.05,
-    // width: width * 0.55,
-    maxWidth: width * 0.95,
-    paddingHorizontal: width * 0.05,
+    fontSize: width * 0.045,
+    borderRadius: 25,
     paddingVertical: height * 0.01,
-    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    textTransform: 'uppercase',
+    textAlign: 'center',
     marginTop: height * 0.02,
+    marginBottom: height * 0.03,
+    paddingHorizontal: width * 0.05,
   },
 
   headingStyles2: {

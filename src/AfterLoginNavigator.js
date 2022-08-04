@@ -24,6 +24,7 @@ import GroupsScreen from './screens/GroupsScreen';
 import GradesScreen from './screens/GradesScreen';
 import TimeAssessment from './screens/TimeAssessment';
 import GradingSystem from './screens/GradingSystem';
+import GroupFilter from './components/GroupFilter';
 import ScaleScreen from './screens/ScaleScreen';
 import FaciliatorInstructionsScreen from './screens/FaciliatorInstructionsScreen';
 import {connect} from 'react-redux';
@@ -569,6 +570,8 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         })}
         component={FaciliatorInstructionsScreen}
       />
+      
+      
     </AfterLoginStack.Navigator>
   );
 };
