@@ -45,50 +45,62 @@ const GradesScreen = ({
   const [groupMembers, setGroupMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  const [gender, setGender]=useState("all")
+  const [showFilterModal, setShowFilterModal] = useState(true);
+  const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
-  const [participants,setParticipants]=useState([])
-  console.log("first",participants)
+  const [participants, setParticipants] = useState([])
+  // console.log("first",participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
 
-  useEffect(()=>{
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer 25|AQ3o57RsL9c4Xw453pHNb7BGbiejmMah3689WeKa");
-    
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-    
-    let data = fetch("https://webprojectmockup.com/custom/spectrum-8/public/api/participant/data", requestOptions)
-      .then(response => response.json())
-      .then((result) => {
-        setParticipants(result.data)
-      })
-      .catch(error => console.log('error', error));
-
-  },)
   useEffect(() => {
-    getAllGroupsMembers();
-  }, []);
+    setShowFilterModal(true);
+    setParticipants(userReducer.participants);
 
-console.log("iiohihioiouioup",userReducer?.getGroupMembers)
-
-  useEffect(() => {
-    if(userReducer?.groupMembers){
-      if(gender=="all"){
-        setGroupMembers(userReducer?.groupMembers)
-      }else{
-        const filteredData=[...userReducer?.groupMembers].filter(it=>it.Gender==gender)
-        setGroupMembers(filteredData)
-      }
+    return () => {
+      setParticipants([])
     }
-  }, [userReducer?.groupMembers,gender]);
-  console.log(gender)
+  }, [])
+
+
+  // useEffect(()=>{
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("Authorization", "Bearer 25|AQ3o57RsL9c4Xw453pHNb7BGbiejmMah3689WeKa");
+
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow'
+  //   };
+
+  //   let data = fetch("https://webprojectmockup.com/custom/spectrum-8/public/api/participant/data", requestOptions)
+  //     .then(response => response.json())
+  //     .then((result) => {
+  //       setParticipants(result.data)
+  //     })
+  //     .catch(error => console.log('error', error));
+
+  // },)
+
+  // useEffect(() => {
+  //   setShowFilterModal(true)
+  //   // getAllGroupsMembers();
+  // }, []);
+
+  console.log("participants", participants)
+
+  // useEffect(() => {
+  //   if(userReducer?.groupMembers){
+  //     if(gender=="all"){
+  //       setGroupMembers(userReducer?.groupMembers)
+  //     }else{
+  //       const filteredData=[...userReducer?.groupMembers].filter(it=>it.Gender==gender)
+  //       setGroupMembers(filteredData)
+  //     }
+  //   }
+  // }, [userReducer?.groupMembers,gender]);
+  // console.log(gender)
 
   const getAllGroupsMembers = async () => {
     setIsLoading(true);
@@ -101,29 +113,37 @@ console.log("iiohihioiouioup",userReducer?.getGroupMembers)
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
   const filterParticipants = async data => {
+    console.log("selected Grade Id", data.grade_id);
+    console.log("selected Group Id", data.group_id);
+    setIsLoading(true);
+    const filtered = userReducer.participants.filter((participant) => {
+      return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+    });
+    setParticipants(filtered)
+    setIsLoading(false);
 
     // setSelectedGender()
-    if (data?.gender.length > 1) {
-      setSelectedGender('Boys-Girls');
-    } else {
-      setSelectedGender(data?.gender[0].gender);
-    }
+    // if (data?.gender.length > 1) {
+    //   setSelectedGender('Boys-Girls');
+    // } else {
+    //   setSelectedGender(data?.gender[0].gender);
+    // }
 
-    const apiData = {
-      age: data?.age,
-      gender: data?.gender?.map(ele => {
-        if (ele?.id === 1) {
-          return 0;
-        } else {
-          return 1;
-        }
-      }),
-      group_id: data?.group_id,
-    };
-    // console.log(apiData);
-    setIsLoading(true);
-    await getFilteredParticipants(apiData, accessToken, onSuccess);
-    setIsLoading(false);
+    // const apiData = {
+    //   age: data?.age,
+    //   gender: data?.gender?.map(ele => {
+    //     if (ele?.id === 1) {
+    //       return 0;
+    //     } else {
+    //       return 1;
+    //     }
+    //   }),
+    //   group_id: data?.group_id,
+    // };
+    // // console.log(apiData);
+    // setIsLoading(true);
+    // await getFilteredParticipants(apiData, accessToken, onSuccess);
+    // setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -286,23 +306,23 @@ console.log("iiohihioiouioup",userReducer?.getGroupMembers)
                     if (ITEM?.Type === 'Duration') {
                       navigation?.navigate('timeAssessment', {
                         item: ITEM,
-                        childData: {...item,index},
+                        childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData:groupMembers
+                        memberData: groupMembers
                       });
                     } else if (ITEM?.Type === 'Distance') {
                       navigation?.navigate('scaleScreen', {
                         item: ITEM,
-                        childData: {...item,index},
+                        childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData:groupMembers
+                        memberData: groupMembers
                       });
                     } else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
-                        childData: {...item,index},
+                        childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData:groupMembers
+                        memberData: groupMembers
                       });
                     }
                   }}
