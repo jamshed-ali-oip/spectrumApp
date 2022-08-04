@@ -37,45 +37,40 @@ const ParticipantFilterModal = ({
   const [age, setAge] = useState(1);
   const [grade, setGrade] = useState(0);
   const [gradeCounter, setGradeCounter] = useState([]); // array od grades
-  const [gradeData, setGradeData] = useState(); // selected grade
+  const [selectedGrade, setSelectedGrade] = useState(); // selected grade
   const [counter, setCounter] = useState(0);
-  const [Data, setData] = useState([]);
-  const [GroupsData, setGroupsData] = useState([]);
+  const [Grades, setGrades] = useState([]);
+  const [selectedGroupsData, setGroupsData] = useState([]);
   const [selectedboth, setSelectedboth] = useState(false);
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
-  const [selectedGenders, setSelectedGenders] = useState([
-  ]);
-  console.log("age",age)
-  console.log("grade",counter)
-  const [mine,setmine]=useState("");
-  // const GroupsData = userReducer.groups || []
-  // console.log("gradeCounter", gradeCounter);
-  // console.log("gradeData", gradeData);
+  const [selectedGenders, setSelectedGenders] = useState([]);
+  // console.log("userReducer.groups", userReducer.groups);
+  // console.log("Grades", Grades);
+  // console.log("selectedGroupsData", selectedGroupsData);
+  // console.log("selectedGrade", selectedGrade);
+  // console.log("counter", counter);
+  
   useEffect(() => {
-    if (userReducer?.groups && gradeData && gradeData.id) {
+    if (userReducer?.groups && selectedGrade && selectedGrade.id) {
       setGroupsData(
         userReducer?.groups?.filter(group =>
-          group.grade_id.includes(`${gradeData.id}`),
+          group.grade_id.includes(`${selectedGrade.id}`),
         ) || [],
       )}
-  }, [gradeData]);
-  useEffect(()=>{
-    GroupsData.map((item)=>{
-// console.log("data dikahdo",item.grade_id)
-    })
-  },[])
-  // console.log("data given frou",GroupsData)
+  }, [selectedGrade]);
+
+  // console.log("data given frou",selectedGroupsData)
   // console.log(grade);
   // console.log(userReducer.groups);
-  // console.log("first,,,/,/,/", GroupsData)
+  // console.log("first,,,/,/,/", selectedGroupsData)
   // grade_id
-  // GroupsData.map((item) => {
+  // selectedGroupsData.map((item) => {
   //   return (
   //     console.log("dtadtdatdatdatdtadtad", item.grade_id.grade_id('2'))
   //   )
   // })
-  // console.log("dtadtdatdatdatdtadtad",GroupsData.grade_id)
+  // console.log("dtadtdatdatdatdtadtad",selectedGroupsData.grade_id)
   const onPressGender = obj => {
     var i;
     let hasFound = false;
@@ -98,16 +93,13 @@ const ParticipantFilterModal = ({
     setSelectedGenders(copyArr);
   };
   
-  // console.log("first gender",selectedGenders)
   useEffect(() => {
     fetchCall();
-    // console.log(userReducer?.groups[counter])
     if (userReducer?.groups?.length > 0) {
-      // alert("call")
       setGrade(userReducer?.groups[counter]);
-      // console.log("first,",userReducer?.groups[counter])
     }
   }, [counter,userReducer?.groups]);
+
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
     const headers = {
@@ -116,13 +108,9 @@ const ParticipantFilterModal = ({
         Authorization: `Bearer 22|lNXltijPdHHOyVPYSxlmgiym5OLPjenZOFZcRYhO`,
       },
     };
-
     const response = await axios.get(URL, headers);
-    // console.log(response)
-    setData(response.data.data);
-    // setCounter(0)
-    // setAge(1);
-    setGradeData(response.data.data.find(o => o.id === age + 1));
+    setGrades(response.data.data);
+    setSelectedGrade(response.data.data.find(o => o.id === age + 1));
   };
 
   const gradeHandler = param => {
@@ -130,7 +118,7 @@ const ParticipantFilterModal = ({
       if (age > 1) {
         setAge(age - 1);
         // console.log(gradeCounter.find(o => o.id === age - 1));
-        setGradeData(Data.find(o => o.id === age - 1));
+        setSelectedGrade(Grades.find(o => o.id === age - 1));
         // console.log('grade-', gradeCounter);
       }
     // else if(param == "increase") {
@@ -189,7 +177,7 @@ const ParticipantFilterModal = ({
                 <IconComp
                   type={'MaterialIcons'}
                   iconName={
-                    // GroupsData.filter(f=>(f.group_type =="Both"))
+                    // selectedGroupsData.filter(f=>(f.group_type =="Both"))
                     selectedboth == true
                       ? 'check-circle'
                       : 'radio-button-unchecked'
@@ -247,7 +235,7 @@ const ParticipantFilterModal = ({
         <IconComp
           type={'MaterialIcons'}
           iconName={
-            // GroupsData.filter(f=>(f.group_type =="Both"))
+            // selectedGroupsData.filter(f=>(f.group_type =="Both"))
             true
               ? 'check-circle'
               : 'radio-button-unchecked'
@@ -295,14 +283,14 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
                 <Heading
                   passedStyle={[styles.label, {marginHorizontal: width * 0.03}]}
-                  title={age}
+                  title={selectedGrade?.Name || "UnKnow"}
                   fontType="medium"
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    if (age < Data.length) {
+                    if (age < Grades.length) {
                       setAge(age + 1);
-                      setGradeData(Data.find(o => o.id === age + 1));
+                      setSelectedGrade(Grades.find(o => o.id === age + 1));
                       setCounter(0)
                       // console.log('grade', gradeCounter);
                     }
@@ -339,13 +327,13 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
                 <Heading
                   passedStyle={[styles.label, {marginHorizontal: width * 0.03}]}
-                  title={grade?.Name}
+                  title={selectedGroupsData[counter]?.Name || "Unknow"}
                   fontType="medium"
                 />
 
                 <TouchableOpacity
                   onPress={() => {
-                    if (counter < GroupsData.length - 1) {
+                    if (counter < selectedGroupsData.length - 1) {
                       setCounter(counter + 1);
                     }
                   }}>
@@ -363,7 +351,7 @@ const ParticipantFilterModal = ({
             title={'Gender'}
             fontType="medium"
           /> */}
-          {GroupsData.filter(group => group.group_type == 'Both') ? (
+          {selectedGroupsData.filter(group => group.group_type == 'Both') ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -371,9 +359,9 @@ const ParticipantFilterModal = ({
                 justifyContent: 'space-around',
                 marginLeft: width * 0.05,
               }}>
-              {GroupsData.length>1&&(
+              {selectedGroupsData.length>1&&(
                 <>
-                {renderGenders(GroupsData[counter])}
+                {renderGenders(selectedGroupsData[counter])}
                 </>
               )}
             </View>
@@ -403,18 +391,26 @@ const ParticipantFilterModal = ({
                   title={buttonText || 'OK'}
                   onBtnPress={() => {
                     if (onPress) {
+                      console.log("onOk", selectedGroupsData[counter]);
+                      // let selectedGender = []
+                      // if (selectedGroupsData[counter].group_type == "Male") {
+                      //   selectedGender = [0]
+                      // } else if (selectedGroupsData[counter].group_type == "Female") {
+                      //   selectedGender = [1]
+                      // } else {
+                      //   selectedGender = [0, 1]
+                      // }
                       // alert(JSON.stringify({
-                      //   grade: gradeData?.Name,
+                      //   grade: selectedGrade?.Name,
                       //   gender: selectedGenders,
                       //   group_id: grade?.id,
                       // }))
-                      // alert(JSON.stringify(gradeData))
+                      // alert(JSON.stringify(selectedGrade))
                         onPress({
-                          grade_id: gradeData?.id,
-                          gender: selectedGenders.length>0?selectedGenders:(
-                            GroupsData[counter].group_type=="Female"?[1]:[0]
-                          ),
-                          group_id: grade?.id,
+                          grade_id: selectedGrade?.id,
+                          gender: selectedGroupsData[counter].group_type || "Both",
+                          group_id: selectedGroupsData[counter]?.id,
+                          GROUP_DATA: selectedGroupsData[counter]
                         });
                     } else {
                       setIsModalVisible(false);

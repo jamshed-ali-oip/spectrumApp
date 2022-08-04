@@ -39,17 +39,18 @@ const GradesScreen = ({
   getFilteredParticipants,
 }) => {
   const ITEM = route.params.item;
-  const GROUP_DATA = route.params.groupData;
+  // const GROUP_DATA = route.params.groupData;
 
   const accessToken = userReducer.accessToken;
   const [groupMembers, setGroupMembers] = useState([]);
+  const [GROUP_DATA, SET_GROUP_DATA] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(true);
   const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
-  // console.log("first",participants)
+  console.log("GROUP_DATA",GROUP_DATA)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
@@ -113,37 +114,28 @@ const GradesScreen = ({
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
   const filterParticipants = async data => {
-    console.log("selected Grade Id", data.grade_id);
-    console.log("selected Group Id", data.group_id);
+    // console.log("selected", data);
+    // console.log("selected Gender", data.gender);
+    // console.log("selected Grade Id", data.grade_id);
+    // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    const filtered = userReducer.participants.filter((participant) => {
-      return participant.group_id == data.group_id && participant.grade_id == data.grade_id
-    });
-    setParticipants(filtered)
+    SET_GROUP_DATA(data.GROUP_DATA)
+    if (data.gender == "Both") {
+      const filtered = userReducer.participants.filter((participant) => {
+        return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+      });
+      setParticipants(filtered)
+    } else {
+      const filtered = userReducer.participants.filter((participant) => {
+        return (
+          participant.group_id == data.group_id &&
+          participant.grade_id == data.grade_id &&
+          participant.Gender == data.gender
+        )
+      });
+      setParticipants(filtered)
+    }
     setIsLoading(false);
-
-    // setSelectedGender()
-    // if (data?.gender.length > 1) {
-    //   setSelectedGender('Boys-Girls');
-    // } else {
-    //   setSelectedGender(data?.gender[0].gender);
-    // }
-
-    // const apiData = {
-    //   age: data?.age,
-    //   gender: data?.gender?.map(ele => {
-    //     if (ele?.id === 1) {
-    //       return 0;
-    //     } else {
-    //       return 1;
-    //     }
-    //   }),
-    //   group_id: data?.group_id,
-    // };
-    // // console.log(apiData);
-    // setIsLoading(true);
-    // await getFilteredParticipants(apiData, accessToken, onSuccess);
-    // setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -182,7 +174,7 @@ const GradesScreen = ({
             }
             ListFooterComponent={() => {
               return (
-                groupMembers?.length === 0 && (
+                participants?.length === 0 && (
                   <View
                     style={{
                       backgroundColor: 'rgba(0,0,0,0.2)',
@@ -286,11 +278,11 @@ const GradesScreen = ({
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
                     />
-                    <Heading
+                    {/* <Heading
                       title={`${GROUP_DATA?.Name} - ${selectedGender}`}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
-                    />
+                    /> */}
                   </View>
                 </ScrollView>
                 {/* Colors  */}
@@ -308,26 +300,26 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: groupMembers
+                        memberData: participants
                       });
                     } else if (ITEM?.Type === 'Distance') {
                       navigation?.navigate('scaleScreen', {
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: groupMembers
+                        memberData: participants
                       });
                     } else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: groupMembers
+                        memberData: participants
                       });
                     }
                   }}
                   style={[
-                    index !== groupMembers?.length - 1 && {
+                    index !== participants?.length - 1 && {
                       borderBottomColor: 'silver',
                       borderBottomWidth: 1,
                     },
