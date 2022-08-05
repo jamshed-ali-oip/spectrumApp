@@ -96,20 +96,38 @@ const GradesScreen = ({
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
     SET_GROUP_DATA(data.GROUP_DATA)
+    
     if (data.gender == "Both") {
-      const filtered = userReducer.participants.filter((participant) => {
-        return participant.group_id == data.group_id && participant.grade_id == data.grade_id
-      });
-      setParticipants(filtered)
+      if(data.gradeAll){
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.group_id == data.group_id
+        });
+        setParticipants(filtered)
+      }else{
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+        });
+        setParticipants(filtered)
+      }
     } else {
-      const filtered = userReducer.participants.filter((participant) => {
-        return (
-          participant.group_id == data.group_id &&
-          participant.grade_id == data.grade_id &&
-          participant.Gender == data.gender
-        )
-      });
-      setParticipants(filtered)
+      if(data.gradeAll){
+        const filtered = userReducer.participants.filter((participant) => {
+          return (
+            participant.group_id == data.group_id &&
+            participant.Gender == data.gender
+          )
+        });
+        setParticipants(filtered)
+      }else{
+        const filtered = userReducer.participants.filter((participant) => {
+          return (
+            participant.group_id == data.group_id &&
+            participant.grade_id == data.grade_id &&
+            participant.Gender == data.gender
+          )
+        });
+        setParticipants(filtered)
+      }
     }
     setIsLoading(false);
   };

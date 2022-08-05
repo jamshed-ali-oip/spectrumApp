@@ -45,6 +45,7 @@ const ParticipantFilterModal = ({
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Both");
+  const [gradeAll, setGradeAll] = useState(false);
   // console.log("userReducer.groups", userReducer.groups);
   // console.log("Grades", Grades);
   // console.log("selectedGroupsData", selectedGroupsData);
@@ -74,6 +75,8 @@ const ParticipantFilterModal = ({
       setGrade(userReducer?.groups[counter]);
     }
   }, [userReducer?.groups]);
+
+  console.log("aaaaaaaaa")
 
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
@@ -268,7 +271,33 @@ const ParticipantFilterModal = ({
             </View>
 
             {/* Grade  */}
-            <View style={styles.filterContainer}>
+            <View>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  // onPress={() => onPressGender({id: 3, gender: 'Both'})}
+                  onPress={() => {
+                    setGradeAll(!gradeAll)
+                  }}
+                  style={styles.checkBoxContainer}>
+                  <IconComp
+                    type={'MaterialIcons'}
+                    iconName={
+                      // selectedGroupsData.filter(f=>(f.group_type =="Both"))
+                      gradeAll
+                        ? 'check-circle'
+                        : 'radio-button-unchecked'
+                    }
+                    passedStyle={styles.textLAbel}
+                  />
+                  <Heading
+                    passedStyle={styles.label}
+                    title={'All Grade'}
+                    fontType="medium"
+                  />
+                </TouchableOpacity>
+              </View>
+            {!gradeAll && (
+              <View style={styles.filterContainer}>
               <Heading
                 passedStyle={styles.label}
                 title={'Grade'}
@@ -304,6 +333,7 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
               </View>
             </View>
+            )}
 
           </View>
           {/* <Heading
@@ -370,7 +400,8 @@ const ParticipantFilterModal = ({
                         grade_id: selectedGrade?.id,
                         gender: selectedGender || selectedGroupsData[counter]?.group_type || "Both",
                         group_id: selectedGroupsData[counter]?.id,
-                        GROUP_DATA: selectedGroupsData[counter]
+                        GROUP_DATA: selectedGroupsData[counter],
+                        gradeAll
                       });
                       setIsModalVisible(false);
                     } else {
@@ -451,7 +482,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: width * 0.8,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   cancelBtnStyle: {
     borderRadius: width * 0.025,
