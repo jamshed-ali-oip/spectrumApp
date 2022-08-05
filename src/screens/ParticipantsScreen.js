@@ -12,7 +12,7 @@ import {
   Platform,
   RefreshControl,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -22,15 +22,15 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {template} from '@babel/core';
+import { template } from '@babel/core';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import ParticipantFilterModal from '../components/ParticipantFilterModal';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const ParticipantsScreen = ({
   navigation,
@@ -40,24 +40,38 @@ const ParticipantsScreen = ({
   getFilteredParticipants,
 }) => {
   const accessToken = userReducer.accessToken;
-  const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Boys-Girls");
+  const [participants, setParticipants] = useState([]);
+
+  console.log('====================================');
+  console.log(userReducer);
+  console.log('====================================');
 
   useEffect(() => {
     getAllParticipants();
-  }, []);
+    return () => {
+      setParticipants([])
+    }
+  }, [])
 
   useEffect(() => {
-    setParticipants(userReducer?.participants);
-  }, [userReducer?.participants]);
+    setParticipants(userReducer.participants);
+  }, [userReducer.participants])
 
   const getAllParticipants = async () => {
     setIsLoading(true);
     await getParticipants(accessToken);
     await getGroups(accessToken);
+    setIsLoading(false);
+  };
+
+  const getAllGroupsMembers = async () => {
+    setIsLoading(true);
+    await getGroupMembers(apiData, accessToken);
+    await getColors(accessToken);
     setIsLoading(false);
   };
 
@@ -70,37 +84,34 @@ const ParticipantsScreen = ({
     wait(1500).then(() => {
       setRefreshing(false);
       getAllParticipants();
+      getAllGroupsMembers();
     });
   }, []);
 
-  const filterParticipants = async (data) => {
-    // setSelectedGender()
-
-      if (data?.gender.length>1) {
-        setSelectedGender("Boys-Girls")
-      }
-      else if(data?.gender[0]==0){
-        setSelectedGender("Boys")
-      }else{
-        setSelectedGender("Girls")
-      }
-    // alert(JSON.stringify(data?.gender[0].gender));
-    // data?.gender?.map((gender) => {
-    // })
-    const apiData = {
-      age: data?.age,
-      gender: data?.gender?.map(ele => {
-        if (ele?.id === 1) {
-          return 0;
-        } else {
-          return 1;
-        }
-      }),
-      group_id: data?.group_id,
-    };
-    // console.log(apiData);
+  const filterParticipants = async data => {
+    console.log("selected", data);
+    console.log("selected Gender", data.gender);
+    console.log("selected Grade Id", data.grade_id);
+    console.log("selected Group Id", data.group_id);
+    console.log("participants", participants)
     setIsLoading(true);
-    await getFilteredParticipants(data, accessToken, onSuccess);
+    // SET_GROUP_DATA(data.GROUP_DATA)
+    if (data.gender == "Both") {
+      const filtered = userReducer.participants.filter((participant) => {
+        return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+      });
+      setParticipants(filtered)
+    } else {
+      const filtered = userReducer.participants.filter((participant) => {
+        return (
+          participant.group_id == data.group_id &&
+          participant.grade_id == data.grade_id &&
+          participant.Gender == data.gender
+        )
+      });
+      setParticipants(filtered)
+    }
+    setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -124,7 +135,7 @@ const ParticipantsScreen = ({
           />
         ) : (
           <FlatList
-            contentContainerStyle={{paddingBottom: height * 0.1}}
+            contentContainerStyle={{ paddingBottom: height * 0.1 }}
             ListFooterComponent={() => {
               return (
                 participants?.length === 0 && (
@@ -141,7 +152,7 @@ const ParticipantsScreen = ({
                     }}>
                     <Heading
                       title="No Record, Swipe Down To Refresh"
-                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      passedStyle={{ fontSize: width * 0.045, color: 'white' }}
                       fontType="semi-bold"
                     />
                   </View>
@@ -204,12 +215,12 @@ const ParticipantsScreen = ({
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={participants}
-            keyExtractor={({item, index}) => item?.id?.toString()}
-            renderItem={({item, index}) => {
+            keyExtractor={({ item, index }) => item?.id?.toString()}
+            renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation?.navigate('viewParticipants', {data: item})
+                    navigation?.navigate('viewParticipants', { data: item })
                   }
                   style={{
                     width: width * 0.9,
@@ -224,7 +235,7 @@ const ParticipantsScreen = ({
                   }}>
                   <Heading
                     title={`${item?.Firstname} ${item?.Lastname}`}
-                    passedStyle={{color: 'white', fontSize: width * 0.04}}
+                    passedStyle={{ color: 'white', fontSize: width * 0.04 }}
                     fontType="regular"
                   />
                   <View
@@ -235,7 +246,7 @@ const ParticipantsScreen = ({
                     }}>
                     <TouchableOpacity
                       onPress={() =>
-                        navigation?.navigate('viewParticipants', {data: item})
+                        navigation?.navigate('viewParticipants', { data: item })
                       }
                       activeOpacity={0.9}>
                       <Image
@@ -275,8 +286,8 @@ const ParticipantsScreen = ({
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(ParticipantsScreen);
 const styles = StyleSheet.create({

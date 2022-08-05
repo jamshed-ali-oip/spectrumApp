@@ -122,6 +122,7 @@ const GradesScreen = ({
     setRefreshing(true);
     wait(1500).then(() => {
       setRefreshing(false);
+      getAllParticipants();
       getAllGroupsMembers();
     });
   }, []);

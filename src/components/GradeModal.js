@@ -51,7 +51,7 @@ const ParticipantFilterModal = ({
   // console.log("counter selectedGroupsData", selectedGroupsData[counter]);
   // console.log("selectedGrade", selectedGrade);
   // console.log("counter", counter);
-console.log("myyy data =?????????".selectedGroupsData)
+  console.log("myyy data =?????????", age, age <= 1)
   useEffect(() => {
     if (userReducer?.groups && selectedGrade && selectedGrade.id) {
       setGroupsData(
@@ -61,7 +61,7 @@ console.log("myyy data =?????????".selectedGroupsData)
       )
     }
   }, [selectedGrade]);
-console.log("first grdae data",Grades)
+  // console.log("first grdae data", Grades)
   useEffect(() => {
     if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
@@ -192,7 +192,6 @@ console.log("first grdae data",Grades)
             // setSelectedboth(true)
             // setSelectedgirl(false)
           }}
-          disabled={true}
           style={styles.checkBoxContainer}>
           <IconComp
             type={'MaterialIcons'}
@@ -225,43 +224,8 @@ console.log("first grdae data",Grades)
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            {/* Age  */}
-            <View style={styles.filterContainer}>
-              <Heading
-                passedStyle={styles.label}
-                title={'Grade'}
-                fontType="medium"
-              />
-              <View style={styles.rowView}>
-                <TouchableOpacity
-                  onPress={() => {
-                    gradeHandlerGrade('decrease');
-                  }}>
-                  <IconComp
-                    type={'Feather'}
-                    iconName={'minus-circle'}
-                    passedStyle={styles.textLAbel}
-                  />
-                </TouchableOpacity>
-                <Heading
-                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                  title={selectedGrade?.Name || "UnKnow"}
-                  fontType="medium"
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    gradeHandlerGrade('incress');
-                  }}>
-                  <IconComp
-                    type={'Feather'}
-                    iconName={'plus-circle'}
-                    passedStyle={styles.textLAbel}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
 
-            {/* Grade  */}
+            {/* Group  */}
             <View style={styles.filterContainer}>
               <Heading
                 passedStyle={styles.label}
@@ -302,6 +266,45 @@ console.log("first grdae data",Grades)
                 </TouchableOpacity>
               </View>
             </View>
+
+            {/* Grade  */}
+            <View style={styles.filterContainer}>
+              <Heading
+                passedStyle={styles.label}
+                title={'Grade'}
+                fontType="medium"
+              />
+              <View style={styles.rowView}>
+                <TouchableOpacity
+                  disabled={age <= 1}
+                  onPress={() => {
+                    gradeHandlerGrade('decrease');
+                  }}>
+                  <IconComp
+                    type={'Feather'}
+                    iconName={'minus-circle'}
+                    passedStyle={styles.textLAbel}
+                  />
+                </TouchableOpacity>
+                <Heading
+                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
+                  title={selectedGrade?.Name || "Not Possible"}
+                  fontType="medium"
+                />
+                <TouchableOpacity
+                  disabled={age >= 10}
+                  onPress={() => {
+                    gradeHandlerGrade('incress');
+                  }}>
+                  <IconComp
+                    type={'Feather'}
+                    iconName={'plus-circle'}
+                    passedStyle={styles.textLAbel}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
           </View>
           {/* <Heading
             passedStyle={[styles.label, {marginLeft: width * 0.03}]}
@@ -369,7 +372,7 @@ console.log("first grdae data",Grades)
                         group_id: selectedGroupsData[counter]?.id,
                         GROUP_DATA: selectedGroupsData[counter]
                       });
-                      
+                      setIsModalVisible(false);
                     } else {
                       setIsModalVisible(false);
                     }
@@ -378,7 +381,7 @@ console.log("first grdae data",Grades)
                   btnStyle={styles.btnStyle}
                   btnTextStyle={styles.btnTextStyle}
                 />
-                <Button
+                {/* <Button
                   title="CANCEL"
                   onBtnPress={() => {
                     setIsModalVisible(false);
@@ -386,7 +389,7 @@ console.log("first grdae data",Grades)
                   isBgColor={false}
                   btnStyle={styles.cancelBtnStyle}
                   btnTextStyle={styles.cancelBtnTextStyle}
-                />
+                /> */}
               </>
             )}
           </View>
@@ -437,7 +440,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: themeLightBlue,
     borderRadius: width * 0.025,
-    width: width * 0.35,
+    width: width * 0.7,
     margin: 0,
   },
   filterContainer: {
