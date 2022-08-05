@@ -1,5 +1,5 @@
 import Modal from 'react-native-modal';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -20,11 +20,11 @@ import {
   themePurple,
 } from '../assets/colors/colors';
 import IconComp from './IconComp';
-import {useEffect} from 'react';
-import {connect} from 'react-redux';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
-import {baseUrl} from '../config';
-const {width, height} = Dimensions.get('window');
+import { baseUrl } from '../config';
+const { width, height } = Dimensions.get('window');
 
 const ParticipantFilterModal = ({
   isModalVisible,
@@ -34,7 +34,7 @@ const ParticipantFilterModal = ({
   showLoader,
   userReducer,
 }) => {
-  const [age, setAge] = useState(1);
+  const [age, setAge] = useState(0);
   const [grade, setGrade] = useState(0);
   const [gradeCounter, setGradeCounter] = useState([]); // array od grades
   const [selectedGrade, setSelectedGrade] = useState(); // selected grade
@@ -44,61 +44,36 @@ const ParticipantFilterModal = ({
   const [selectedboth, setSelectedboth] = useState(false);
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
-  const [selectedGenders, setSelectedGenders] = useState([]);
+  const [selectedGender, setSelectedGender] = useState("Both");
   // console.log("userReducer.groups", userReducer.groups);
   // console.log("Grades", Grades);
   // console.log("selectedGroupsData", selectedGroupsData);
+  // console.log("counter selectedGroupsData", selectedGroupsData[counter]);
   // console.log("selectedGrade", selectedGrade);
   // console.log("counter", counter);
-  
+console.log("myyy data =?????????".selectedGroupsData)
   useEffect(() => {
     if (userReducer?.groups && selectedGrade && selectedGrade.id) {
       setGroupsData(
         userReducer?.groups?.filter(group =>
           group.grade_id.includes(`${selectedGrade.id}`),
         ) || [],
-      )}
+      )
+    }
   }, [selectedGrade]);
-
-  // console.log("data given frou",selectedGroupsData)
-  // console.log(grade);
-  // console.log(userReducer.groups);
-  // console.log("first,,,/,/,/", selectedGroupsData)
-  // grade_id
-  // selectedGroupsData.map((item) => {
-  //   return (
-  //     console.log("dtadtdatdatdatdtadtad", item.grade_id.grade_id('2'))
-  //   )
-  // })
-  // console.log("dtadtdatdatdatdtadtad",selectedGroupsData.grade_id)
-  const onPressGender = obj => {
-    var i;
-    let hasFound = false;
-    let index;
-    for (i = 0; i < selectedGenders.length; i++) {
-      if (selectedGenders[i].id === obj.id) {
-        hasFound = true;
-        index = i;
-        // return;
-      }
+console.log("first grdae data",Grades)
+  useEffect(() => {
+    if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
+      setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
     }
+  }, [counter])
 
-    let copyArr = [...selectedGenders];
-
-    if (hasFound) {
-      copyArr.splice(index, 1);
-    } else {
-      copyArr.push(obj);
-    }
-    setSelectedGenders(copyArr);
-  };
-  
   useEffect(() => {
     fetchCall();
     if (userReducer?.groups?.length > 0) {
       setGrade(userReducer?.groups[counter]);
     }
-  }, [counter,userReducer?.groups]);
+  }, [userReducer?.groups]);
 
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
@@ -113,144 +88,132 @@ const ParticipantFilterModal = ({
     setSelectedGrade(response.data.data.find(o => o.id === age + 1));
   };
 
-  const gradeHandler = param => {
-    if (param == 'decrease')
-      if (age > 1) {
-        setAge(age - 1);
-        // console.log(gradeCounter.find(o => o.id === age - 1));
-        setSelectedGrade(Grades.find(o => o.id === age - 1));
-        // console.log('grade-', gradeCounter);
-      }
-    // else if(param == "increase") {
-    //   console.log("increse")
-    //   if(age < 8){
-    //     setAge(age + 1);
-    //     console.log(age)
-    //     console.log(grade.find(o => o.id === age));
-    //   }
-    // }
+  const gradeHandlerGrade = param => {
+    if (param == 'decrease') {
+      setAge((age) => age - 1);
+      setSelectedGrade(Grades.find(o => o.id === age - 1));
+      setCounter(0)
+    } else {
+      setAge((age) => age + 1);
+      setSelectedGrade(Grades.find(o => o.id === age + 1));
+      setCounter(0)
+    }
   };
 
-  function renderGenders(group){
-    if(group?.group_type=="Both"){
-      return(
+  function renderGenders(group) {
+    if (group?.group_type == "Both") {
+      return (
         <>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={styles.checkBoxContainer}
-                // onPress={() =>
-                // onPressGender({id: 1, gender: 'Boys'})
-                // }
-                onPress={() => {
-                  setSelectedGenders([0])
-                  setSelectedboy(true),
-                    setSelectedboth(false),
-                    setSelectedgirl(false);
-                }}>
-                <IconComp
-                  type={'MaterialIcons'}
-                  iconName={
-                    // selectedGenders[0]?.id === 1 || selectedGenders[1]?.id === 1
-                    selectedboy == true
-                      ? 'check-circle'
-                      : 'radio-button-unchecked'
-                  }
-                  passedStyle={styles.textLAbel}
-                />
-                <Heading
-                  passedStyle={styles.label}
-                  title={'Boys'}
-                  fontType="medium"
-                />
-              </TouchableOpacity>
+          {/* All */}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            // onPress={() => onPressGender({id: 3, gender: 'Both'})}
+            onPress={() => {
+              setSelectedGender("Both")
+            }}
+            style={styles.checkBoxContainer}>
+            <IconComp
+              type={'MaterialIcons'}
+              iconName={
+                // selectedGroupsData.filter(f=>(f.group_type =="Both"))
+                selectedGender == "Both"
+                  ? 'check-circle'
+                  : 'radio-button-unchecked'
+              }
+              passedStyle={styles.textLAbel}
+            />
+            <Heading
+              passedStyle={styles.label}
+              title={'All'}
+              fontType="medium"
+            />
+          </TouchableOpacity>
 
-              <TouchableOpacity
-                activeOpacity={0.9}
-                // onPress={() => onPressGender({id: 3, gender: 'Both'})}
-                onPress={() => {
-                  setSelectedGenders([0,1])
-                  setSelectedboy(false),
-                    setSelectedboth(true),
-                    setSelectedgirl(false);
-                }}
-                style={styles.checkBoxContainer}>
-                <IconComp
-                  type={'MaterialIcons'}
-                  iconName={
-                    // selectedGroupsData.filter(f=>(f.group_type =="Both"))
-                    selectedboth == true
-                      ? 'check-circle'
-                      : 'radio-button-unchecked'
-                  }
-                  passedStyle={styles.textLAbel}
-                />
-                <Heading
-                  passedStyle={styles.label}
-                  title={'Both'}
-                  fontType="medium"
-                />
-              </TouchableOpacity>
+          {/* Male */}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.checkBoxContainer}
+            onPress={() => {
+              setSelectedGender("Male")
+            }}>
+            <IconComp
+              type={'MaterialIcons'}
+              iconName={
+                // selectedGenders[0]?.id === 1 || selectedGenders[1]?.id === 1
+                selectedGender == "Male"
+                  ? 'check-circle'
+                  : 'radio-button-unchecked'
+              }
+              passedStyle={styles.textLAbel}
+            />
+            <Heading
+              passedStyle={styles.label}
+              title={'Boys'}
+              fontType="medium"
+            />
+          </TouchableOpacity>
 
-              <TouchableOpacity
-                activeOpacity={0.9}
-                // onPress={() => onPressGender({id: 2, gender: 'Girls'})}
-                onPress={() => {
-                  setSelectedGenders([1])
-                  setSelectedboy(false),
-                    setSelectedboth(false),
-                    setSelectedgirl(true);
-                }}
-                style={styles.checkBoxContainer}>
-                <IconComp
-                  type={'MaterialIcons'}
-                  iconName={
-                    // selectedGenders[0]?.id === 2 || selectedGenders[1]?.id === 2
-                    selectedgirl == true
-                      ? 'check-circle'
-                      : 'radio-button-unchecked'
-                  }
-                  passedStyle={styles.textLAbel}
-                />
-                <Heading
-                  passedStyle={styles.label}
-                  title={'Girls'}
-                  fontType="medium"
-                />
-              </TouchableOpacity>
+
+          {/* Female */}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            // onPress={() => onPressGender({id: 2, gender: 'Girls'})}
+            onPress={() => {
+              setSelectedGender("Female")
+            }}
+            style={styles.checkBoxContainer}>
+            <IconComp
+              type={'MaterialIcons'}
+              iconName={
+                // selectedGenders[0]?.id === 2 || selectedGenders[1]?.id === 2
+                selectedGender == "Female"
+                  ? 'check-circle'
+                  : 'radio-button-unchecked'
+              }
+              passedStyle={styles.textLAbel}
+            />
+            <Heading
+              passedStyle={styles.label}
+              title={'Girls'}
+              fontType="medium"
+            />
+          </TouchableOpacity>
         </>
       )
     }
-    else{
-      return(
+    else {
+      // setSelectedGender("Hello")
+      return (
         <TouchableOpacity
-        activeOpacity={0.9}
-        // onPress={() => onPressGender({id: 3, gender: 'Both'})}
-        onPress={() => {
-          setSelectedboy(false),
-            setSelectedboth(true),
-            setSelectedgirl(false);
-        }}
-        disabled={true}
-        style={styles.checkBoxContainer}>
-        <IconComp
-          type={'MaterialIcons'}
-          iconName={
-            // selectedGroupsData.filter(f=>(f.group_type =="Both"))
-            true
-              ? 'check-circle'
-              : 'radio-button-unchecked'
-          }
-          passedStyle={styles.textLAbel}
-        />
-        <Heading
-          passedStyle={styles.label}
-          title={group?.group_type}
-          fontType="medium"
-        />
-      </TouchableOpacity>
+          activeOpacity={0.9}
+          // onPress={() => onPressGender({id: 3, gender: 'Both'})}
+          onPress={() => {
+            // setSelectedboy(false)
+            // setSelectedboth(true)
+            // setSelectedgirl(false)
+          }}
+          disabled={true}
+          style={styles.checkBoxContainer}>
+          <IconComp
+            type={'MaterialIcons'}
+            iconName={
+              // selectedGroupsData.filter(f=>(f.group_type =="Both"))
+              true
+                ? 'check-circle'
+                : 'radio-button-unchecked'
+            }
+            passedStyle={styles.textLAbel}
+          />
+          <Heading
+            passedStyle={styles.label}
+            title={selectedGender == "Male" ? "Boys" : "Girls"}
+            fontType="medium"
+          />
+        </TouchableOpacity>
       )
     }
   }
+
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
@@ -272,8 +235,7 @@ const ParticipantFilterModal = ({
               <View style={styles.rowView}>
                 <TouchableOpacity
                   onPress={() => {
-                    gradeHandler('decrease');
-                    setCounter(0)
+                    gradeHandlerGrade('decrease');
                   }}>
                   <IconComp
                     type={'Feather'}
@@ -282,18 +244,13 @@ const ParticipantFilterModal = ({
                   />
                 </TouchableOpacity>
                 <Heading
-                  passedStyle={[styles.label, {marginHorizontal: width * 0.03}]}
+                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
                   title={selectedGrade?.Name || "UnKnow"}
                   fontType="medium"
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    if (age < Grades.length) {
-                      setAge(age + 1);
-                      setSelectedGrade(Grades.find(o => o.id === age + 1));
-                      setCounter(0)
-                      // console.log('grade', gradeCounter);
-                    }
+                    gradeHandlerGrade('incress');
                   }}>
                   <IconComp
                     type={'Feather'}
@@ -326,7 +283,7 @@ const ParticipantFilterModal = ({
                   />
                 </TouchableOpacity>
                 <Heading
-                  passedStyle={[styles.label, {marginHorizontal: width * 0.03}]}
+                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
                   title={selectedGroupsData[counter]?.Name || "Unknow"}
                   fontType="medium"
                 />
@@ -351,7 +308,7 @@ const ParticipantFilterModal = ({
             title={'Gender'}
             fontType="medium"
           /> */}
-          {selectedGroupsData.filter(group => group.group_type == 'Both') ? (
+          {/* {selectedGroupsData.filter(group => group.group_type == 'Both') ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -367,7 +324,22 @@ const ParticipantFilterModal = ({
             </View>
           ) : (
             <Text>nill</Text>
-          )}
+          )} */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              marginLeft: width * 0.05,
+            }}>
+            {
+              selectedGroupsData.length ? (
+                <>
+                  {renderGenders(selectedGroupsData[counter])}
+                </>
+              ) : <Text>Something went wrong!</Text>
+            }
+          </View>
           {/* Buttons Container  */}
           <View style={styles.flexRow}>
             {showLoader ? (
@@ -391,27 +363,13 @@ const ParticipantFilterModal = ({
                   title={buttonText || 'OK'}
                   onBtnPress={() => {
                     if (onPress) {
-                      console.log("onOk", selectedGroupsData[counter]);
-                      // let selectedGender = []
-                      // if (selectedGroupsData[counter].group_type == "Male") {
-                      //   selectedGender = [0]
-                      // } else if (selectedGroupsData[counter].group_type == "Female") {
-                      //   selectedGender = [1]
-                      // } else {
-                      //   selectedGender = [0, 1]
-                      // }
-                      // alert(JSON.stringify({
-                      //   grade: selectedGrade?.Name,
-                      //   gender: selectedGenders,
-                      //   group_id: grade?.id,
-                      // }))
-                      // alert(JSON.stringify(selectedGrade))
-                        onPress({
-                          grade_id: selectedGrade?.id,
-                          gender: selectedGroupsData[counter].group_type || "Both",
-                          group_id: selectedGroupsData[counter]?.id,
-                          GROUP_DATA: selectedGroupsData[counter]
-                        });
+                      onPress({
+                        grade_id: selectedGrade?.id,
+                        gender: selectedGender || selectedGroupsData[counter]?.group_type || "Both",
+                        group_id: selectedGroupsData[counter]?.id,
+                        GROUP_DATA: selectedGroupsData[counter]
+                      });
+                      
                     } else {
                       setIsModalVisible(false);
                     }
@@ -437,14 +395,14 @@ const ParticipantFilterModal = ({
     </View>
   );
 };
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, null)(ParticipantFilterModal);
 
 const styles = StyleSheet.create({
-  textLAbel: {color: themeLightBlue, fontSize: width * 0.08},
-  rowView: {flexDirection: 'row', alignItems: 'center'},
+  textLAbel: { color: themeLightBlue, fontSize: width * 0.08 },
+  rowView: { flexDirection: 'row', alignItems: 'center' },
   checkBoxContainer: {
     flexDirection: 'row',
     alignItems: 'center',

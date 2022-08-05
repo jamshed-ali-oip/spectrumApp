@@ -24,7 +24,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
   const [assessments, setAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+console.log("firstjolj",userReducer)
   const _onPressRunAssessment = item => {
     navigation.navigate('runAssessment', {item: item});
     console.log("ljdkahsilh",item)

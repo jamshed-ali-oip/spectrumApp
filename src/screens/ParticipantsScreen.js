@@ -36,8 +36,8 @@ const ParticipantsScreen = ({
   navigation,
   userReducer,
   getParticipants,
-  getFilteredParticipants,
   getGroups,
+  getFilteredParticipants,
 }) => {
   const accessToken = userReducer.accessToken;
   const [participants, setParticipants] = useState([]);

@@ -36,6 +36,8 @@ const GradesScreen = ({
   getGroupMembers,
   userReducer,
   getColors,
+  getParticipants,
+  getGroups,
   getFilteredParticipants,
 }) => {
   const ITEM = route.params.item;
@@ -50,58 +52,31 @@ const GradesScreen = ({
   const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
-  console.log("GROUP_DATA",GROUP_DATA)
+
+  // console.log("GROUP_DATA",GROUP_DATA)
+  console.log("participants",participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
 
   useEffect(() => {
-    setShowFilterModal(true);
-    setParticipants(userReducer.participants);
-
+    getAllParticipants();
     return () => {
       setParticipants([])
     }
   }, [])
 
+  useEffect(() => {
+    setParticipants(userReducer.participants);
+  }, [userReducer.participants])
 
-  // useEffect(()=>{
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("Authorization", "Bearer 25|AQ3o57RsL9c4Xw453pHNb7BGbiejmMah3689WeKa");
-
-  //   var requestOptions = {
-  //     method: 'GET',
-  //     headers: myHeaders,
-  //     redirect: 'follow'
-  //   };
-
-  //   let data = fetch("https://webprojectmockup.com/custom/spectrum-8/public/api/participant/data", requestOptions)
-  //     .then(response => response.json())
-  //     .then((result) => {
-  //       setParticipants(result.data)
-  //     })
-  //     .catch(error => console.log('error', error));
-
-  // },)
-
-  // useEffect(() => {
-  //   setShowFilterModal(true)
-  //   // getAllGroupsMembers();
-  // }, []);
-
-  console.log("participants", participants)
-
-  // useEffect(() => {
-  //   if(userReducer?.groupMembers){
-  //     if(gender=="all"){
-  //       setGroupMembers(userReducer?.groupMembers)
-  //     }else{
-  //       const filteredData=[...userReducer?.groupMembers].filter(it=>it.Gender==gender)
-  //       setGroupMembers(filteredData)
-  //     }
-  //   }
-  // }, [userReducer?.groupMembers,gender]);
-  // console.log(gender)
+  const getAllParticipants = async () => {
+    setShowFilterModal(true);
+    setIsLoading(true);
+    await getParticipants(accessToken);
+    await getGroups(accessToken);
+    setIsLoading(false);
+  };
 
   const getAllGroupsMembers = async () => {
     setIsLoading(true);
@@ -113,6 +88,7 @@ const GradesScreen = ({
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
+
   const filterParticipants = async data => {
     // console.log("selected", data);
     // console.log("selected Gender", data.gender);

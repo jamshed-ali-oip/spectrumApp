@@ -12,7 +12,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import React, {useState, useEffect,useLayoutEffect} from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Heading from '../components/Heading';
 import * as actions from '../store/actions';
 import {
@@ -20,11 +20,11 @@ import {
   themeFerozi,
   themeLightBlue,
 } from '../assets/colors/colors';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const ScaleScreen = ({
   navigation,
@@ -39,67 +39,68 @@ const ScaleScreen = ({
   const ITEM = route?.params?.item;
   const CHILD_DATA = route.params.childData;
   const GROUP_DATA = route.params.groupData;
-  const [Memebers,setMembers] = useState([]);
+  const [Memebers, setMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [score, setScore] = useState('0');
   const [ranges, setRanges] = useState([]);
   const [ans, setAns] = useState(height * 0.01);
   const [Uservalue, setUservalue] = useState({});
-  const [Resultvalue,setResultvalue]=useState([]);
+  const [Resultvalue, setResultvalue] = useState([]);
   // const [assessment_id,setassessment_id]=useState([]);
-  const [resultColor, setResultColor] = useState(
-    colors[7]?.WebColor || 'black',
-  );
-// console.log("scale screen...... child",Memebers)
-console.log("clikcekkkkkk data")
-useLayoutEffect(()=>{
-  setMembers(route.params?.memberData)
-},[])
+  // const [resultColor, setResultColor] = useState(
+  //   colors[7]?.WebColor || 'black',
+  // );
+  // console.log("scale screen...... child",Memebers)
+  // console.log("clikcekkkkkk data")
+  useLayoutEffect(() => {
+    setMembers(route.params?.memberData)
+  }, [])
   // const RESULT = 25;
-  const space1 = height * 0.01;
-  const space2 = height * 0.045;
-  const space3 = height * 0.08;
-  const space4 = height * 0.115;
-  const space5 = height * 0.145;
-  const space6 = height * 0.175;
-  const space7 = height * 0.215;
-  const space8 = height * 0.245;
-  const assessment_id=userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
+  // const space1 = height * 0.01;
+  // const space2 = height * 0.045;
+  // const space3 = height * 0.08;
+  // const space4 = height * 0.115;
+  // const space5 = height * 0.145;
+  // const space6 = height * 0.175;
+  // const space7 = height * 0.215;
+  // const space8 = height * 0.245;
+  const assessment_id = userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
+
   const findResult = () => {
-    if (score > parseInt(ranges[0]?.MaxValue)) {
-      setAns(space1);
-      setResultColor(colors[7]?.WebColor);
-    } else if (score > parseInt(ranges[1]?.MaxValue)) {
-      setResultColor(colors[7]?.WebColor);
-      setAns(space1);
-    } else if (score > parseInt(ranges[2]?.MaxValue)) {
-      setResultColor(colors[6]?.WebColor);
-      setAns(space2);
-    } else if (score > parseInt(ranges[3]?.MaxValue)) {
-      setResultColor(colors[5]?.WebColor);
-      setAns(space3);
-    } else if (score > parseInt(ranges[4]?.MaxValue)) {
-      setResultColor(colors[4]?.WebColor);
-      setAns(space4);
-    } else if (score > parseInt(ranges[5]?.MaxValue)) {
-      setResultColor(colors[3]?.WebColor);
-      setAns(space5);
-    } else if (score > parseInt(ranges[6]?.MaxValue)) {
-      setResultColor(colors[2]?.WebColor);
-      setAns(space6);
-    } else if (score > parseInt(ranges[7]?.MaxValue)) {
-      setResultColor(colors[1]?.WebColor);
-      setAns(space7);
-    } else {
-      setResultColor(colors[0]?.WebColor);
-      setAns(space8);
-    }
+    // if (score > parseInt(ranges[0]?.MaxValue)) {
+    //   setAns(space1);
+    //   setResultColor(colors[7]?.WebColor);
+    // } else if (score > parseInt(ranges[1]?.MaxValue)) {
+    //   setResultColor(colors[7]?.WebColor);
+    //   setAns(space1);
+    // } else if (score > parseInt(ranges[2]?.MaxValue)) {
+    //   setResultColor(colors[6]?.WebColor);
+    //   setAns(space2);
+    // } else if (score > parseInt(ranges[3]?.MaxValue)) {
+    //   setResultColor(colors[5]?.WebColor);
+    //   setAns(space3);
+    // } else if (score > parseInt(ranges[4]?.MaxValue)) {
+    //   setResultColor(colors[4]?.WebColor);
+    //   setAns(space4);
+    // } else if (score > parseInt(ranges[5]?.MaxValue)) {
+    //   setResultColor(colors[3]?.WebColor);
+    //   setAns(space5);
+    // } else if (score > parseInt(ranges[6]?.MaxValue)) {
+    //   setResultColor(colors[2]?.WebColor);
+    //   setAns(space6);
+    // } else if (score > parseInt(ranges[7]?.MaxValue)) {
+    //   setResultColor(colors[1]?.WebColor);
+    //   setAns(space7);
+    // } else {
+    //   setResultColor(colors[0]?.WebColor);
+    //   setAns(space8);
+    // }
   };
 
-  useEffect(() => {
-    findResult();
-  }, [score]);
+  // useEffect(() => {
+  //   findResult();
+  // }, [score]);
 
   useEffect(() => {
     setUservalue(route.params.childData)
@@ -144,11 +145,11 @@ useLayoutEffect(()=>{
         }
       }
       const apiData = {
-        assessment_score_id: Resultvalue? Resultvalue.id : null,
+        assessment_score_id: Resultvalue ? Resultvalue.id : null,
         participant_id: CHILD_DATA?.id,
-        Score: Resultvalue? Resultvalue.MaxValue:0,
+        Score: Resultvalue ? Resultvalue.MaxValue : 0,
         grade_id: CHILD_DATA?.id,
-        assessment_id: Resultvalue.length !== 0? Resultvalue.assessment_id:assessment_id,
+        assessment_id: Resultvalue.length !== 0 ? Resultvalue.assessment_id : assessment_id,
         group_id: GROUP_DATA?.id,
         Distance: null,
       };
@@ -162,62 +163,62 @@ useLayoutEffect(()=>{
   };
 
   const onSuccess = () => {
-    if((Uservalue.index+1)< Memebers.length){
-      const updatedMembers=[...Memebers].map((it)=>{
-        if(it.id==Uservalue.id){
+    if ((Uservalue.index + 1) < Memebers.length) {
+      const updatedMembers = [...Memebers].map((it) => {
+        if (it.id == Uservalue.id) {
           return {
             ...it,
-            disable:true
+            disable: true
           }
-        }else{
+        } else {
           return it
         }
       })
       setMembers(updatedMembers)
-      const newIndex=Memebers[Uservalue.index + 1].disable?(Uservalue.index + 2):Uservalue.index + 1
-      setUservalue({...Memebers[newIndex],index:newIndex})
-    }else{
+      const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
+      setUservalue({ ...Memebers[newIndex], index: newIndex })
+    } else {
       navigation.navigate('home');
     }
   };
-  
 
-  const RenderMembersData = ({item,index}) => (
-    <View style={{flexDirection: 'row', paddingVertical: 3}}>
+
+  const RenderMembersData = ({ item, index }) => (
+    <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
-      disabled={item.disable}
+        disabled={item.disable}
         onPress={() => {
-          setUservalue({...item,index});
+          setUservalue({ ...item, index });
         }}>
         <Text
           style={{
             fontSize: 20,
             alignSelf: 'center',
-            color: item.disable?'gray':(Uservalue.id == item.id ? 'green' : 'white'),
+            color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
             // textAlign: 'center',
             // textAlignVertical: 'center',
-            letterSpacing:1
+            letterSpacing: 1
           }}>
           {`${item.Firstname} ${item.Lastname}`}
         </Text>
       </TouchableOpacity>
     </View>
   );
-  const RenderimageDAta = ({item}) => (
-   <TouchableOpacity onPress={()=>{setResultvalue(item)}} style={{width:Platform.OS=="ios"?95:98,flexDirection:"row"}}>
-     <Image
-      style={{height:height*.1, width:width*.185,marginTop:height*.02,opacity:Resultvalue.image ==item.image?1:.5}}
-    
-      source={{
-        uri:
-          item.image=== null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png":`https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
-      }}
-    />
-    {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
+  const RenderimageDAta = ({ item }) => (
+    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
+      <Image
+        style={{ height: height * .1, width: width * .185, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 }}
+
+        source={{
+          uri:
+            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+        }}
+      />
+      {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
       {item.image == null?"":item.MaxValue}
     </Text> */}
-   </TouchableOpacity>
+    </TouchableOpacity>
   );
   return (
     <>
@@ -226,50 +227,50 @@ useLayoutEffect(()=>{
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-                      <View style={styles.headingView}>
-              <Heading
-                title={ITEM?.Name}
-                passedStyle={styles.headingStyles}
-                fontType="semi-bold"
-              />
-            </View>
-            {/* </View> */}
-            {/* <Image
+        <View style={styles.headingView}>
+          <Heading
+            title={ITEM?.Name}
+            passedStyle={styles.headingStyles}
+            fontType="semi-bold"
+          />
+        </View>
+        {/* </View> */}
+        {/* <Image
               resizeMode="contain"
               source={require('../assets/images/new-logo.png')}
               style={styles.bgimage}
             /> */}
 
-            {/* Grade  */}
+        {/* Grade  */}
 
-            <View
-              style={{
-                height: height *0.20,
-                width: width * 0.9,
-                backgroundColor: themeDarkBlue,
-                borderRadius: 10,
-                paddingLeft: 20,
-                paddingRight:width*.5,
-                alignSelf:"center",
-              }}>
-              <FlatList
-            
-                data={Memebers}
-                renderItem={RenderMembersData}
-                keyExtractor={item => item.id}
-                // scrollEnabled={false}
-                // contentContainerStyle={{
-                //   flexGrow: 1,
-                // }}
-              />
-            </View>
-            <View style={styles.headingStyle2View}>
-              <Heading
-                title={`${GROUP_DATA?.Name}`}
-                passedStyle={styles.headingStyles2}
-                fontType="regular"
-              />
-            </View>
+        <View
+          style={{
+            height: height * 0.20,
+            width: width * 0.9,
+            backgroundColor: themeDarkBlue,
+            borderRadius: 10,
+            paddingLeft: 20,
+            paddingRight: width * .5,
+            alignSelf: "center",
+          }}>
+          <FlatList
+
+            data={Memebers}
+            renderItem={RenderMembersData}
+            keyExtractor={item => item.id}
+          // scrollEnabled={false}
+          // contentContainerStyle={{
+          //   flexGrow: 1,
+          // }}
+          />
+        </View>
+        <View style={styles.headingStyle2View}>
+          <Heading
+            title={`${GROUP_DATA?.Name}`}
+            passedStyle={styles.headingStyles2}
+            fontType="regular"
+          />
+        </View>
         {isLoading ? (
           <LottieView
             speed={1}
@@ -280,7 +281,7 @@ useLayoutEffect(()=>{
           />
         ) : (
           <ScrollView>
-                  
+
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>
               <Heading
@@ -566,29 +567,29 @@ useLayoutEffect(()=>{
                 fontType="semi-bold"
               />
 
-             <View style={{alignItems:"center",justifyContent:"space-evenly"}}>
-             <FlatList
-              style={{marginLeft:20,marginTop:Platform.OS=="ios"?30:0}}
-                data={ranges}
-                renderItem={RenderimageDAta}
-                keyExtractor={item => item.id}
-                numColumns={4}
-              />
+              <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+                <FlatList
+                  style={{ marginLeft: 20, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                  data={ranges}
+                  renderItem={RenderimageDAta}
+                  keyExtractor={item => item.id}
+                  numColumns={4}
+                />
 
-             </View>
-              <TouchableOpacity 
-              onPress={()=>{setResultvalue([])}}
+              </View>
+              <TouchableOpacity
+                onPress={() => { setResultvalue([]) }}
               >
-              <Image
-                source={ require('../assets/images/black.png' )}
-                style={{
-                  height:height*.1, 
-                  width:width*.185,
-                  marginLeft: width * 0.05,
-                  opacity:Resultvalue.length == 0 ?1:.5
-                }}
-              />
-          
+                <Image
+                  source={require('../assets/images/black.png')}
+                  style={{
+                    height: height * .1,
+                    width: width * .185,
+                    marginLeft: width * 0.05,
+                    opacity: Resultvalue.length == 0 ? 1 : .5
+                  }}
+                />
+
               </TouchableOpacity>
 
               <View
@@ -626,7 +627,7 @@ useLayoutEffect(()=>{
                     />
                   </TouchableOpacity>
                 }
-                <View style={{paddingBottom: 150}} />
+                <View style={{ paddingBottom: 150 }} />
               </View>
             </View>
           </ScrollView>
@@ -636,7 +637,7 @@ useLayoutEffect(()=>{
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
+const mapStateToProps = ({ userReducer }) => {
   return {
     userReducer,
   };
