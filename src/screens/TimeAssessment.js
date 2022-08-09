@@ -37,6 +37,7 @@ import {showMessage} from 'react-native-flash-message';
 import RNBeep from 'react-native-a-beep';
 import Sound from 'react-native-sound';
 import moment from 'moment';
+import { baseUrl } from '../config';
 const {width, height} = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -46,6 +47,7 @@ const TimeAssessment = ({
   getColors,
   submitResult,
   getGameInfo,
+  getAssessmentDetails,
   checkGame,
 }) => {
   const ITEM = route.params.item;
@@ -61,7 +63,11 @@ const TimeAssessment = ({
   const [assessmentScoreid, setAssessmentScoreId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [Uservalue, setUservalue] = useState({});
+  const [Resultvalue, setResultvalue] = useState([]);
   const [showTextField, setShowTextField] = useState(false);
+  const [ranges, setRanges] = useState([]);
+  const [highscore,sethighscore]=useState();
+  console.log("my kasjm,ir",route.params.item.id,highscore)
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
     winnerIndex: null,
@@ -71,20 +77,21 @@ const TimeAssessment = ({
   const Value = userReducer?.gameInfo?.filter(
     game => game.assessment_id == ITEM.id,
   );
+  const assessment_id = userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
   // console.log("gameindo",userReducer?.gameInfo)
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
   // console.log("seconds", secs)
-  console.log("first",meterValue)
+  // console.log("first",meterValue)
   const apiData = {
     assessment_score_id: scoring.id,
     participant_id: CHILD_DATA?.id,
-    Score: scoring.MaxValue,
+    Score: Resultvalue.MaxValue,
     grade_id: CHILD_DATA?.id,
     group_id: GROUP_DATA?.id,
-    assessment_id: scoring.assessment_id,
+    assessment_id: route.params.item.id,
     Duration: secs,
   };
   const [timer, setTimer] = useState({
@@ -129,6 +136,27 @@ const TimeAssessment = ({
   };
 
   // console.log(JSON.stringify(CHILD_DATA,null,2), '----');
+const assesmentBeep = () => {
+    var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+// console.log("first",8)
+var raw = JSON.stringify({
+  assessment_id:route.params.item.id,
+  top_score: 5
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch(`${baseUrl}/api/score_result`, requestOptions)
+  .then(response => response.json())
+  .then(result => sethighscore(result.Score))
+  .catch(error => console.log('error', error));
+}
   const _onButtonPress = () => {
     // if (!wheelState?.started) {
     //   setWheelState(() => {
@@ -197,6 +225,10 @@ const TimeAssessment = ({
     // }
   };
 
+  useEffect(() => {
+    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+  }, [userReducer?.assessmentDetails]);
+
   useLayoutEffect(()=>{
     setMembers(route.params?.memberData)
   },[])
@@ -214,9 +246,12 @@ const TimeAssessment = ({
   useEffect(() => {
     setColors(userReducer?.colors);
   }, [userReducer?.colors]);
-
+useEffect(()=>{
+  assesmentBeep();
+},[])
   const getAllColors = async () => {
     setIsLoading(true);
+    await getAssessmentDetails(1, accessToken);
     await getColors(accessToken);
     await getGameInfo(accessToken);
     setIsLoading(false);
@@ -224,6 +259,7 @@ const TimeAssessment = ({
 
   const _onPressSave = async () => {
     setIsLoading(true);
+    // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
@@ -255,10 +291,10 @@ const TimeAssessment = ({
   useEffect(() => {
     meterController();
   }, [secs]);
-console.log("scoring",scoring)
+// console.log("scoring",scoring)
   const meterController = () => {
-    console.log('faozannnnnn', secs);
-    console.log('..//....//',Value[0]);
+    // console.log('faozannnnnn', secs);
+    // console.log('..//....//',Value[0]);
     if (
       parseInt(secs) > Number(Value[0]?.minTime) &&
       Number(secs) <= Number(Value[0]?.maxTime)
@@ -480,6 +516,30 @@ console.log("scoring",scoring)
                 fontType="regular"
               />
             </View>
+            <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+                <FlatList
+                  style={{ marginLeft: 20, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                  data={ranges}
+                  renderItem={RenderimageDAta}
+                  keyExtractor={item => item.id}
+                  numColumns={4}
+                />
+
+              </View>
+              <TouchableOpacity
+                onPress={() => { setResultvalue([]) }}
+              >
+                <Image
+                  source={require('../assets/images/black.png')}
+                  style={{
+                    height: height * .1,
+                    width: width * .185,
+                    marginLeft: width * 0.05,
+                    opacity: Resultvalue.length == 0 ? 1 : .5
+                  }}
+                />
+
+              </TouchableOpacity>
 
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>
@@ -601,7 +661,7 @@ console.log("scoring",scoring)
               {/* Game Meter  */}
 
               {/* <Button title='sound' onPress={()=>{playSound()}} /> */}
-              <RNSpeedometer
+              {/* <RNSpeedometer
                 wrapperStyle={{marginRight: width * 0.05}}
                 value={parseInt(meterValue)}
                 minValue={100}
@@ -696,8 +756,7 @@ console.log("scoring",scoring)
                         },
                       ]
                 }
-              />
-            </View>
+              /> */}
 
             <View
               style={{
@@ -735,6 +794,8 @@ console.log("scoring",scoring)
                 getTime={time => getFormattedTime(time)}
               />
             </View>
+            </View>
+
             {/* 
             {showTextField && (
               <TextInput
@@ -781,6 +842,22 @@ console.log("scoring",scoring)
       </>
     );
   }
+
+  const RenderimageDAta = ({ item }) => (
+    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
+      <Image
+        style={{ height: height * .1, width: width * .185, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 }}
+
+        source={{
+          uri:
+            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+        }}
+      />
+      {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
+      {item.image == null?"":item.MaxValue}
+    </Text> */}
+    </TouchableOpacity>
+  );
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -834,7 +911,6 @@ const styles = StyleSheet.create({
   configurations: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: height * 0.05,
     justifyContent: 'space-between',
   },
   stopBtnStyle: {
