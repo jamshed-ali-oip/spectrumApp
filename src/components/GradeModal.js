@@ -39,20 +39,26 @@ const ParticipantFilterModal = ({
   const [gradeCounter, setGradeCounter] = useState([]); // array od grades
   const [selectedGrade, setSelectedGrade] = useState(); // selected grade
   const [counter, setCounter] = useState(0);
+  const [event, setevent] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState({});
   const [Grades, setGrades] = useState([]);
   const [selectedGroupsData, setGroupsData] = useState([]);
   const [selectedboth, setSelectedboth] = useState(false);
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Both");
-  const [gradeAll, setGradeAll] = useState(false);
+  const [gradeAll, setGradeAll] = useState(true);
+  const [Eventdata, setEventdata] = useState([]);
+  // console.log("EventData", Eventdata)
+  // console.log("seklected event", selectedEvent)
+
   // console.log("userReducer.groups", userReducer.groups);
   // console.log("Grades", Grades);
   // console.log("selectedGroupsData", selectedGroupsData);
   // console.log("counter selectedGroupsData", selectedGroupsData[counter]);
   // console.log("selectedGrade", selectedGrade);
   // console.log("counter", counter);
-  console.log("myyy data =?????????", age, age <= 1)
+  // console.log("myyy data =?????????", age)
   useEffect(() => {
     if (userReducer?.groups && selectedGrade && selectedGrade.id) {
       setGroupsData(
@@ -68,6 +74,24 @@ const ParticipantFilterModal = ({
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
     }
   }, [counter])
+  useEffect(() => {
+    Event()
+  }, [])
+
+  useEffect(() => {
+    setSelectedEvent(Eventdata[0]);
+  }, [Eventdata])
+
+  const Event = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    fetch(`${baseUrl}/api/event`, requestOptions)
+      .then(response => response.json())
+      .then(result => setEventdata(result.data))
+    // .catch(error => console.log('error', error));
+  }
 
   useEffect(() => {
     fetchCall();
@@ -76,7 +100,7 @@ const ParticipantFilterModal = ({
     }
   }, [userReducer?.groups]);
 
-  console.log("aaaaaaaaa")
+  // console.log("aaaaaaaaa")
 
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
@@ -102,85 +126,117 @@ const ParticipantFilterModal = ({
       setCounter(0)
     }
   };
+  const eventhandle = param => {
+    if (param == 'decrease') {
+      setevent((event) => event - 1);
+    } else {
+      setevent((event) => event + 1);
+    }
+  };
+  useEffect(() => {
+    setSelectedEvent(Eventdata[event]);
+  }, [event])
+
 
   function renderGenders(group) {
     if (group?.group_type == "Both") {
       return (
         <>
           {/* All */}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            // onPress={() => onPressGender({id: 3, gender: 'Both'})}
-            onPress={() => {
-              setSelectedGender("Both")
-            }}
-            style={styles.checkBoxContainer}>
-            <IconComp
-              type={'MaterialIcons'}
-              iconName={
-                // selectedGroupsData.filter(f=>(f.group_type =="Both"))
-                selectedGender == "Both"
-                  ? 'check-circle'
-                  : 'radio-button-unchecked'
-              }
-              passedStyle={styles.textLAbel}
-            />
+          <View style={{
+            // paddingVertical: height * -0.01,
+            // paddingBottom:-10,
+            marginBottom: height * 0.02,
+            borderWidth: 1,
+            borderColor: themeLightBlue,
+            borderRadius: 10,
+            width: width * 0.8,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginRight:width*0.05
+          }}>
             <Heading
-              passedStyle={styles.label}
-              title={'All'}
+              passedStyle={[styles.label, { marginBottom: -height * 0.03 }]}
+              title={'Gender'}
               fontType="medium"
             />
-          </TouchableOpacity>
+            <View style={{ flexDirection: "row", justifyContent: "space-evenly", padding: 20, paddingLeft: width * .15, marginBottom: -height * .03 }}>
 
-          {/* Male */}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.checkBoxContainer}
-            onPress={() => {
-              setSelectedGender("Male")
-            }}>
-            <IconComp
-              type={'MaterialIcons'}
-              iconName={
-                // selectedGenders[0]?.id === 1 || selectedGenders[1]?.id === 1
-                selectedGender == "Male"
-                  ? 'check-circle'
-                  : 'radio-button-unchecked'
-              }
-              passedStyle={styles.textLAbel}
-            />
-            <Heading
-              passedStyle={styles.label}
-              title={'Boys'}
-              fontType="medium"
-            />
-          </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                // onPress={() => onPressGender({id: 3, gender: 'Both'})}
+                onPress={() => {
+                  setSelectedGender("Both")
+                }}
+                style={styles.checkBoxContainer}>
+                <IconComp
+                  type={'MaterialIcons'}
+                  iconName={
+                    // selectedGroupsData.filter(f=>(f.group_type =="Both"))
+                    selectedGender == "Both"
+                      ? 'check-circle'
+                      : 'radio-button-unchecked'
+                  }
+                  passedStyle={styles.textLAbel}
+                />
+                <Heading
+                  passedStyle={styles.label}
+                  title={'All'}
+                  fontType="medium"
+                />
+              </TouchableOpacity>
+
+              {/* Male */}
+              <TouchableOpacity
+                activeOpacity={0.9}
+                style={styles.checkBoxContainer}
+                onPress={() => {
+                  setSelectedGender("Male")
+                }}>
+                <IconComp
+                  type={'MaterialIcons'}
+                  iconName={
+                    // selectedGenders[0]?.id === 1 || selectedGenders[1]?.id === 1
+                    selectedGender == "Male"
+                      ? 'check-circle'
+                      : 'radio-button-unchecked'
+                  }
+                  passedStyle={styles.textLAbel}
+                />
+                <Heading
+                  passedStyle={styles.label}
+                  title={'Male'}
+                  fontType="medium"
+                />
+              </TouchableOpacity>
 
 
-          {/* Female */}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            // onPress={() => onPressGender({id: 2, gender: 'Girls'})}
-            onPress={() => {
-              setSelectedGender("Female")
-            }}
-            style={styles.checkBoxContainer}>
-            <IconComp
-              type={'MaterialIcons'}
-              iconName={
-                // selectedGenders[0]?.id === 2 || selectedGenders[1]?.id === 2
-                selectedGender == "Female"
-                  ? 'check-circle'
-                  : 'radio-button-unchecked'
-              }
-              passedStyle={styles.textLAbel}
-            />
-            <Heading
-              passedStyle={styles.label}
-              title={'Girls'}
-              fontType="medium"
-            />
-          </TouchableOpacity>
+              {/* Female */}
+              <TouchableOpacity
+                activeOpacity={0.9}
+                // onPress={() => onPressGender({id: 2, gender: 'Girls'})}
+                onPress={() => {
+                  setSelectedGender("Female")
+                }}
+                style={styles.checkBoxContainer}>
+                <IconComp
+                  type={'MaterialIcons'}
+                  iconName={
+                    // selectedGenders[0]?.id === 2 || selectedGenders[1]?.id === 2
+                    selectedGender == "Female"
+                      ? 'check-circle'
+                      : 'radio-button-unchecked'
+                  }
+                  passedStyle={styles.textLAbel}
+                />
+                <Heading
+                  passedStyle={styles.label}
+                  title={'Female'}
+                  fontType="medium"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </>
       )
     }
@@ -228,6 +284,44 @@ const ParticipantFilterModal = ({
               justifyContent: 'center',
             }}>
 
+            {/* event selector */}
+            <View style={styles.filterContainer}>
+              <Heading
+                passedStyle={styles.label}
+                title={'Event'}
+                fontType="medium"
+              />
+              <View style={styles.rowView}>
+                <TouchableOpacity
+                  disabled={event <= 0}
+                  onPress={() => {
+                    eventhandle('decrease');
+                  }}>
+                  <IconComp
+                    type={'Feather'}
+                    iconName={'minus-circle'}
+                    passedStyle={styles.textLAbel}
+                  />
+                </TouchableOpacity>
+                <Heading
+                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
+                  title={selectedEvent?.name || "Nill"}
+                  fontType="medium"
+                />
+                <TouchableOpacity
+                  disabled={event >= (Eventdata.length - 1)}
+                  onPress={() => {
+                    eventhandle('incress');
+                  }}>
+                  <IconComp
+                    type={'Feather'}
+                    iconName={'plus-circle'}
+                    passedStyle={styles.textLAbel}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
             {/* Group  */}
             <View style={styles.filterContainer}>
               <Heading
@@ -271,69 +365,77 @@ const ParticipantFilterModal = ({
             </View>
 
             {/* Grade  */}
-            <View>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  // onPress={() => onPressGender({id: 3, gender: 'Both'})}
-                  onPress={() => {
-                    setGradeAll(!gradeAll)
-                  }}
-                  style={styles.checkBoxContainer}>
-                  <IconComp
-                    type={'MaterialIcons'}
-                    iconName={
-                      // selectedGroupsData.filter(f=>(f.group_type =="Both"))
-                      gradeAll
-                        ? 'check-circle'
-                        : 'radio-button-unchecked'
-                    }
-                    passedStyle={styles.textLAbel}
-                  />
-                  <Heading
-                    passedStyle={styles.label}
-                    title={'All Grade'}
-                    fontType="medium"
-                  />
-                </TouchableOpacity>
-              </View>
-            {!gradeAll && (
-              <View style={styles.filterContainer}>
-              <Heading
-                passedStyle={styles.label}
-                title={'Grade'}
-                fontType="medium"
-              />
-              <View style={styles.rowView}>
-                <TouchableOpacity
-                  disabled={age <= 1}
-                  onPress={() => {
-                    gradeHandlerGrade('decrease');
-                  }}>
-                  <IconComp
-                    type={'Feather'}
-                    iconName={'minus-circle'}
-                    passedStyle={styles.textLAbel}
-                  />
-                </TouchableOpacity>
+            <View style={{
+              paddingVertical: height * 0.001,
+              marginBottom: height * 0.02,
+              borderWidth: 1,
+              borderColor: themeLightBlue,
+              borderRadius: 10,
+              width: width * 0.8,
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  setGradeAll(!gradeAll)
+                }}
+                style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
+                <IconComp
+                  type={'MaterialIcons'}
+                  iconName={
+                    gradeAll
+                      ? 'check-circle'
+                      : 'radio-button-unchecked'
+                  }
+                  passedStyle={styles.textLAbel}
+                />
                 <Heading
-                  passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                  title={selectedGrade?.Name || "Not Possible"}
+                  passedStyle={styles.label}
+                  title={'All Grades'}
                   fontType="medium"
                 />
-                <TouchableOpacity
-                  disabled={age >= 10}
-                  onPress={() => {
-                    gradeHandlerGrade('incress');
-                  }}>
-                  <IconComp
-                    type={'Feather'}
-                    iconName={'plus-circle'}
-                    passedStyle={styles.textLAbel}
-                  />
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
+            {!gradeAll && (
+              <View style={styles.filterContainer}>
+                <Heading
+                  passedStyle={styles.label}
+                  title={'Grade'}
+                  fontType="medium"
+                />
+                <View style={styles.rowView}>
+                  <TouchableOpacity
+                    disabled={age <= 1}
+                    onPress={() => {
+                      gradeHandlerGrade('decrease');
+                    }}>
+                    <IconComp
+                      type={'Feather'}
+                      iconName={'minus-circle'}
+                      passedStyle={styles.textLAbel}
+                    />
+                  </TouchableOpacity>
+                  <Heading
+                    passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
+                    title={selectedGrade?.Name || "Not Possible"}
+                    fontType="medium"
+                  />
+                  <TouchableOpacity
+                    disabled={age >= 10}
+                    onPress={() => {
+                      gradeHandlerGrade('incress');
+                    }}>
+                    <IconComp
+                      type={'Feather'}
+                      iconName={'plus-circle'}
+                      passedStyle={styles.textLAbel}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             )}
+
 
           </View>
           {/* <Heading
@@ -401,7 +503,8 @@ const ParticipantFilterModal = ({
                         gender: selectedGender || selectedGroupsData[counter]?.group_type || "Both",
                         group_id: selectedGroupsData[counter]?.id,
                         GROUP_DATA: selectedGroupsData[counter],
-                        gradeAll
+                        gradeAll,
+                        event: selectedEvent || "not selected"
                       });
                       setIsModalVisible(false);
                     } else {

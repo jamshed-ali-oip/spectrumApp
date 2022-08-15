@@ -52,12 +52,14 @@ const GradesScreen = ({
   const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
-
+  const [Eventdetails,setEventdetails]=useState([]);
+console.log("event detyail on screen",Eventdetails)
   // console.log("GROUP_DATA",GROUP_DATA)
   console.log("participants",participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
+
 
   useEffect(() => {
     getAllParticipants();
@@ -96,7 +98,8 @@ const GradesScreen = ({
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
     SET_GROUP_DATA(data.GROUP_DATA)
-    
+    // console.log("eevent datacon screen/////",)
+    setEventdetails(data.event)
     if (data.gender == "Both") {
       if(data.gradeAll){
         const filtered = userReducer.participants.filter((participant) => {
@@ -295,21 +298,24 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants
+                        memberData: participants,
+                        event:Eventdetails
                       });
                     } else if (ITEM?.Type === 'Distance') {
                       navigation?.navigate('scaleScreen', {
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants
+                        memberData: participants,
+                        event:Eventdetails,
                       });
                     } else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants
+                        memberData: participants,
+                        event:Eventdetails
                       });
                     }
                   }}

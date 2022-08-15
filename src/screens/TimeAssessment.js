@@ -13,7 +13,7 @@ import {
   Button,
   FlatList,
 } from 'react-native';
-import React, {useState, useRef, useEffect,useLayoutEffect} from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
 import Heading from '../components/Heading';
 // import {Timer, Countdown} from 'react-native-element-timer';
@@ -29,16 +29,16 @@ import {
   themeYellow,
 } from '../assets/colors/colors';
 // import WheelOfFortune from 'react-native-wheel-of-fortune';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
-import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
-import {showMessage} from 'react-native-flash-message';
+import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import { showMessage } from 'react-native-flash-message';
 import RNBeep from 'react-native-a-beep';
 import Sound from 'react-native-sound';
 import moment from 'moment';
 import { baseUrl } from '../config';
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const TimeAssessment = ({
   navigation,
@@ -51,9 +51,10 @@ const TimeAssessment = ({
   checkGame,
 }) => {
   const ITEM = route.params.item;
-  const [Memebers,setMembers] = useState([]);
+  const [Memebers, setMembers] = useState([]);
   const CHILD_DATA = route.params.childData;
   const GROUP_DATA = route.params.groupData;
+  const Event = route.params.event;
   const [hasTimerStarted, setHasTimerStarted] = useState(false);
   const [child, setChild] = useState(null);
   const accessToken = userReducer?.accessToken;
@@ -63,21 +64,22 @@ const TimeAssessment = ({
   const [assessmentScoreid, setAssessmentScoreId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [Uservalue, setUservalue] = useState({});
-  const [Resultvalue, setResultvalue] = useState([]);
+  const [Resultvalue, setResultvalue] = useState({});
+  // const [NA, setNA] = useState(true)
+  const [flag, setFlag] = useState(true)
   const [showTextField, setShowTextField] = useState(false);
   const [ranges, setRanges] = useState([]);
-  const [highscore,sethighscore]=useState();
-  console.log("my kasjm,ir",route.params.item.id,highscore)
+  const [highscore, sethighscore] = useState();
+  // console.log("my kasjm,ir",route.params.item.id,highscore)
+  // console.log("time assement screen", Event)
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
     winnerIndex: null,
     started: false,
   });
-  const [scoring,setscoring]=useState(0);
-  const Value = userReducer?.gameInfo?.filter(
-    game => game.assessment_id == ITEM.id,
-  );
-  const assessment_id = userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
+  const [scoring, setscoring] = useState(0);
+  const Value = userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id);
+  // const assessment_id = userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
   // console.log("gameindo",userReducer?.gameInfo)
   const timerRef = useRef(null);
   const countdownRef = useRef(null);
@@ -85,15 +87,41 @@ const TimeAssessment = ({
   const [secs, setSecs] = useState(0);
   // console.log("seconds", secs)
   // console.log("first",meterValue)
+  // const apiData = {
+  //   assessment_score_id: Resultvalue ? Resultvalue.id : 0,
+  //   Score: Resultvalue ? Resultvalue.MaxValue : 0,
+  //   participant_id: Uservalue?.id,
+  //   // Score: Resultvalue.MaxValue,
+  //   grade_id: CHILD_DATA?.grade_id,
+  //   group_id: GROUP_DATA?.id,
+  //   assessment_id: route.params.item.id,
+  //   Duration: secs,
+  //   event_id: Event.id
+  // };
+
+  // Value.find((scoor) => {
+  //   highscore > scoor.MaxValue && highscore < scoor.MinValue
+  // })
+
+  useEffect(() => {
+    console.log(Number(secs), highscore?.Duration, Number(secs) == Number(highscore?.Duration));
+    if (Number(secs) == highscore?.Duration) {
+      console.log("Beeeeeeeep");
+      playSound()
+    }
+  }, [secs])
+
   const apiData = {
-    assessment_score_id: scoring.id,
-    participant_id: CHILD_DATA?.id,
-    Score: Resultvalue.MaxValue,
-    grade_id: CHILD_DATA?.id,
-    group_id: GROUP_DATA?.id,
-    assessment_id: route.params.item.id,
+    assessment_score_id: Resultvalue.id || 0,
+    participant_id: Uservalue?.id,
+    Score: Resultvalue.MaxValue || "0",
+    grade_id: CHILD_DATA?.grade_id,
+    assessment_id: ITEM?.id,
     Duration: secs,
+    group_id: GROUP_DATA?.id,
+    event_id: Event.id
   };
+  console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
   const [timer, setTimer] = useState({
     timerStart: false,
     stopwatchStart: false,
@@ -129,34 +157,50 @@ const TimeAssessment = ({
     knobSource: require('../assets/images/knob.png'),
     getWinner: (value, index) => {
       setWheelState(prev => {
-        return {...prev, winnerValue: value, winnerIndex: index};
+        return { ...prev, winnerValue: value, winnerIndex: index };
       });
     },
     onRef: ref => setChild(ref),
   };
 
   // console.log(JSON.stringify(CHILD_DATA,null,2), '----');
-const assesmentBeep = () => {
+  // console.log("userReducer?.assessmentDetails?.id",highscore,userReducer?.assessmentDetails?.id)
+  const assesmentBeep = () => {
     var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-// console.log("first",8)
-var raw = JSON.stringify({
-  assessment_id:route.params.item.id,
-  top_score: 5
-});
+    myHeaders.append("Content-Type", "application/json");
+    // console.log("first",8)
+    var raw = JSON.stringify({
+      assessment_id: ITEM?.id,
+      top_score: 5
+    });
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
 
-fetch(`${baseUrl}/api/score_result`, requestOptions)
-  .then(response => response.json())
-  .then(result => sethighscore(result.Score))
-  .catch(error => console.log('error', error));
-}
+    fetch(`${baseUrl}/api/score_result`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        sethighscore(result)
+        // console.log("scorrimnh maa kli ajnk ",result)
+      })
+      .catch(error => console.log('error', error));
+  }
+
+  useEffect(() => {
+    // console.log("sdfsdfaaa",highscore,flag,meterValue)
+    if (meterValue > highscore && flag) {
+      playSound()
+      setFlag(false)
+    } else {
+      console.log("calling")
+    }
+
+  }, [meterValue])
+
   const _onButtonPress = () => {
     // if (!wheelState?.started) {
     //   setWheelState(() => {
@@ -224,14 +268,15 @@ fetch(`${baseUrl}/api/score_result`, requestOptions)
     //   setMeterValue(95);
     // }
   };
-
   useEffect(() => {
-    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
-  }, [userReducer?.assessmentDetails]);
+    // setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
+    // setRanges(Value);
+  }, [userReducer?.gameInfo]);
 
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     setMembers(route.params?.memberData)
-  },[])
+  }, [])
   useEffect(() => {
     setUservalue(route.params.childData);
     getAllColors();
@@ -246,9 +291,9 @@ fetch(`${baseUrl}/api/score_result`, requestOptions)
   useEffect(() => {
     setColors(userReducer?.colors);
   }, [userReducer?.colors]);
-useEffect(()=>{
-  assesmentBeep();
-},[])
+  useEffect(() => {
+    assesmentBeep();
+  }, [])
   const getAllColors = async () => {
     setIsLoading(true);
     await getAssessmentDetails(1, accessToken);
@@ -267,18 +312,18 @@ useEffect(()=>{
 
   const onSuccess = () => {
     if (Uservalue.index + 1 < Memebers.length) {
-    const updatedMembers=[...Memebers].map((it)=>{
-      if(it.id==Uservalue.id){
-        return {
-          ...it,
-          disable:true
+      const updatedMembers = [...Memebers].map((it) => {
+        if (it.id == Uservalue.id) {
+          return {
+            ...it,
+            disable: true
+          }
+        } else {
+          return it
         }
-      }else{
-        return it
-      }
-    })
-    setMembers(updatedMembers)
-    const newIndex=Memebers[Uservalue.index + 1].disable?(Uservalue.index + 2):Uservalue.index + 1
+      })
+      setMembers(updatedMembers)
+      const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
       setUservalue({
         ...Memebers[newIndex],
         index: newIndex,
@@ -288,10 +333,10 @@ useEffect(()=>{
     }
   };
 
-  useEffect(() => {
-    meterController();
-  }, [secs]);
-// console.log("scoring",scoring)
+  // useEffect(() => {
+  //   meterController();
+  // }, [secs]);
+  // console.log("scoring",scoring)
   const meterController = () => {
     // console.log('faozannnnnn', secs);
     // console.log('..//....//',Value[0]);
@@ -406,19 +451,19 @@ useEffect(()=>{
       // Play the sound with an onEnd callback
       whoosh.play(success => {
         if (success) {
-          // console.log('successfully finished playing');
+          console.log('successfully finished playing');
         } else {
-          // console.log('playback failed due to audio decoding errors');
+          console.log('playback failed due to audio decoding errors');
         }
       });
     });
   };
-  const RenderMembersData = ({item, index}) => (
-    <View style={{flexDirection: 'row', paddingVertical: 3}}>
+  const RenderMembersData = ({ item, index }) => (
+    <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
         onPress={() => {
-          setUservalue({...item, index});
+          setUservalue({ ...item, index });
         }}>
         <Text
           style={{
@@ -446,7 +491,7 @@ useEffect(()=>{
           />
         </View>
         <ScrollView
-        nestedScrollEnabled={true}
+          nestedScrollEnabled={true}
           style={{
             height: height * 0.2,
             width: width * 0.9,
@@ -459,24 +504,40 @@ useEffect(()=>{
             return (
               <View
                 key={index}
-                style={{flexDirection: 'row', paddingVertical: 3}}>
+                style={{ flexDirection: 'row', paddingVertical: 3 }}>
                 {/* {console.log(Memebers)} */}
                 <TouchableOpacity
-                disabled={item.disable}
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                  disabled={item.disable}
                   onPress={() => {
-                    setUservalue({...item, index});
+                    setUservalue({ ...item, index });
                   }}>
                   <Text
                     style={{
                       fontSize: 20,
                       alignSelf: 'center',
-                      color: item.disable?'gray':(Uservalue.id == item.id ? 'green' : 'white'),
+                      color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
                       // textAlign: 'center',
                       // textAlignVertical: 'center',
                       letterSpacing: 1,
                     }}>
                     {`${item.Firstname} ${item.Lastname}`}
                   </Text>
+                  {
+                    Uservalue.id == item.id ?
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          alignSelf: 'center',
+                          color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
+                          letterSpacing: 1,
+                          marginLeft: width * 0.05
+
+                        }}>
+                        ✓
+                      </Text> :
+                      <Text></Text>
+                  }
                 </TouchableOpacity>
               </View>
             );
@@ -517,29 +578,44 @@ useEffect(()=>{
               />
             </View>
             <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
-                <FlatList
-                  style={{ marginLeft: 20, marginTop: Platform.OS == "ios" ? 30 : 0 }}
-                  data={ranges}
-                  renderItem={RenderimageDAta}
-                  keyExtractor={item => item.id}
-                  numColumns={4}
-                />
+              <FlatList
+                style={{ marginLeft: width * 0.08, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                data={ranges}
+                renderItem={RenderimageDAta}
+                keyExtractor={item => item.id}
+                numColumns={4}
+              />
 
-              </View>
-              <TouchableOpacity
-                onPress={() => { setResultvalue([]) }}
-              >
-                <Image
-                  source={require('../assets/images/black.png')}
-                  style={{
-                    height: height * .1,
-                    width: width * .185,
-                    marginLeft: width * 0.05,
-                    opacity: Resultvalue.length == 0 ? 1 : .5
-                  }}
-                />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setResultvalue({})
+              }}
+              style={{
+                height: height * 0.075,
+                backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
 
-              </TouchableOpacity>
+                width: width * 0.3,
+                borderRadius: width * 0.5,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: height * .03,
+                marginBottom: -height * 0.03,
+                marginLeft: width * 0.05
+              }}
+            >
+
+              <Text style={{
+                color: "white",
+                textAlign: "center",
+                textAlignVertical: "center",
+                fontSize: width * 0.04,
+                fontWeight: "600",
+
+              }}>
+                N/A
+              </Text>
+            </TouchableOpacity>
 
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>
@@ -553,12 +629,13 @@ useEffect(()=>{
             {/* Meter and Button View Container  */}
             <View style={styles.configurations}>
               {/* Buttons and Timers View  */}
-              <View style={styles.innerLeftConfigView}>
+              <View style={{...styles.innerLeftConfigView,width:'40%'}}>
                 {/* Start Button  */}
                 {!hasTimerStarted ? (
                   <>
                     <TouchableOpacity
                       onPress={() => {
+                        setFlag(true)
                         if (!hasTimerStarted) {
                           // timerRef.current.start();
 
@@ -582,6 +659,7 @@ useEffect(()=>{
                     {secs > 0 && (
                       <TouchableOpacity
                         onPress={() => {
+                          setFlag(true)
                           resetStopwatch();
                           checkGame(false);
                           setSecs(0);
@@ -758,42 +836,43 @@ useEffect(()=>{
                 }
               /> */}
 
-            <View
-              style={{
-                alignSelf: 'center',
-                marginTop: height * 0.03,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {/* Timer  */}
-              <Heading
-                title="Timer"
-                passedStyle={{
-                  color: 'white',
-                  fontSize: width * 0.07,
-                }}
-                fontType="bold"
-              />
+              <View
+                style={{
+                  alignSelf: 'center',
+                  width:'60%',
+                  // marginTop: height * 0.03,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {/* Timer  */}
+                <Heading
+                  title="Timer"
+                  passedStyle={{
+                    color: 'white',
+                    fontSize: width * 0.05,
+                    textAlign:"center"
+                  }}
+                  fontType="bold"
+                />
 
-              <Stopwatch
-                laps
-                msecs
-                start={timer.stopwatchStart}
-                reset={timer.stopwatchReset}
-                options={{
-                  container: {
-                    width:220
-                  },
-                  text: {
-                    fontSize: 30,
-                    color: '#FFF',
-                    marginLeft: 7,
-                    fontFamily: 'Montserrat-SemiBold',
-                  },
-                }}
-                getTime={time => getFormattedTime(time)}
-              />
-            </View>
+                <Stopwatch
+                  laps
+                  msecs
+                  start={timer.stopwatchStart}
+                  reset={timer.stopwatchReset}
+                  options={{
+                    container: {
+                    },
+                    text: {
+                      fontSize: 22,
+                      color: '#FFF',
+                      // marginLeft: 7,
+                      fontFamily: 'Montserrat-SemiBold',
+                    },
+                  }}
+                  getTime={time => getFormattedTime(time)}
+                />
+              </View>
             </View>
 
             {/* 
@@ -836,7 +915,7 @@ useEffect(()=>{
                 />
               </TouchableOpacity>
             )}
-            <View style={{paddingBottom: 150}} />
+            <View style={{ paddingBottom: 150 }} />
           </>
         )}
       </>
@@ -844,9 +923,11 @@ useEffect(()=>{
   }
 
   const RenderimageDAta = ({ item }) => (
-    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
+    <TouchableOpacity onPress={() => {
+      setResultvalue(item)
+    }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
       <Image
-        style={{ height: height * .1, width: width * .185, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 }}
+        style={{ height: height * .095, width: width * .155, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5, resizeMode: "contain" }}
 
         source={{
           uri:
@@ -866,9 +947,9 @@ useEffect(()=>{
         style={styles.container}>
         <FlatList
           nestedScrollEnabled={true}
-          data={[1,2]}
+          data={[1, 2]}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             if (index == 0) {
               return renderHeader();
             } else {
@@ -881,8 +962,8 @@ useEffect(()=>{
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(TimeAssessment);
 
@@ -987,7 +1068,7 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
+    borderRadius: width * .1,
     paddingVertical: height * 0.01,
     alignSelf: 'center',
     justifyContent: 'center',

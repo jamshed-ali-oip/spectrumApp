@@ -489,6 +489,7 @@ export const getAssessmentDetails = (id, accessToken) => async dispatch => {
     };
 
     const response = await axios.get(URL, headers);
+    console.log("WWwwwwwwwwwwwwwwwwwwww", response.data);
     if (response.data.success) {
       dispatch({
         type: GET_ASSESSMENT_DETAILS,

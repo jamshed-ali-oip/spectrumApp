@@ -25,7 +25,7 @@ const AssessmentMapper = ({item, index, onPress, assessments}) => {
       : item?.Name === 'Shot Put'
       ? SHOT_PUT
       : HURDLES;
-
+console.log("image data",`${imageUrl}/assessment_image/${item?.Image}`)
   return (
     <View
       style={[

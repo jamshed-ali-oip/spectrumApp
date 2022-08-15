@@ -70,7 +70,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         groups: action?.payload?.map(group => {
-          return { ...group, grade_id: group.grade_id.split('|') }
+          return { ...group, grade_id: group.grade_id.split(',') }
         })
       };
 

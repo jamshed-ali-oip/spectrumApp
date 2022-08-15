@@ -60,27 +60,40 @@ const ParticipantsMapper = ({ item, index, userReducer }) => {
 
             // console.log(color_id, minValue, maxValue);
             return (
+              <>
               <View
                 key={index}
                 style={{
-                  // backgroundColor:'red',
-                  // alignSelf:'flex-end',
+                
                   backgroundColor:
                     parseInt(item?.Score) >= parseInt(minValue) &&
                     (parseInt(item?.Score) >= parseInt(maxValue) ||
                       parseInt(item?.Score) <= parseInt(maxValue))
                       ? colorObj?.WebColor
-                      : 'white',
-                  // backgroundColor: colorObj?.WebColor,
+                      : 'gray',
+                  
                   borderRadius: 9,
                   padding: width * 0.02,
                   marginLeft: 3,
+            
                 }}>
-                {/* <Text>{color_id}</Text> */}
+               
               </View>
+            
+              </>
+              
+              
             );
           })}
       </View>
+      <View style={{
+                backgroundColor:"black",
+                borderRadius: 9,
+                  padding: width * 0.02,
+                  marginLeft: 3,
+            
+                }}></View>
+     
     </View>
   );
 };
@@ -101,6 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingRight:width*.06
   },
   imageStyles: {
     width: width * 0.072,

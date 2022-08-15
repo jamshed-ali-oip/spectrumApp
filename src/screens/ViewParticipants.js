@@ -105,6 +105,7 @@ const ViewParticipants = ({
   //     //   console.log(data,"...///")
   //     // });
   // }, []);
+  console.log("result screen")
   useEffect(() => {
     var ably = new Ably.Realtime(
       'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
@@ -369,7 +370,8 @@ const ViewParticipants = ({
             keyExtractor={({item, index}) => item?.id?.toString()}
             contentContainerStyle={{paddingBottom: height * 0.1}}
             renderItem={({item, index}) => (
-              <ParticipantsMapper item={item} index={index} />
+        <ParticipantsMapper item={item} index={index} />
+     
             )}
           />
         )}

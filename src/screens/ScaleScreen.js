@@ -37,6 +37,7 @@ const ScaleScreen = ({
 }) => {
   const accessToken = userReducer?.accessToken;
   const ITEM = route?.params?.item;
+  const Event = route.params.event;
   const CHILD_DATA = route.params.childData;
   const GROUP_DATA = route.params.groupData;
   const [Memebers, setMembers] = useState([]);
@@ -46,7 +47,9 @@ const ScaleScreen = ({
   const [ranges, setRanges] = useState([]);
   const [ans, setAns] = useState(height * 0.01);
   const [Uservalue, setUservalue] = useState({});
-  const [Resultvalue, setResultvalue] = useState([]);
+  const [Resultvalue, setResultvalue] = useState({});
+  console.log("scale screen", Event)
+  console.log("chutipaya 5", CHILD_DATA.grade_id)
   // const [assessment_id,setassessment_id]=useState([]);
   // const [resultColor, setResultColor] = useState(
   //   colors[7]?.WebColor || 'black',
@@ -144,14 +147,25 @@ const ScaleScreen = ({
           color_id = userReducer?.gameInfo[i]?.color_id;
         }
       }
+      // const apiData = {
+      //   assessment_score_id: Resultvalue ? Resultvalue.id : 0,
+      //   participant_id: Uservalue?.id,
+      //   Score: Resultvalue ?Resultvalue.MaxValue : 0,
+      //   grade_id: CHILD_DATA?.grade_id,
+      //   assessment_id: Resultvalue.length !== 0 ? Resultvalue.assessment_id : assessment_id,
+      //   group_id: GROUP_DATA?.id,
+      //   Distance: null,
+      //   event_id:Event.id
+      // };
       const apiData = {
-        assessment_score_id: Resultvalue ? Resultvalue.id : null,
-        participant_id: CHILD_DATA?.id,
-        Score: Resultvalue ? Resultvalue.MaxValue : 0,
-        grade_id: CHILD_DATA?.id,
-        assessment_id: Resultvalue.length !== 0 ? Resultvalue.assessment_id : assessment_id,
-        group_id: GROUP_DATA?.id,
+        assessment_score_id: Resultvalue.id || 0,
+        participant_id: Uservalue?.id,
+        Score: Resultvalue.MaxValue || "0",
+        grade_id: CHILD_DATA?.grade_id,
+        assessment_id: userReducer?.assessmentDetails?.id,
         Distance: null,
+        group_id: GROUP_DATA?.id,
+        event_id: Event.id
       };
 
       setIsLoading(true);
@@ -184,10 +198,11 @@ const ScaleScreen = ({
 
 
   const RenderMembersData = ({ item, index }) => (
-    <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
+    <View style={{ flexDirection: 'row', paddingVertical: 3,width:'100%' }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
         disabled={item.disable}
+        style={{ flexDirection: "row", alignItems: "center",minWidth:width-50 }}
         onPress={() => {
           setUservalue({ ...item, index });
         }}>
@@ -202,13 +217,28 @@ const ScaleScreen = ({
           }}>
           {`${item.Firstname} ${item.Lastname}`}
         </Text>
+        {
+          Uservalue.id == item.id ?
+            <Text
+              style={{
+                fontSize: 20,
+                alignSelf: 'center',
+                color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
+                letterSpacing: 1,
+                marginLeft: width * 0.05
+
+              }}>
+              ✓
+            </Text> :
+            <Text></Text>
+        }
       </TouchableOpacity>
     </View>
   );
   const RenderimageDAta = ({ item }) => (
-    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
+    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: width/4, flexDirection: "row",justifyContent:'center',alignItems:'center' }}>
       <Image
-        style={{ height: height * .1, width: width * .185, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 }}
+        style={{ height: height * .095, width: width/6, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5,resizeMode:"contain" }}
 
         source={{
           uri:
@@ -569,7 +599,7 @@ const ScaleScreen = ({
 
               <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                 <FlatList
-                  style={{ marginLeft: 20, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                  style={{  marginTop: Platform.OS == "ios" ? 30 : 0 }}
                   data={ranges}
                   renderItem={RenderimageDAta}
                   keyExtractor={item => item.id}
@@ -578,20 +608,40 @@ const ScaleScreen = ({
 
               </View>
               <TouchableOpacity
-                onPress={() => { setResultvalue([]) }}
+                onPress={() => { setResultvalue({}) }}
+                style={{
+
+                  height: height * 0.075,
+                  backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
+                  width: width * 0.3,
+                  borderRadius: width * 0.5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: height * .03,
+                  marginBottom: -height * 0.03,
+                  marginLeft: width * 0.05
+                }}
               >
-                <Image
+                {/* <Image
                   source={require('../assets/images/black.png')}
                   style={{
-                    height: height * .1,
-                    width: width * .185,
+                    height:height*.1, 
+                    width:width*.185,
                     marginLeft: width * 0.05,
                     opacity: Resultvalue.length == 0 ? 1 : .5
                   }}
-                />
+                /> */}
+                <Text style={{
+                  color: "white",
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                  fontSize: width * 0.04,
+                  fontWeight: "600",
 
+                }}>
+                  N/A
+                </Text>
               </TouchableOpacity>
-
               <View
                 style={{
                   flexDirection: 'row',
@@ -703,7 +753,7 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
+    borderRadius: width * .1,
     paddingVertical: height * 0.01,
     alignSelf: 'center',
     justifyContent: 'center',

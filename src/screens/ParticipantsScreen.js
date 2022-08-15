@@ -252,8 +252,8 @@ const ParticipantsScreen = ({
                       <Image
                         source={require('../assets/images/cut-eye.png')}
                         style={{
-                          width: width * 0.06,
-                          height: height * 0.032,
+                          width: width * 0.065,
+                          height: height * 0.035,
                           marginRight: width * 0.02,
                         }}
                       />

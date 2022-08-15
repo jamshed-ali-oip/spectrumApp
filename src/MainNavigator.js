@@ -10,7 +10,7 @@ const MainNavigator = ({userReducer}) => {
   const ACCESS_TOKEN = userReducer?.accessToken;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={{colors:"black"}}>
       {ACCESS_TOKEN ? <AfterLoginNavigator /> : <BeforeLoginNavigator />}
     </NavigationContainer>
   );

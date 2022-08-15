@@ -109,7 +109,7 @@ export default connect(mapStateToProps, actions)(HomeScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: themeDarkBlue,
   },
   logoStyle: {
     marginTop: height * 0.15,

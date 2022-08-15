@@ -6,14 +6,14 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
-  ImageBackground, 
+  ImageBackground,
   StatusBar,
   FlatList,
   ScrollView,
   Platform,
 } from 'react-native';
 
-import React, {useState, useEffect,useLayoutEffect} from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Heading from '../components/Heading';
 import Button from '../components/Button';
 import {
@@ -23,15 +23,15 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {Svg, Polygon, Rect, Styles, G, Path} from 'react-native-svg';
+import { Svg, Polygon, Rect, Styles, G, Path } from 'react-native-svg';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
-import {connect} from 'react-redux';
-import {showMessage} from 'react-native-flash-message';
-import {Shadow} from 'react-native-shadow-2';
+import { connect } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
+import { Shadow } from 'react-native-shadow-2';
 import OctIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const GradingSystem = ({
   navigation,
@@ -44,41 +44,43 @@ const GradingSystem = ({
 }) => {
   const accessToken = userReducer?.accessToken;
   const ITEM = route?.params?.item;
+  const Event = route.params.event;
   const GROUP_DATA = route.params.groupData;
   const CHILD_DATA = route.params.childData;
-  const [Memebers,setMembers] = useState([]);
+  const [Memebers, setMembers] = useState([]);
   console.log('hkhklahksdhakhdskl;ahkld', Memebers);
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [score, setScore] = useState('');
   const [ranges, setRanges] = useState([]);
-  const [Resultvalue, setResultvalue] = useState([]);
-  const [assessment_id,setassessment_id]=useState([]);
-  console.log("clicked adata",Resultvalue)
+  const [Resultvalue, setResultvalue] = useState({});
+  const [assessment_id, setassessment_id] = useState([]);
   const [Uservalue, setUservalue] = useState({});
   console.log('=======>', Uservalue);
-  const [resultColor, setResultColor] = useState(
-    colors[0]?.WebColor || 'black',
-  );
+  // const [resultColor, setResultColor] = useState(
+  //   colors[0]?.WebColor || 'black',
+  // );
+  // console.log("result vaue", Resultvalue)
+  // console.log("sjdk", CHILD_DATA.grade_id)
+  // console.log("Grading screen", Event)
   //  useEffect(() => {
   //     setRes(ranges[0]?.MaxValue);
   //   }, []);
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     setMembers(route.params?.memberData)
- 
-  },[])
-  console.log("firsttttttttttttttttttttttttt",userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id)
+  }, [])
+  // console.log("firsttttttttttttttttttttttttt",userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id)
   // useEffect=(()=>{
   //   setassessment_id(userReducer?.assessmentDetails.assessment_scoring[0]?.assessment_id)
   // },[assessment_id])
 
- 
-  const Resulting =
-    userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue;
-  console.log('Areaaa', userReducer?.assessmentDetails?.assessment_scoring);
-  useEffect(() => {
-    findResult();
-  }, [score]);
+
+  // const Resulting =
+  //   userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue;
+  // console.log('Areaaa', userReducer?.assessmentDetails?.assessment_scoring);
+  // useEffect(() => {
+  //   findResult();
+  // }, [score]);
 
   useEffect(() => {
     setUservalue(route.params.childData)
@@ -112,36 +114,38 @@ const GradingSystem = ({
       }
     }
     const apiData = {
-      assessment_score_id: Resultvalue? Resultvalue.id : null,
-      participant_id: Uservalue.id,
-      Score: Resultvalue? Resultvalue.MaxValue:0,
-      grade_id: CHILD_DATA?.id,
-      assessment_id: Resultvalue.length !== 0? Resultvalue.assessment_id:assessment_id,
+      assessment_score_id: Resultvalue.id || 0,
+      participant_id: Uservalue?.id,
+      Score: Resultvalue.MaxValue || "0",
+      grade_id: CHILD_DATA?.grade_id,
+      assessment_id: userReducer?.assessmentDetails?.id,
       Beep: null,
       group_id: GROUP_DATA?.id,
+      event_id: Event.id
     };
     setIsLoading(true);
-    console.log(JSON.stringify(apiData, null, 2));
+    // console.log(JSON.stringify(apiData, null, 2));
+    // console.log("+++++++++++++++++=", userReducer?.assessmentDetails?.id);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
 
   const onSuccess = () => {
-    if((Uservalue.index+1)< Memebers.length){
-      const updatedMembers=[...Memebers].map((it)=>{
-        if(it.id==Uservalue.id){
+    if ((Uservalue.index + 1) < Memebers.length) {
+      const updatedMembers = [...Memebers].map((it) => {
+        if (it.id == Uservalue.id) {
           return {
             ...it,
-            disable:true
+            disable: true
           }
-        }else{
+        } else {
           return it
         }
       })
       setMembers(updatedMembers)
-      const newIndex=Memebers[Uservalue.index + 1].disable?(Uservalue.index + 2):Uservalue.index + 1
-      setUservalue({...Memebers[newIndex],index:newIndex})
-    }else{
+      const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
+      setUservalue({ ...Memebers[newIndex], index: newIndex })
+    } else {
       navigation.navigate('home');
     }
   };
@@ -149,59 +153,77 @@ const GradingSystem = ({
 
   // console.log("first",ranges[0].MaxValue)
 
-  const findResult = () => {
-    if (score > parseInt(ranges[0]?.MaxValue)) {
-      setResultColor(colors[0]?.WebColor);
-    } else if (score > parseInt(ranges[1]?.MaxValue)) {
-      setResultColor(colors[7]?.WebColor);
-    } else if (score > parseInt(ranges[2]?.MaxValue)) {
-      setResultColor(colors[6]?.WebColor);
-    } else if (score > parseInt(ranges[3]?.MaxValue)) {
-      setResultColor(colors[5]?.WebColor);
-    } else if (score > parseInt(ranges[4]?.MaxValue)) {
-      setResultColor(colors[4]?.WebColor);
-    } else if (score > parseInt(ranges[5]?.MaxValue)) {
-      setResultColor(colors[3]?.WebColor);
-    } else if (score > parseInt(ranges[6]?.MaxValue)) {
-      setResultColor(colors[2]?.WebColor);
-    } else if (score > parseInt(ranges[7]?.MaxValue)) {
-      setResultColor(colors[1]?.WebColor);
-    } else {
-      setResultColor(colors[0]?.WebColor);
-    }
-  };
+  // const findResult = () => {
+  //   if (score > parseInt(ranges[0]?.MaxValue)) {
+  //     setResultColor(colors[0]?.WebColor);
+  //   } else if (score > parseInt(ranges[1]?.MaxValue)) {
+  //     setResultColor(colors[7]?.WebColor);
+  //   } else if (score > parseInt(ranges[2]?.MaxValue)) {
+  //     setResultColor(colors[6]?.WebColor);
+  //   } else if (score > parseInt(ranges[3]?.MaxValue)) {
+  //     setResultColor(colors[5]?.WebColor);
+  //   } else if (score > parseInt(ranges[4]?.MaxValue)) {
+  //     setResultColor(colors[4]?.WebColor);
+  //   } else if (score > parseInt(ranges[5]?.MaxValue)) {
+  //     setResultColor(colors[3]?.WebColor);
+  //   } else if (score > parseInt(ranges[6]?.MaxValue)) {
+  //     setResultColor(colors[2]?.WebColor);
+  //   } else if (score > parseInt(ranges[7]?.MaxValue)) {
+  //     setResultColor(colors[1]?.WebColor);
+  //   } else {
+  //     setResultColor(colors[0]?.WebColor);
+  //   }
+  // };
 
-  const RenderMembersData = ({item,index}) => (
-    <View style={{flexDirection: 'row', paddingVertical: 3}}>
+  const RenderMembersData = ({ item, index }) => (
+    <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
-      disabled={item.disable}
+        style={{ flexDirection: "row", alignItems: "center" }}
+        disabled={item.disable}
         onPress={() => {
-          setUservalue({...item,index});
+          setUservalue({ ...item, index });
         }}>
         <Text
           style={{
             fontSize: 20,
             alignSelf: 'center',
-            color: item.disable?'gray':(Uservalue.id == item.id ? 'green' : 'white'),
+            color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
             // textAlign: 'center',
             // textAlignVertical: 'center',
-            letterSpacing:1
+            letterSpacing: 1
           }}>
           {`${item.Firstname} ${item.Lastname}`}
         </Text>
+
+        {
+          Uservalue.id == item.id ?
+            <Text
+              style={{
+                fontSize: 20,
+                alignSelf: 'center',
+                color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
+                letterSpacing: 1,
+                marginLeft: width * 0.05
+
+              }}>
+              ✓
+            </Text> :
+            <Text></Text>
+        }
+
       </TouchableOpacity>
     </View>
   );
 
-  const RenderimageDAta = ({item}) => (
+  const RenderimageDAta = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
         setResultvalue(item);
       }}
-      style={{width: 100, flexDirection: 'row'}}>
+    >
       <Image
-        style={{height:height*.1, width:width*.185,marginTop:height*.02,opacity:Resultvalue.image ==item.image?1:.5}}
+        style={{ height: height * .095, width: width * .155, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 ,resizeMode:"contain"}}
         source={{
           uri:
             item.image === null
@@ -214,45 +236,48 @@ const GradingSystem = ({
      </Text> */}
     </TouchableOpacity>
   );
+  console.log("=============================", Resultvalue, !Resultvalue.id ? 1 : .5);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-                      <Heading
-              title={ITEM?.Name}
-              passedStyle={styles.headingStyles}
-              fontType="semi-bold"
-            />
+        <View>
+          <Heading
+            title={ITEM?.Name}
+            passedStyle={styles.headingStyles}
+            fontType="semi-bold"
+          />
+        </View>
 
-            {/* <Image
+        {/* <Image
               resizeMode="contain"
               source={require('../assets/images/logo.png')}
               style={styles.bgimage}
             /> */}
 
-            {/* Grade  */}
-            <View
-              style={{
-                height: height *0.20,
-                width: width * 0.9,
-                backgroundColor: themeDarkBlue,
-                borderRadius: 10,
-                paddingLeft: 20,
-                alignSelf:"center"
-              }}>
-              <FlatList
-            
-                data={Memebers}
-                renderItem={RenderMembersData}
-                keyExtractor={item => item.id}
-                // scrollEnabled={false}
-                // contentContainerStyle={{
-                //   flexGrow: 1,
-                // }}
-              />
-            </View>
+        {/* Grade  */}
+        <View
+          style={{
+            height: height * 0.20,
+            width: width * 0.9,
+            backgroundColor: themeDarkBlue,
+            borderRadius: 10,
+            paddingLeft: 20,
+            alignSelf: "center"
+          }}>
+          <FlatList
+
+            data={Memebers}
+            renderItem={RenderMembersData}
+            keyExtractor={item => item.id}
+          // scrollEnabled={false}
+          // contentContainerStyle={{
+          //   flexGrow: 1,
+          // }}
+          />
+        </View>
         {isLoading ? (
           <LottieView
             speed={1}
@@ -264,7 +289,7 @@ const GradingSystem = ({
         ) : (
           <View showsVerticalScrollIndicator={false}>
             <ScrollView>
-              <View style={[styles.headingStyle2View,{marginBottom:20}]}>
+              <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
                 <Heading
                   title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
                   passedStyle={styles.headingStyles2}
@@ -280,9 +305,9 @@ const GradingSystem = ({
               />
             </View> */}
 
-              <View style={{width: width * 1}}>
+              <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                 <FlatList
-                  style={{marginLeft: 20}}
+                style={{ marginLeft: width*0.08, marginTop: Platform.OS == "ios" ? 30 : 0 }}
                   data={ranges}
                   renderItem={RenderimageDAta}
                   keyExtractor={item => item.id}
@@ -290,24 +315,40 @@ const GradingSystem = ({
                 />
               </View>
               {/* <Text>haz,a</Text> */}
-              <TouchableOpacity onPress={()=>{setResultvalue([
-
-              ])}}>
-                <Image
-                  source={
-                    require('../assets/images/black.png')
-                  }
+              <TouchableOpacity
+                onPress={() => { setResultvalue({}) }}
+                style={{
+                 
+                  height: height * 0.075,
+                  backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
+                  width: width * 0.3,
+                  borderRadius: width * 0.5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: height * .03,
+                  marginBottom: -height * 0.02,
+                  marginLeft: width * 0.05
+                }}
+              >
+                {/* <Image
+                  source={require('../assets/images/black.png')}
                   style={{
-                    height: height * 0.12,
-                    width: width * 0.2,
-                    marginLeft: width * 0.09,
-                    marginTop: 20,
-                    opacity:Resultvalue.length == 0 ?1:.5
+                    height:height*.1, 
+                    width:width*.185,
+                    marginLeft: width * 0.05,
+                    opacity: Resultvalue.length == 0 ? 1 : .5
                   }}
-                />
-                {/* <Text style={{position:"absolute",marginLeft:65,color:"white",marginTop:50}}>
-                {Resultvalue.MaxValue}
-              </Text> */}
+                /> */}
+                <Text style={{
+                  color: "white",
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                  fontSize: width * 0.04,
+                  fontWeight: "600",
+
+                }}>
+                  N/A
+                </Text>
               </TouchableOpacity>
               <View
                 style={{
@@ -344,7 +385,7 @@ const GradingSystem = ({
                     />
                   </TouchableOpacity>
                 }
-                <View style={{paddingBottom: 150}} />
+                <View style={{ paddingBottom: 150 }} />
               </View>
             </ScrollView>
           </View>
@@ -354,7 +395,7 @@ const GradingSystem = ({
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
+const mapStateToProps = ({ userReducer }) => {
   return {
     userReducer,
   };
@@ -407,7 +448,7 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
+    borderRadius: width * .1,
     paddingVertical: height * 0.01,
     alignSelf: 'center',
     justifyContent: 'center',

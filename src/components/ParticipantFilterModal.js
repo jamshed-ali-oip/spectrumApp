@@ -49,15 +49,13 @@ const ParticipantFilterModal = ({
   // console.log("Grades", Grades);
   // console.log("selectedGroupsData", selectedGroupsData);
   // console.log("counter selectedGroupsData", selectedGroupsData[counter]);
-  // console.log("selectedGrade", selectedGrade);
+  console.log("selectedGrade", selectedGrade);
   // console.log("counter", counter);
 
   useEffect(() => {
     if (userReducer?.groups && selectedGrade && selectedGrade.id) {
       setGroupsData(
-        userReducer?.groups?.filter(group =>
-          group.grade_id.includes(`${selectedGrade.id}`),
-        ) || [],
+        userReducer?.groups?.filter(group => group.grade_id.includes(`${selectedGrade.id}`)) || [],
       )
     }
   }, [selectedGrade]);
@@ -75,6 +73,8 @@ const ParticipantFilterModal = ({
     }
   }, [userReducer?.groups]);
 
+  console.log(age, counter, selectedGroupsData, userReducer?.groups);
+
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
     const headers = {
@@ -91,14 +91,20 @@ const ParticipantFilterModal = ({
   const gradeHandlerGrade = param => {
     if (param == 'decrease') {
       setAge((age) => age - 1);
-      setSelectedGrade(Grades.find(o => o.id === age - 1));
+      // setSelectedGrade(Grades.find(o => o.id === age - 1));
       setCounter(0)
     } else {
       setAge((age) => age + 1);
-      setSelectedGrade(Grades.find(o => o.id === age + 1));
+      // setSelectedGrade(Grades.find(o => o.id === age + 1));
       setCounter(0)
     }
   };
+
+  useEffect(() => {
+    // setSelectedGrade(Grades.find(o => o.id === age - 1));
+    setSelectedGrade(Grades[age]);
+  }, [age])
+
 
   function renderGenders(group) {
     if (group?.group_type == "Both") {
@@ -148,7 +154,7 @@ const ParticipantFilterModal = ({
             />
             <Heading
               passedStyle={styles.label}
-              title={'Boys'}
+              title={'Male'}
               fontType="medium"
             />
           </TouchableOpacity>
@@ -174,7 +180,7 @@ const ParticipantFilterModal = ({
             />
             <Heading
               passedStyle={styles.label}
-              title={'Girls'}
+              title={'Female'}
               fontType="medium"
             />
           </TouchableOpacity>
@@ -234,6 +240,7 @@ const ParticipantFilterModal = ({
               />
               <View style={styles.rowView}>
                 <TouchableOpacity
+                  disabled={age == 0}
                   onPress={() => {
                     gradeHandlerGrade('decrease');
                   }}>
@@ -249,6 +256,7 @@ const ParticipantFilterModal = ({
                   fontType="medium"
                 />
                 <TouchableOpacity
+                  disabled={age == (Grades.length - 1)}
                   onPress={() => {
                     gradeHandlerGrade('incress');
                   }}>
@@ -271,10 +279,11 @@ const ParticipantFilterModal = ({
 
               <View style={styles.rowView}>
                 <TouchableOpacity
+                  disabled={counter <= 0}
                   onPress={() => {
-                    if (counter > 0) {
-                      setCounter(counter - 1);
-                    }
+                    setCounter((counter) => counter - 1);
+                    // if (counter > 0) {
+                    // }
                   }}>
                   <IconComp
                     type={'Feather'}
@@ -289,10 +298,9 @@ const ParticipantFilterModal = ({
                 />
 
                 <TouchableOpacity
+                  disabled={counter >= (selectedGroupsData.length - 1)}
                   onPress={() => {
-                    if (counter < selectedGroupsData.length - 1) {
-                      setCounter(counter + 1);
-                    }
+                    setCounter((counter) => counter + 1);
                   }}>
                   <IconComp
                     type={'Feather'}
