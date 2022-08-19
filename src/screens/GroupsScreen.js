@@ -9,9 +9,11 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
-  RefreshControl,Platform
+  RefreshControl,
+  Platform,
+  ScrollView,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import Heading from '../components/Heading';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
@@ -33,17 +35,17 @@ const {width, height} = Dimensions.get('window');
 const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
   const ITEM = route.params.item;
   const accessToken = userReducer.accessToken;
-  const [assessments, setAssessments] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+console.log(ITEM?.Name?.length)
+  useEffect(() => {
+    getAllGroups();
+  }, []);
 
-  // useEffect(() => {
-  //   getAllGroups();
-  // }, []);
-
-  // useEffect(() => {
-  //   setAssessments(userReducer?.assessments);
-  // }, [userReducer?.assessments]);
+  useEffect(() => {
+    setGroups(userReducer?.groups);
+  }, [userReducer?.groups]);
 
   const getAllGroups = async () => {
     setIsLoading(true);
@@ -84,70 +86,117 @@ const GroupsScreen = ({navigation, route, userReducer, getGroups}) => {
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
+            ListFooterComponent={() => {
+              return (
+                groups?.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: width * 0.02,
+                      height: height * 0.1,
+                      width: width * 0.5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: height * 0.2,
+                      alignSelf: 'center',
+                    }}>
+                    <Heading
+                      title="No Record, Swipe Down To Refresh"
+                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                )
+              );
+            }}
             ListHeaderComponent={
               <>
-                <Heading
+                {/* <Heading
                   title={ITEM?.Name}
                   passedStyle={styles.headingStyles}
                   fontType="semi-bold"
-                />
-
-                <View style={styles.filterLabelViewStyle}>
-                  <Heading
-                    title="Run Assessment"
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
+                /> */}
+                <View style={styles.headingView}>
                   <Heading
                     title={ITEM?.Name}
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Groups"
-                    passedStyle={styles.selectFilterTextStyle}
+                    passedStyle={[
+                      styles.headingStyles,
+                      // {
+                      //   paddingVertical:
+                      //     ITEM?.Name?.length <= 20 ? height * 0.01 : 0, 
+                      // },
+                    ]}
                     fontType="semi-bold"
                   />
                 </View>
-
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
+                  <View style={styles.filterLabelViewStyle}>
+                    <Heading
+                      title="Run Assessment"
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title={ITEM?.Name}
+                      passedStyle={styles.filterLabelStyle}
+                      fontType="regular"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title="Groups"
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                </ScrollView>
                 {/* Colors  */}
                 <ColoredFlatlist />
               </>
             }
-            data={list}
+            data={groups}
             keyExtractor={({item, index}) => item?.id?.toString()}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
+                  onPress={() => {
                     navigation?.navigate('grades', {
-                      item: {...ITEM, grade: item.name},
-                    })
-                  }
-                  style={{
-                    width: width * 0.9,
-                    alignSelf: 'center',
-                    zIndex: 999,
-                    borderBottomColor: 'silver',
-                    borderBottomWidth: 1,
-                    height: height * 0.07,
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
+                      item: ITEM,
+                      groupData: item,
+                    });
+                  }}
+                  style={[
+                    index !== groups?.length - 1 && {
+                      borderBottomColor: 'silver',
+                      borderBottomWidth: 1,
+                    },
+                    {
+                      width: width * 0.9,
+                      alignSelf: 'center',
+                      zIndex: 999,
+                      height: height * 0.07,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    },
+                  ]}>
                   <Heading
-                    title={item?.name}
-                    passedStyle={{color: 'white', fontSize: width * 0.04}}
+                    title={`${item?.Name} - ${item?.Abbr}`}
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.04,
+                      textTransform: 'capitalize',
+                    }}
                     fontType="regular"
                   />
                 </TouchableOpacity>
@@ -186,7 +235,7 @@ const styles = StyleSheet.create({
   lottieStyle: {
     height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
     marginTop: height * 0.098,
-    marginLeft: width * 0.07,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   selectFilterStyle: {
     flexDirection: 'row',
@@ -196,6 +245,7 @@ const styles = StyleSheet.create({
   selectFilterTextStyle: {
     fontSize: width * 0.04,
     color: 'white',
+    paddingRight: 20,
   },
   rightIconStyle: {
     color: 'white',
@@ -213,19 +263,24 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   headingStyles: {
-    width: width * 0.5,
     color: 'white',
-    textTransform: 'uppercase',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,
-    borderRadius: 25,
-    paddingVertical: height * 0.01,
+
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  headingView: {
+    backgroundColor: themeFerozi,
+    borderRadius: width * 0.1,
+    maxWidth: width * 0.95,
+    paddingHorizontal:width * 0.05,
+    marginBottom: height * 0.1,
+    paddingVertical:8,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
 });
 

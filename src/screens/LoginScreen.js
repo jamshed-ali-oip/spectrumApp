@@ -20,6 +20,7 @@ import * as actions from '../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import LottieView from 'lottie-react-native';
+import {showMessage} from 'react-native-flash-message';
 
 const {width, height} = Dimensions.get('window');
 
@@ -33,9 +34,15 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
     Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
   const _onPressLoginButton = async () => {
-    setIsLoading(true);
-    await loginRequest({email, password}, onLoginFailed);
-    setIsLoading(false);
+    if (email.length == 0 || password.length == 0) {
+      showMessage({
+        message: 'Credentials Required!',
+        type: 'danger',
+      });
+    } else {
+      setIsLoading(true);
+      await loginRequest({email, password}, onLoginFailed);
+    }
   };
 
   const onLoginFailed = () => {
@@ -50,9 +57,9 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
         style={styles.container}>
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View>
+            <View style={{paddingBottom: height * 0.3}}>
               <Image
-                source={require('../assets/images/logo.png')}
+                source={require('../assets/images/new-logo.png')}
                 style={{
                   marginTop: height * 0.15,
                   marginBottom: height * 0.05,
@@ -60,6 +67,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                   height: height * 0.2,
                   alignSelf: 'center',
                 }}
+                resizeMode="contain"
               />
               <TextInput
                 placeholder="Email Address"
@@ -77,27 +85,17 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 value={email}
               />
 
-              {/* <TextInput
-                placeholder="Password"
-                secureTextEntry={true}
-                placeholderTextColor="#565B66"
-                style={[styles.inputfield, {marginBottom: width * 0.04}]}
-                onChangeText={e => {
-                  if (e == ' ' || isLoading) {
-                    return;
-                  }
-                  setPassword(e);
-                }}
-                value={password}
-              /> */}
               <View style={styles.passwordViewContainer}>
                 <TextInput
                   placeholder="Password"
                   placeholderTextColor="#565B66"
-                  style={styles.inputfieldPassword}
+                  style={[
+                    styles.inputfieldPassword,
+                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
+                  ]}
                   value={password}
                   onChangeText={e => {
-                    if (e == ' ') {
+                    if (e == ' ' || isLoading) {
                       return;
                     }
                     setPassword(e);
@@ -143,7 +141,10 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
               )}
 
               <TouchableOpacity
-                onPress={() => {}}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('forgetPassword');
+                }}
                 style={{marginTop: height * 0.03}}>
                 <Heading
                   title="Forgot Password"
@@ -177,9 +178,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     width: width * 0.9,
-    borderRadius: 25,
+    borderRadius: width * 0.5,
     paddingLeft: 20,
-    height: height * 0.07,
+    height: Platform.OS == 'ios' ? height * 0.065 : height * 0.07,
     fontFamily: 'Montserrat-Medium',
     shadowColor: '#000',
     shadowOffset: {
@@ -194,10 +195,10 @@ const styles = StyleSheet.create({
   inputfieldPassword: {
     alignSelf: 'center',
     width: width * 0.8,
-    borderBottomLeftRadius: 25,
-    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: width * 0.5,
+    borderTopLeftRadius: width * 0.5,
     paddingLeft: 20,
-    height: height * 0.07,
+    height: Platform.OS == 'ios' ? height * 0.065 : height * 0.07,
     fontFamily: 'Montserrat-Medium',
   },
   loginBtnStyle: {
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     width: width * 0.9,
-    height: height * 0.08,
+    height: Platform.OS == 'ios' ? height * 0.065 : height * 0.07,
     marginTop: height * 0.02,
   },
   passwordViewContainer: {
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     width: width * 0.9,
-    borderRadius: 25,
+    borderRadius: width * 0.5,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: {

@@ -14,11 +14,10 @@ import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
+import {imageUrl} from '../config';
 
-const AssessmentMapper = ({item, index, onPress}) => {
-
+const AssessmentMapper = ({item, index, onPress, assessments}) => {
   let SHOW_IMAGE =
-
     item?.Name === 'Long Jump'
       ? LONG_JUMP
       : item?.Name === 'Sprinting'
@@ -26,11 +25,20 @@ const AssessmentMapper = ({item, index, onPress}) => {
       : item?.Name === 'Shot Put'
       ? SHOT_PUT
       : HURDLES;
+console.log("image data",`${imageUrl}/assessment_image/${item?.Image}`)
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+
+        index !== assessments?.length - 1 && {
+          borderBottomColor: 'silver',
+          borderBottomWidth: 1,
+        },
+      ]}>
       <View style={{flexDirection: 'row'}}>
         <Image
-          source={SHOW_IMAGE}
+          source={{uri: `${imageUrl}/assessment_image/${item?.Image}`}}
           resizeMode="contain"
           style={styles.imageStyles}
         />
@@ -63,8 +71,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 999,
     //   marginTop:-100,
-    borderBottomColor: 'silver',
-    borderBottomWidth: 1,
+    // borderBottomColor: 'silver',
+    // borderBottomWidth: 1,
     height: height * 0.09,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -82,11 +90,16 @@ const styles = StyleSheet.create({
   nameStyle: {
     color: 'white',
     fontSize: width * 0.035,
+    width: width * 0.3,
+    alignSelf: 'center',
     marginHorizontal: width * 0.02,
   },
   textBtnStyle: {
     color: 'white',
     fontSize: width * 0.04,
   },
-  imageStyles: {width: width * 0.072, height: height * 0.032},
+  imageStyles: {
+    width: width * 0.072,
+    height: height * 0.045,
+  },
 });

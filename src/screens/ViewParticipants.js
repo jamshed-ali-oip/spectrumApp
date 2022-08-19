@@ -9,10 +9,15 @@ import {
   ImageBackground,
   StatusBar,
   FlatList,
+  RefreshControl,
+  Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import Heading from '../components/Heading';
-import Button from '../components/Button';
+import Echo from 'laravel-echo';
+import * as Ably from 'ably';
+// import Pusher from 'pusher-js';
+import LottieView from 'lottie-react-native';
 import {
   themeBlue,
   themeDarkBlue,
@@ -20,185 +25,393 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import {template} from '@babel/core';
+import * as actions from '../store/actions';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import ParticipantsMapper from '../components/ParticipantsMapper';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
+// sd
+const ViewParticipants = ({
+  navigation,
+  route,
+  getPastAssessment,
+  userReducer,
+  getColors,
+}) => {
+  const DATA = route.params.data;
+  const accessToken = userReducer.accessToken;
+  const [pastAssessments, setPastAssessments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [record, setRecord] = useState(null);
+  const apiData = {
+    id: DATA?.id,
+  };
+  const socketRef = userReducer?.socket;
+  useEffect(() => {
+    // socketRef.emit('addUser', userId);
 
-const ViewParticipants = () => {
+    // socketRef.on('getMessage', data => {
+    //   console.log(data, 'Text Recieved========');
+    // });
+    getDetail();
+  }, []);
+  // console.log(DATA)
+  useEffect(() => {
+    setPastAssessments(userReducer?.pastAssessment);
+  }, [userReducer?.pastAssessment]);
+
+  const getDetail = async () => {
+    setIsLoading(true);
+    await getPastAssessment(apiData, accessToken);
+    await getColors(accessToken);
+    setIsLoading(false);
+  };
+
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1500).then(() => {
+      setRefreshing(false);
+      getDetail();
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   // 2
+  //   // Axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
+  //   // 3
+  //   const echo = new Echo({
+  //     broadcaster: 'ably',
+  //     key: 'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
+  //     wsHost: 'realtime-pusher.ably.io',
+  //     wsPort: 443,
+  //     disableStats: true,
+  //     enÇcrypted: true,
+  //   });
+  //   // 4
+  //   echo
+  //     .channel('public.room')
+  //     .subscribed(() => {
+  //       console.log('You are subscribed');
+  //     })
+  //     // 5
+  //     // .listen('.message.new', data => {
+  //     //   console.log(data,"...///")
+  //     // });
+  // }, []);
+  console.log("result screen")
+  useEffect(() => {
+    var ably = new Ably.Realtime(
+      'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
+    );
+    ably.connection.on('connected', function () {
+      // alert('Connected, that was easy');
+    });
+    var channel = ably.channels.get('test');
+    // console.log(channel,)
+    channel.subscribe(function (message) {
+      let NewRecord = JSON.parse(message.data);
+      setRecord(NewRecord);
+    });
+  }, []);
+
+  const appendRecordToArray = data => {
+    // if (DATA?.id == data?.participant_id) {
+    const DATAA = JSON.parse(data);
+    // console.log(DATAA,'DATAAA')
+    const created_at = JSON.parse(DATAA?.created_at);
+    const assessments = [...JSON.parse(DATAA?.assessments)];
+    const assessCopy = [
+      ...JSON.parse({
+        created_at: created_at,
+        // assessments: assessments?.map(ele => {
+        //   let id = JSON.parse(ele?.id);
+        //   let Name = JSON.parse(ele?.Name);
+        //   let Abbr = JSON.parse(ele?.Abbr);
+        //   let Image = JSON.parse(ele?.Image);
+        //   return {
+        //     id: id,
+        //     Name: Name,
+        //     Abbr: Abbr,
+        //     Image: Image,
+        //     assessment_scoring: [...JSON.parse(ele?.assessment_scoring)]?.map(
+        //       el => {
+        //         return {
+        //           id: JSON.parse(el?.id),
+        //           assessment_id: JSON.parse(el?.assessment_id),
+        //           color_id: JSON.parse(el?.color_id),
+        //           MinValue: JSON.parse(el?.MinValue),
+        //           MaxValue: JSON.parse(el?.MaxValue),
+        //         };
+        //       },
+        //     ),
+        //   };
+        // }),
+      }),
+      ...pastAssessments,
+    ];
+    console.log(assessments, '======');
+    // setPastAssessments(assessCopy);
+    // }
+  };
+
+  useEffect(() => {
+    if (record !== null) {
+      const assessCopy = [record, ...pastAssessments];
+      // console.log(userReducer?.pastAssessment);
+      console.log(JSON.stringify(assessCopy?.length, null, 2), ' length');
+      setPastAssessmenkts(assessCopy);
+      setRecord(null);
+    }
+  }, [record]);
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <FlatList
-          ListHeaderComponent={
-            <>
-              <Heading
-                title={'VIEW PARTICIPANTS'}
-                passedStyle={styles.headingStyles}
-                fontType="semi-bold"
-              />
-              {/* Participants Head View  */}
-              <View style={styles.participantsViewStyle}>
-                <Heading
-                  title="Participants"
-                  passedStyle={styles.participantsLabelStyle}
-                  fontType="regular"
-                />
-                <IconComp
-                  iconName={'chevron-right'}
-                  type="Feather"
-                  passedStyle={styles.iconStyle}
-                />
-                <Heading
-                  title="Lalit Beahan"
-                  passedStyle={styles.participantsLabelStyle}
-                  fontType="semi-bold"
-                />
-              </View>
+        {isLoading ? (
+          <LottieView
+            speed={1}
+            style={styles.lottieStyle}
+            autoPlay
+            loop
+            source={require('../assets/lottie/color-loader.json')}
+          />
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListHeaderComponent={
+              <>
+                <View style={styles.headingView}>
+                  <Heading
+                    title={'VIEW PARTICIPANTS'}
+                    passedStyle={styles.headingStyles}
+                    fontType="semi-bold"
+                  />
+                </View>
 
-              {/* Colors  */}
-              <ColoredFlatlist />
+                {/* Participants Head View  */}
+                <View style={styles.participantsViewStyle}>
+                  <Heading
+                    title="Participants"
+                    passedStyle={styles.participantsLabelStyle}
+                    fontType="regular"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.iconStyle}
+                  />
+                  <Heading
+                    title={`${DATA?.Firstname} ${DATA?.Lastname}`}
+                    passedStyle={styles.participantsLabelStyle}
+                    fontType="semi-bold"
+                  />
+                </View>
 
-              {/* Age  */}
-              <TouchableOpacity
-                style={{
-                  backgroundColor: themeDarkBlue,
-                  borderRadius: 25,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  width: width * 0.9,
-                  height: height * 0.07,
-                  marginTop: height * 0.02,
-                }}>
-                <Heading
-                  title="Age"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.045,
-                    marginLeft: width * 0.06,
-                  }}
-                  fontType="semi-bold"
-                />
-                <Heading
-                  title="8"
-                  passedStyle={{
-                    color: 'white',
-                    marginLeft: width * 0.18,
-                    fontSize: width * 0.045,
-                  }}
-                  fontType="regular"
-                />
-              </TouchableOpacity>
+                {/* Colors  */}
+                <ColoredFlatlist />
 
-              {/* Grade  */}
-              <TouchableOpacity
-                style={{
-                  backgroundColor: themeDarkBlue,
-                  borderRadius: 25,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  width: width * 0.9,
-                  height: height * 0.07,
-                  marginTop: height * 0.02,
-                }}>
-                <Heading
-                  title="Grade"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.045,
-                    marginLeft: width * 0.06,
-                  }}
-                  fontType="semi-bold"
-                />
-                <Heading
-                  title="1"
-                  passedStyle={{
-                    color: 'white',
-                    marginLeft: width * 0.14,
-                    fontSize: width * 0.045,
-                  }}
-                  fontType="regular"
-                />
-              </TouchableOpacity>
+                {/* Age  */}
+                <View
+                  style={{
+                    backgroundColor: themeDarkBlue,
+                    borderRadius: 25,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    width: width * 0.9,
+                    height: height * 0.07,
+                    marginTop: height * 0.02,
+                  }}>
+                  <Heading
+                    title="Age"
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.045,
+                      marginLeft: width * 0.06,
+                    }}
+                    fontType="semi-bold"
+                  />
+                  <Heading
+                    title={DATA?.Age}
+                    passedStyle={{
+                      color: 'white',
+                      marginLeft: width * 0.18,
+                      fontSize: width * 0.045,
+                    }}
+                    fontType="regular"
+                  />
+                </View>
 
-              {/* Gender  */}
-              <TouchableOpacity
-                style={{
-                  backgroundColor: themeDarkBlue,
-                  borderRadius: 25,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  width: width * 0.9,
-                  height: height * 0.07,
-                  marginTop: height * 0.02,
-                }}>
-                <Heading
-                  title="Gender"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.045,
-                    marginLeft: width * 0.06,
-                  }}
-                  fontType="semi-bold"
-                />
-                <Heading
-                  title="Male"
-                  passedStyle={{
-                    color: 'white',
-                    marginLeft: width * 0.1,
-                    fontSize: width * 0.045,
-                  }}
-                  fontType="regular"
-                />
-              </TouchableOpacity>
+                {/* Grade  */}
+                <View
+                  style={{
+                    backgroundColor: themeDarkBlue,
+                    borderRadius: 25,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    width: width * 0.9,
+                    height: height * 0.07,
+                    marginTop: height * 0.02,
+                  }}>
+                  <Heading
+                    title="Grade"
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.045,
+                      marginLeft: width * 0.06,
+                    }}
+                    fontType="semi-bold"
+                  />
+                  <Heading
+                    title={DATA?.grade_name}
+                    passedStyle={{
+                      color: 'white',
+                      marginLeft: width * 0.14,
+                      fontSize: width * 0.045,
+                    }}
+                    fontType="regular"
+                  />
+                </View>
 
-              <Heading
+                {/* Gender  */}
+                <View
+                  style={{
+                    backgroundColor: themeDarkBlue,
+                    borderRadius: 25,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    width: width * 0.9,
+                    height: height * 0.07,
+                    marginTop: height * 0.02,
+                  }}>
+                  <Heading
+                    title="Gender"
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.045,
+                      marginLeft: width * 0.06,
+                    }}
+                    fontType="semi-bold"
+                  />
+                  <Heading
+                    title={DATA?.Gender}
+                    passedStyle={{
+                      color: 'white',
+                      marginLeft: width * 0.1,
+                      fontSize: width * 0.045,
+                    }}
+                    fontType="regular"
+                  />
+                </View>
+
+                {/* <Heading
                 title={'PAST ASSESSMENTS'}
                 passedStyle={styles.pastAssessmentHeadingStyles}
                 fontType="semi-bold"
-              />
-            </>
-          }
-          data={list}
-          keyExtractor={({item, index}) => item?.id?.toString()}
-          contentContainerStyle={{paddingBottom: height * 0.1}}
-          renderItem={({item, index}) => (
-            <ParticipantsMapper item={item} index={index} />
-          )}
-        />
+              /> */}
+
+                <View
+                  style={[
+                    styles.headingView,
+                    {
+                      backgroundColor: themeFerozi,
+                      marginTop: height * 0.05,
+                      marginBottom: 20,
+                    },
+                  ]}>
+                  <Heading
+                    title={'PAST ASSESSMENTS'}
+                    passedStyle={[
+                      styles.headingStyles,
+                      // {backgroundColor: themeFerozi},
+                    ]}
+                    fontType="semi-bold"
+                  />
+                </View>
+              </>
+            }
+            ListFooterComponent={() => {
+              return (
+                pastAssessments?.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: width * 0.02,
+                      height: height * 0.1,
+                      width: width * 0.5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      // marginTop:height * 0.2,
+                      alignSelf: 'center',
+                    }}>
+                    <Heading
+                      title="No Record, Swipe Down To Refresh"
+                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      fontType="semi-bold"
+                    />
+                  </View>
+                )
+              );
+            }}
+            data={pastAssessments}
+            keyExtractor={({item, index}) => item?.id?.toString()}
+            contentContainerStyle={{paddingBottom: height * 0.1}}
+            renderItem={({item, index}) => (
+        <ParticipantsMapper item={item} index={index} />
+     
+            )}
+          />
+        )}
       </ImageBackground>
     </>
   );
 };
 
-export default ViewParticipants;
+const mapStateToProps = ({userReducer}) => {
+  return {userReducer};
+};
+export default connect(mapStateToProps, actions)(ViewParticipants);
 
 const styles = StyleSheet.create({
+  lottieStyle: {
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.098,
+    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
+  },
   container: {
     flex: 1,
     backgroundColor: 'blue',
   },
   headingStyles: {
-    width: width * 0.6,
     color: 'white',
-    backgroundColor: themeLightBlue,
+    // backgroundColor: themeLightBlue,
     fontSize: width * 0.045,
-    borderRadius: 25,
     paddingVertical: height * 0.01,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  headingView: {
+    backgroundColor: themeLightBlue,
+    borderRadius: width * 0.05,
+    width: width * 0.57,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
     marginTop: height * 0.02,
-    marginBottom: height * 0.1,
   },
   pastAssessmentHeadingStyles: {
     width: width * 0.55,
@@ -224,6 +437,7 @@ const styles = StyleSheet.create({
   participantsLabelStyle: {
     fontSize: width * 0.04,
     color: 'white',
+    textTransform: 'capitalize',
   },
   iconStyle: {
     color: 'white',

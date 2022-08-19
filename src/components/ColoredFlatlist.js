@@ -5,7 +5,7 @@ const {width, height} = Dimensions.get('window');
 const ColoredFlatlist = () => {
   return (
     <FlatList
-      data={colors}
+      data={colors} showsHorizontalScrollIndicator={false}
       horizontal={true}
       keyExtractor={({item, index}) => item?.id?.toString()}
       renderItem={({item, index}) => {
