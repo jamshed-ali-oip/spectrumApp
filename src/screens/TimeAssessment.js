@@ -885,7 +885,7 @@ console.log("ranges",ranges)
 
               <Stopwatch
                 laps
-                // msecs
+                msecs
                 start={timer.stopwatchStart}
                 reset={timer.stopwatchReset}
                 options={{

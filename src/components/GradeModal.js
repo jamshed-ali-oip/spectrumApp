@@ -48,6 +48,8 @@ const ParticipantFilterModal = ({
   const [selectedboy, setSelectedboy] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Both");
   const [gradeAll, setGradeAll] = useState(false);
+  const [allGroud, setAllGroup] = useState(false);
+
   const [Eventdata, setEventdata] = useState([]);
   // console.log("EventData", Eventdata)
   // console.log("seklected event", selectedEvent)
@@ -322,8 +324,41 @@ const ParticipantFilterModal = ({
               </View>
             </View>
 
+            <View style={{
+              paddingVertical: height * 0.001,
+              marginBottom: height * 0.02,
+              borderWidth: 1,
+              borderColor: themeLightBlue,
+              borderRadius: 10,
+              width: width * 0.8,
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  setAllGroup(!allGroud)
+                }}
+                style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
+                <IconComp
+                  type={'MaterialIcons'}
+                  iconName={
+                    allGroud
+                      ? 'check-circle'
+                      : 'radio-button-unchecked'
+                  }
+                  passedStyle={styles.textLAbel}
+                />
+                <Heading
+                  passedStyle={styles.label}
+                  title={'All Group'}
+                  fontType="medium"
+                />
+              </TouchableOpacity>
+            </View>
             {/* Group  */}
-            <View style={styles.filterContainer}>
+            {!allGroud &&(
+              <View style={styles.filterContainer}>
               <Heading
                 passedStyle={styles.label}
                 title={'Group'}
@@ -363,6 +398,7 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
               </View>
             </View>
+            )}
 
             {/* Grade  */}
             <View style={{
@@ -472,7 +508,8 @@ const ParticipantFilterModal = ({
                 <>
                   {renderGenders(selectedGroupsData[counter])}
                 </>
-              ) : <Text>Something went wrong!</Text>
+              ) :null
+              // ) : <Text>Something went wrong!</Text>
             }
           </View>
           {/* Buttons Container  */}
