@@ -336,7 +336,7 @@ const ViewParticipants = ({
                     title={'PAST ASSESSMENTS'}
                     passedStyle={[
                       styles.headingStyles,
-                      {backgroundColor: themeFerozi},
+                      // {backgroundColor: themeFerozi},
                     ]}
                     fontType="semi-bold"
                   />
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   },
   headingStyles: {
     color: 'white',
-    backgroundColor: themeLightBlue,
+    // backgroundColor: themeLightBlue,
     fontSize: width * 0.045,
     paddingVertical: height * 0.01,
     textAlign: 'center',

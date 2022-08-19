@@ -23,6 +23,7 @@ import {
 import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import { showMessage } from 'react-native-flash-message';
+import CheckIcon from "react-native-vector-icons/FontAwesome"
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,15 +48,23 @@ const ScaleScreen = ({
   const [ranges, setRanges] = useState([]);
   const [ans, setAns] = useState(height * 0.01);
   const [Uservalue, setUservalue] = useState({});
+  const [reverse, setReverse] = useState("red")
   const [Resultvalue, setResultvalue] = useState({});
   console.log("scale screen", Event)
-  console.log("chutipaya 5", CHILD_DATA.grade_id)
+
   // const [assessment_id,setassessment_id]=useState([]);
   // const [resultColor, setResultColor] = useState(
   //   colors[7]?.WebColor || 'black',
   // );
   // console.log("scale screen...... child",Memebers)
   // console.log("clikcekkkkkk data")
+
+  // useEffect(() => {
+  //   if (ranges.length > 0) {
+  //     setRanges([...ranges].reverse())
+  //   }
+  // }, [reverse])
+
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
   }, [])
@@ -198,11 +207,11 @@ const ScaleScreen = ({
 
 
   const RenderMembersData = ({ item, index }) => (
-    <View style={{ flexDirection: 'row', paddingVertical: 3,width:'100%' }}>
+    <View style={{ flexDirection: 'row', paddingVertical: 3, width: '100%' }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
         disabled={item.disable}
-        style={{ flexDirection: "row", alignItems: "center",minWidth:width-50 }}
+        style={{ flexDirection: "row", alignItems: "center", minWidth: width - 50 }}
         onPress={() => {
           setUservalue({ ...item, index });
         }}>
@@ -236,9 +245,15 @@ const ScaleScreen = ({
     </View>
   );
   const RenderimageDAta = ({ item }) => (
-    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: width/4, flexDirection: "row",justifyContent:'center',alignItems:'center' }}>
+    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+
+      {Resultvalue.image == item.image && (
+        <View style={{ position: 'absolute', zIndex: 1 }}>
+          <CheckIcon name='check' color={"black"} size={30} />
+        </View>
+      )}
       <Image
-        style={{ height: height * .095, width: width/6, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5,resizeMode:"contain" }}
+        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
 
         source={{
           uri:
@@ -287,7 +302,7 @@ const ScaleScreen = ({
 
             data={Memebers}
             renderItem={RenderMembersData}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.color_sort}
           // scrollEnabled={false}
           // contentContainerStyle={{
           //   flexGrow: 1,
@@ -597,9 +612,24 @@ const ScaleScreen = ({
                 fontType="semi-bold"
               />
 
+              {/* <TouchableOpacity
+                onPress={() => {
+                  if (reverse == "red") {
+                    setReverse("white")
+                  } else {
+                    setReverse("red")
+                  }
+                }}
+                style={[styles.headingStyle2View, { marginTop: 0, marginBottom: 20 }]}>
+                <Heading
+                  title={reverse == "red" ? 'White to Red ---->' : 'Red to White ---->'}
+                  passedStyle={styles.headingStyles2}
+                  fontType="regular"
+                />
+              </TouchableOpacity> */}
               <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                 <FlatList
-                  style={{  marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                  style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
                   data={ranges}
                   renderItem={RenderimageDAta}
                   keyExtractor={item => item.id}
@@ -607,46 +637,12 @@ const ScaleScreen = ({
                 />
 
               </View>
-              <TouchableOpacity
-                onPress={() => { setResultvalue({}) }}
-                style={{
-
-                  height: height * 0.075,
-                  backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
-                  width: width * 0.3,
-                  borderRadius: width * 0.5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: height * .03,
-                  marginBottom: -height * 0.03,
-                  marginLeft: width * 0.05
-                }}
-              >
-                {/* <Image
-                  source={require('../assets/images/black.png')}
-                  style={{
-                    height:height*.1, 
-                    width:width*.185,
-                    marginLeft: width * 0.05,
-                    opacity: Resultvalue.length == 0 ? 1 : .5
-                  }}
-                /> */}
-                <Text style={{
-                  color: "white",
-                  textAlign: "center",
-                  textAlignVertical: "center",
-                  fontSize: width * 0.04,
-                  fontWeight: "600",
-
-                }}>
-                  N/A
-                </Text>
-              </TouchableOpacity>
               <View
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingBottom: height * 0.1,
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                  paddingHorizontal: 10
                 }}>
                 {/* <TextInput
                   value={score}
@@ -665,6 +661,7 @@ const ScaleScreen = ({
                     setScore(text);
                   }}
                 /> */}
+         
 
                 {
                   <TouchableOpacity
@@ -677,7 +674,25 @@ const ScaleScreen = ({
                     />
                   </TouchableOpacity>
                 }
-                <View style={{ paddingBottom: 150 }} />
+                       <TouchableOpacity
+                  onPress={() => { setResultvalue({}) }}
+                  style={{ ...styles.saveBtnStyle, backgroundColor: 'black' }}
+                >
+                  {/* <Image
+                  source={require('../assets/images/black.png')}
+                  style={{
+                    height:height*.1, 
+                    width:width*.185,
+                    marginLeft: width * 0.05,
+                    opacity: Resultvalue.length == 0 ? 1 : .5
+                  }}
+                /> */}
+                  <Heading
+                    title={'N/A'}
+                    passedStyle={styles.startBtnStyle}
+                    fontType="bold"
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
@@ -715,11 +730,9 @@ const styles = StyleSheet.create({
     fontSize: width * 0.047,
   },
   saveBtnStyle: {
-    marginLeft: width * 0.05,
     backgroundColor: themeFerozi,
     borderRadius: width * 0.5,
-    // marginTop: width * 0.03,
-    width: width * 0.3,
+    width: width * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
   },

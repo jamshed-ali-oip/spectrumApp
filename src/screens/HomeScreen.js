@@ -75,6 +75,18 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
         />
+        <Button
+          title={'LOG OUT'}
+          btnStyle={{...styles.participantStyle,backgroundColor:'black'}}
+          onBtnPress={logoutRequest}
+          btnTextStyle={styles.textBtnStyle}
+          isBgColor={false}
+        />
+        <TouchableOpacity onPress={() => navigation.navigate("FAQ")} style={{alignItems:"center"}}>
+          <Text style={{fontSize:width* 0.045,fontWeight:"600",color:"white",fontStyle:"italic"}}>
+            FAQ
+          </Text>
+        </TouchableOpacity>
 
         {/* <Button
           title={'RUN AN ASSESSMENT'}
@@ -87,7 +99,8 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
         /> */}
-        <TouchableOpacity
+
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           onPress={logoutRequest}
           style={styles.logOutBtnStyle}>
@@ -96,7 +109,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
             passedStyle={{color: 'white', fontSize: width * 0.045}}
             fontType="semi-bold"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ImageBackground>
     </>
   );

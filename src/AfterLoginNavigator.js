@@ -31,6 +31,8 @@ import {connect} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
 import {io} from 'socket.io-client';
 import * as actions from './store/actions/index';
+import FAQ from './screens/FAQ';
+import setup from './screens/setup';
 
 const {width, height} = Dimensions.get('window');
 
@@ -527,6 +529,49 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
         })}
         component={ScaleScreen}
       />
+        <AfterLoginStack.Screen
+        name="FAQ"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          cardStyleInterpolator:forFade,
+          headerStyle: {
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('FAQ');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={require('./assets/images/round-icon.png')}
+              />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        component={FAQ}
+      />
 
       <AfterLoginStack.Screen
         name="faciliator"
@@ -569,6 +614,48 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
           ),
         })}
         component={FaciliatorInstructionsScreen}
+      />
+         <AfterLoginStack.Screen
+        name="setup"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          cardStyleInterpolator:forFade,
+          headerStyle: {
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('setup');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={require('./assets/images/round-icon.png')}
+              />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        component={setup}
       />
       
       

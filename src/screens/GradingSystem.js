@@ -30,6 +30,8 @@ import { connect } from 'react-redux';
 import { showMessage } from 'react-native-flash-message';
 import { Shadow } from 'react-native-shadow-2';
 import OctIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import CheckIcon from "react-native-vector-icons/FontAwesome"
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -55,6 +57,7 @@ const GradingSystem = ({
   const [ranges, setRanges] = useState([]);
   const [Resultvalue, setResultvalue] = useState({});
   const [assessment_id, setassessment_id] = useState([]);
+  const [reverse,setReverse]=useState("red")
   const [Uservalue, setUservalue] = useState({});
   console.log('=======>', Uservalue);
   // const [resultColor, setResultColor] = useState(
@@ -94,6 +97,12 @@ const GradingSystem = ({
     await getAssessmentDetails(ITEM?.id, accessToken);
     setIsLoading(false);
   };
+
+  // useEffect(()=>{
+  //   if(ranges.length>0){
+  //       setRanges([...ranges].reverse())
+  //   }
+  // },[reverse])
 
   useEffect(() => {
     setColors(userReducer?.colors);
@@ -221,9 +230,15 @@ const GradingSystem = ({
       onPress={() => {
         setResultvalue(item);
       }}
+      style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}
     >
+      {Resultvalue.image == item.image && (
+        <View style={{ position: 'absolute', zIndex: 1 }}>
+          <CheckIcon name='check' color={"black"} size={30} />
+        </View>
+      )}
       <Image
-        style={{ height: height * .095, width: width * .155, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5 ,resizeMode:"contain"}}
+        style={{ height: height * .095, width: width / 6,  resizeMode: "contain" }}
         source={{
           uri:
             item.image === null
@@ -296,6 +311,21 @@ const GradingSystem = ({
                   fontType="regular"
                 />
               </View>
+              {/* <TouchableOpacity 
+              onPress={()=>{
+                if(reverse=="red"){
+                  setReverse("white")
+                }else{
+                  setReverse("red")
+                }
+              }}
+              style={[styles.headingStyle2View, { marginTop:0,marginBottom: 20 }]}>
+                <Heading
+                  title={reverse=="red"?'White to Red ---->':'Red to White ---->'}
+                  passedStyle={styles.headingStyles2}
+                  fontType="regular"
+                />
+              </TouchableOpacity> */}
               {/* Child Name  */}
               {/* <View style={styles.headingStyle2View}>
               <Heading
@@ -307,54 +337,20 @@ const GradingSystem = ({
 
               <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                 <FlatList
-                style={{ marginLeft: width*0.08, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                  style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
                   data={ranges}
                   renderItem={RenderimageDAta}
-                  keyExtractor={item => item.id}
+                  keyExtractor={item => item.color_sort}
                   numColumns={4}
                 />
               </View>
               {/* <Text>haz,a</Text> */}
-              <TouchableOpacity
-                onPress={() => { setResultvalue({}) }}
-                style={{
-                 
-                  height: height * 0.075,
-                  backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
-                  width: width * 0.3,
-                  borderRadius: width * 0.5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: height * .03,
-                  marginBottom: -height * 0.02,
-                  marginLeft: width * 0.05
-                }}
-              >
-                {/* <Image
-                  source={require('../assets/images/black.png')}
-                  style={{
-                    height:height*.1, 
-                    width:width*.185,
-                    marginLeft: width * 0.05,
-                    opacity: Resultvalue.length == 0 ? 1 : .5
-                  }}
-                /> */}
-                <Text style={{
-                  color: "white",
-                  textAlign: "center",
-                  textAlignVertical: "center",
-                  fontSize: width * 0.04,
-                  fontWeight: "600",
-
-                }}>
-                  N/A
-                </Text>
-              </TouchableOpacity>
               <View
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingBottom: height * 0.1,
+                  justifyContent:'space-between',
+                  marginVertical:10,
+                  paddingHorizontal:10
                 }}>
                 {/* <TextInput
                 value={score}
@@ -373,6 +369,7 @@ const GradingSystem = ({
                   setScore(text);
                 }}
               /> */}
+                         
 
                 {
                   <TouchableOpacity
@@ -385,7 +382,25 @@ const GradingSystem = ({
                     />
                   </TouchableOpacity>
                 }
-                <View style={{ paddingBottom: 150 }} />
+                   <TouchableOpacity
+                onPress={() => { setResultvalue({}) }}
+                style={{...styles.saveBtnStyle,backgroundColor:'black'}}
+              >
+                {/* <Image
+                  source={require('../assets/images/black.png')}
+                  style={{
+                    height:height*.1, 
+                    width:width*.185,
+                    marginLeft: width * 0.05,
+                    opacity: Resultvalue.length == 0 ? 1 : .5
+                  }}
+                /> */}
+                    <Heading
+                      title={'N/A'}
+                      passedStyle={styles.startBtnStyle}
+                      fontType="bold"
+                    />
+              </TouchableOpacity>
               </View>
             </ScrollView>
           </View>
@@ -410,11 +425,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   saveBtnStyle: {
-    marginLeft: width * 0.05,
     backgroundColor: themeFerozi,
     borderRadius: width * 0.5,
-    marginTop: width * -0.03,
-    width: width * 0.3,
+    width: width * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
   },

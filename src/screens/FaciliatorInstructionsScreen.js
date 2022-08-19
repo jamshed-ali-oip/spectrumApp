@@ -116,7 +116,7 @@ const FaciliatorInstructionsScreen = ({
                 marginBottom: height * 0.05,
               }}
             />
-
+{console.log("first",DATA)}
             <Heading
               title={DATA?.Instructions}
               fontType="medium"

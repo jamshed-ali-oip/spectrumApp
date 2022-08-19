@@ -76,7 +76,7 @@ const RunAssessment = ({navigation, route}) => {
                 passedStyle={styles.iconStyle}
               />
               <Heading
-                title={ITEM.Name}
+                title={ITEM.Name?.length<18?ITEM.Name:(ITEM.Name.slice(0,18)+" ...")}
                 passedStyle={styles.participantsLabelStyle}
                 fontType="semi-bold"
               />
@@ -154,6 +154,19 @@ const RunAssessment = ({navigation, route}) => {
               fontType="bold"
             />
           </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('setup', {data: ITEM})}
+            style={[
+              styles.buttonContainerStyles,
+              {backgroundColor: "#F9A603"},
+            ]}>
+            <Heading
+              title={' SETUP'}
+              passedStyle={[styles.buttonStyles, {backgroundColor: "#F9A603"}]}
+              fontType="bold"
+            />
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </>
@@ -208,10 +221,11 @@ const styles = StyleSheet.create({
   },
   assessmentListStyle: {
     position: 'absolute',
-    bottom: height * 0.23,
+    bottom: height * 0.13,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    // marginTop:height*0.05
     // left: width * 0.05,
   },
   participantsViewStyle: {

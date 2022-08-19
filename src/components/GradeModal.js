@@ -47,7 +47,7 @@ const ParticipantFilterModal = ({
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Both");
-  const [gradeAll, setGradeAll] = useState(true);
+  const [gradeAll, setGradeAll] = useState(false);
   const [Eventdata, setEventdata] = useState([]);
   // console.log("EventData", Eventdata)
   // console.log("seklected event", selectedEvent)
@@ -305,7 +305,7 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
                 <Heading
                   passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                  title={selectedEvent?.name || "Nill"}
+                  title={selectedEvent?.name?.slice(0,12)+'...' || "Nill"}
                   fontType="medium"
                 />
                 <TouchableOpacity

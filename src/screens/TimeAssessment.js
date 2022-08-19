@@ -36,8 +36,10 @@ import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { showMessage } from 'react-native-flash-message';
 import RNBeep from 'react-native-a-beep';
 import Sound from 'react-native-sound';
+import CheckIcon from "react-native-vector-icons/FontAwesome"
 import moment from 'moment';
 import { baseUrl } from '../config';
+import axios from 'axios';
 const { width, height } = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -70,6 +72,11 @@ const TimeAssessment = ({
   const [showTextField, setShowTextField] = useState(false);
   const [ranges, setRanges] = useState([]);
   const [highscore, sethighscore] = useState();
+  const [player, setPlayer] = useState({})
+  const [players, setPlayers] = useState([])
+const [reverse, setReverse] = useState("red")
+console.log("ranges",ranges)
+
   // console.log("my kasjm,ir",route.params.item.id,highscore)
   // console.log("time assement screen", Event)
   const [wheelState, setWheelState] = useState({
@@ -103,10 +110,32 @@ const TimeAssessment = ({
   //   highscore > scoor.MaxValue && highscore < scoor.MinValue
   // })
 
+  // useEffect(() => {
+  //   if (ranges.length > 0) {
+  //     setRanges([...ranges].reverse())
+  //   }
+  // }, [reverse])
+
+  
   useEffect(() => {
-    console.log(Number(secs), highscore?.Duration, Number(secs) == Number(highscore?.Duration));
-    if (Number(secs) == highscore?.Duration) {
-      console.log("Beeeeeeeep");
+    axios.post(`https://webprojectmockup.com/custom/spectrum-8/api/percentile`, {
+      assessment_id: ITEM?.id
+    }).then(res => {
+      setPlayers(res.data.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (Uservalue && players.length > 0) {
+      const currentPlayer = players?.filter(it => it.grade_id == Uservalue.grade_id && it.gender == Uservalue.Gender)[0]
+      setPlayer(currentPlayer)
+    }
+  }, [Uservalue, players])
+
+  useEffect(() => {
+    console.log(secs, Uservalue.Gender, "0.0" + Math.round(Number(player?.percent)));
+    if (Number(secs) == ("0.0" + Math.round(Number(player?.percent)))) {
+      // alert("Beeeeeeeep");
       playSound()
     }
   }, [secs])
@@ -121,7 +150,7 @@ const TimeAssessment = ({
     group_id: GROUP_DATA?.id,
     event_id: Event.id
   };
-  console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
+  // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
   const [timer, setTimer] = useState({
     timerStart: false,
     stopwatchStart: false,
@@ -270,7 +299,7 @@ const TimeAssessment = ({
   };
   useEffect(() => {
     // setRanges(userReducer?.assessmentDetails?.assessment_scoring);
-    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
+    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id).reverse())
     // setRanges(Value);
   }, [userReducer?.gameInfo]);
 
@@ -577,45 +606,31 @@ const TimeAssessment = ({
                 fontType="regular"
               />
             </View>
+            {/* <TouchableOpacity
+                onPress={() => {
+                  if (reverse == "red") {
+                    setReverse("white")
+                  } else {
+                    setReverse("red")
+                  }
+                }}
+                style={[styles.headingStyle2View, {  marginBottom: 20 }]}>
+                <Heading
+                  title={reverse == "red" ? 'White to Red ---->' : 'Red to White ---->'}
+                  passedStyle={styles.headingStyles2}
+                  fontType="regular"
+                />
+              </TouchableOpacity> */}
             <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
               <FlatList
-                style={{ marginLeft: width * 0.08, marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
                 data={ranges}
                 renderItem={RenderimageDAta}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.color_sort}
                 numColumns={4}
               />
 
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                setResultvalue({})
-              }}
-              style={{
-                height: height * 0.075,
-                backgroundColor: !Resultvalue.id ? "black" : "rgba(0, 0, 0, 0.36)",
-
-                width: width * 0.3,
-                borderRadius: width * 0.5,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: height * .03,
-                marginBottom: -height * 0.03,
-                marginLeft: width * 0.05
-              }}
-            >
-
-              <Text style={{
-                color: "white",
-                textAlign: "center",
-                textAlignVertical: "center",
-                fontSize: width * 0.04,
-                fontWeight: "600",
-
-              }}>
-                N/A
-              </Text>
-            </TouchableOpacity>
 
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>
@@ -629,8 +644,9 @@ const TimeAssessment = ({
             {/* Meter and Button View Container  */}
             <View style={styles.configurations}>
               {/* Buttons and Timers View  */}
-              <View style={{...styles.innerLeftConfigView,width:'40%'}}>
+              <View style={{ ...styles.innerLeftConfigView, width: '100%', flexDirection: 'row',justifyContent:'space-between',marginVertical:10,paddingHorizontal:10 }}>
                 {/* Start Button  */}
+               
                 {!hasTimerStarted ? (
                   <>
                     <TouchableOpacity
@@ -666,7 +682,7 @@ const TimeAssessment = ({
                           setScore('0');
                           setShowTextField(false);
                         }}
-                        style={styles.resetBtnContainer}>
+                        style={{...styles.startBtnContainer,backgroundColor: themePurple}}>
                         <Heading
                           title={'RESET'}
                           passedStyle={styles.startBtnStyle}
@@ -687,7 +703,7 @@ const TimeAssessment = ({
                       findScoreNow();
                       setShowTextField(true);
                     }}
-                    style={styles.stopBtnStyle}>
+                    style={{...styles.startBtnContainer,backgroundColor: themeRed,}}>
                     <Heading
                       title={'STOP'}
                       passedStyle={styles.startBtnStyle}
@@ -695,6 +711,18 @@ const TimeAssessment = ({
                     />
                   </TouchableOpacity>
                 )}
+                 <TouchableOpacity
+                  onPress={() => {
+                    setResultvalue({})
+                  }}
+                  style={{...styles.startBtnContainer,backgroundColor:'black'}}>
+
+                  <Heading
+                    title={'N/A'}
+                    passedStyle={styles.startBtnStyle}
+                    fontType="semi-bold"
+                  />
+                </TouchableOpacity>
 
                 {/* <Timer
                   totalDuration={timer.totalDuration}
@@ -835,46 +863,46 @@ const TimeAssessment = ({
                       ]
                 }
               /> */}
-
-              <View
-                style={{
-                  alignSelf: 'center',
-                  width:'60%',
-                  // marginTop: height * 0.03,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                {/* Timer  */}
-                <Heading
-                  title="Timer"
-                  passedStyle={{
-                    color: 'white',
-                    fontSize: width * 0.05,
-                    textAlign:"center"
-                  }}
-                  fontType="bold"
-                />
-
-                <Stopwatch
-                  laps
-                  msecs
-                  start={timer.stopwatchStart}
-                  reset={timer.stopwatchReset}
-                  options={{
-                    container: {
-                    },
-                    text: {
-                      fontSize: 22,
-                      color: '#FFF',
-                      // marginLeft: 7,
-                      fontFamily: 'Montserrat-SemiBold',
-                    },
-                  }}
-                  getTime={time => getFormattedTime(time)}
-                />
-              </View>
             </View>
+            <View
+              style={{
+                alignSelf: 'center',
+                width: '60%',
+                // marginTop: height * 0.03,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {/* Timer  */}
+              <Heading
+                title="Timer"
+                passedStyle={{
+                  color: 'white',
+                  fontSize: width * 0.05,
+                  textAlign: "center"
+                }}
+                fontType="bold"
+              />
 
+              <Stopwatch
+                laps
+                // msecs
+                start={timer.stopwatchStart}
+                reset={timer.stopwatchReset}
+                options={{
+                  container: {
+                  },
+                  text: {
+                    fontSize: 22,
+                    color: '#FFF',
+                    // marginLeft: 7,
+                    fontFamily: 'Montserrat-SemiBold',
+                  },
+                }}
+                getTime={time => {
+                  getFormattedTime(time)
+                }}
+              />
+            </View>
             {/* 
             {showTextField && (
               <TextInput
@@ -907,7 +935,7 @@ const TimeAssessment = ({
             {showTextField && (
               <TouchableOpacity
                 onPress={_onPressSave}
-                style={styles.saveBtnStyle}>
+                style={{...styles.startBtnContainer,backgroundColor: themeFerozi,alignSelf:'center', marginVertical:10}}>
                 <Heading
                   title={'SAVE'}
                   passedStyle={styles.startBtnStyle}
@@ -923,11 +951,17 @@ const TimeAssessment = ({
   }
 
   const RenderimageDAta = ({ item }) => (
-    <TouchableOpacity onPress={() => {
-      setResultvalue(item)
-    }} style={{ width: Platform.OS == "ios" ? 95 : 98, flexDirection: "row" }}>
+    <TouchableOpacity
+      onPress={() => {
+        setResultvalue(item)
+      }} style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+      {Resultvalue.image == item.image && (
+        <View style={{ position: 'absolute', zIndex: 1 }}>
+          <CheckIcon name='check' color={"black"} size={30} />
+        </View>
+      )}
       <Image
-        style={{ height: height * .095, width: width * .155, marginTop: height * .02, opacity: Resultvalue.image == item.image ? 1 : .5, resizeMode: "contain" }}
+        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
 
         source={{
           uri:
@@ -1038,14 +1072,15 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.02,
   },
   startBtnContainer: {
-    marginTop: height * 0.05,
-    marginLeft: width * 0.05,
+    // marginTop: height * 0.05,
+    // marginLeft: width * 0.05,
+
     backgroundColor: themeGreen,
     borderRadius: width * 0.5,
-    width: width * 0.3,
+    width: width * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: height * 0.02,
+    // marginVertical: height * 0.02,
   },
   timerText: {
     fontSize: 20,

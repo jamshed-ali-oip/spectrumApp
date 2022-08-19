@@ -55,6 +55,8 @@ console.log("firstjolj",userReducer)
       getAllAssessments();
     });
   }, []);
+
+  console.log("ass",assessments)
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
