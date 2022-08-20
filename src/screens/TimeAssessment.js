@@ -75,7 +75,7 @@ const TimeAssessment = ({
   const [player, setPlayer] = useState({})
   const [players, setPlayers] = useState([])
 const [reverse, setReverse] = useState("red")
-console.log("ranges",ranges)
+// console.log("ranges",ranges)
 
   // console.log("my kasjm,ir",route.params.item.id,highscore)
   // console.log("time assement screen", Event)
@@ -121,6 +121,7 @@ console.log("ranges",ranges)
     axios.post(`https://webprojectmockup.com/custom/spectrum-8/api/percentile`, {
       assessment_id: ITEM?.id
     }).then(res => {
+      // alert(JSON.stringify(res.data.data))
       setPlayers(res.data.data)
     })
   }, [])
@@ -128,13 +129,18 @@ console.log("ranges",ranges)
   useEffect(() => {
     if (Uservalue && players.length > 0) {
       const currentPlayer = players?.filter(it => it.grade_id == Uservalue.grade_id && it.gender == Uservalue.Gender)[0]
+      // alert(JSON.stringify(currentPlayer))
       setPlayer(currentPlayer)
     }
   }, [Uservalue, players])
 
   useEffect(() => {
-    console.log(secs, Uservalue.Gender, "0.0" + Math.round(Number(player?.percent)));
-    if (Number(secs) == ("0.0" + Math.round(Number(player?.percent)))) {
+    // alert(JSON.stringify({per:"0.0" + Math.round(Number(player?.percent)),secs}))
+    const per=Math.round(Number(player?.percent))
+    const value=per.toString().length>1?`0.${per}`:`0.0${per}`
+    console.log(secs,value);
+
+    if (Number(secs) == value) {
       // alert("Beeeeeeeep");
       playSound()
     }
