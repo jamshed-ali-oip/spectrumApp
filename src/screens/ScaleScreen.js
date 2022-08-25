@@ -24,6 +24,9 @@ import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import { showMessage } from 'react-native-flash-message';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
+import axios from 'axios';
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,6 +53,7 @@ const ScaleScreen = ({
   const [Uservalue, setUservalue] = useState({});
   const [reverse, setReverse] = useState("red")
   const [Resultvalue, setResultvalue] = useState({});
+  const [errorModal, setErrorModal] = useState(false)
   console.log("scale screen", Event)
 
   // const [assessment_id,setassessment_id]=useState([]);
@@ -68,6 +72,39 @@ const ScaleScreen = ({
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
   }, [])
+
+  useEffect(() => {
+    if (Uservalue.Firstname) {
+      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+        assessment_id: ITEM?.id,
+        participant_id: Uservalue.id
+      }).then((res) => {
+        // alert(JSON.stringify(res.data))
+        if (res.data?.data > 2) {
+          setErrorModal(true)
+        }
+      }).catch((err)=>console.log(err))
+    }
+  }, [Uservalue])
+
+  function nextCandidate() {
+    const newIndex = Uservalue.index + 1
+    const updatedMembers = [...Memebers].map((it) => {
+      if (it.id == Uservalue.id) {
+        return {
+          ...it,
+          disable: true
+        }
+      } else {
+        return it
+      }
+    })
+    setMembers(updatedMembers)
+    setUservalue({
+      ...Memebers[newIndex],
+      index: newIndex,
+    });
+  }
   // const RESULT = 25;
   // const space1 = height * 0.01;
   // const space2 = height * 0.045;
@@ -272,6 +309,34 @@ const ScaleScreen = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+          <AwesomeAlert
+          show={errorModal}
+          showProgress={false}
+          title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+          message={`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          // showCancelButton={true}
+          showConfirmButton={true}
+          // cancelText="No, cancel"
+          confirmText="Next"
+          confirmButtonColor="#DD6B55"
+          // onCancelPressed={() => {
+          //   setErrorModal(false)
+          // }}
+          onConfirmPressed={() => {
+            setErrorModal(false)
+
+            const newIndex = Uservalue.index + 1
+
+            if (newIndex < Memebers.length) {
+              nextCandidate()
+            } else {
+              navigation.navigate('home');
+
+            }
+          }}
+        />
         <View style={styles.headingView}>
           <Heading
             title={ITEM?.Name}

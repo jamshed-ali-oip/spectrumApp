@@ -39,6 +39,7 @@ const ViewParticipants = ({
   getPastAssessment,
   userReducer,
   getColors,
+  getAssessments
 }) => {
   const DATA = route.params.data;
   const accessToken = userReducer.accessToken;
@@ -66,6 +67,7 @@ const ViewParticipants = ({
   const getDetail = async () => {
     setIsLoading(true);
     await getPastAssessment(apiData, accessToken);
+    await getAssessments(accessToken)
     await getColors(accessToken);
     setIsLoading(false);
   };
@@ -343,34 +345,34 @@ const ViewParticipants = ({
                 </View>
               </>
             }
-            ListFooterComponent={() => {
-              return (
-                pastAssessments?.length === 0 && (
-                  <View
-                    style={{
-                      backgroundColor: 'rgba(0,0,0,0.2)',
-                      borderRadius: width * 0.02,
-                      height: height * 0.1,
-                      width: width * 0.5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      // marginTop:height * 0.2,
-                      alignSelf: 'center',
-                    }}>
-                    <Heading
-                      title="No Record, Swipe Down To Refresh"
-                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
-                      fontType="semi-bold"
-                    />
-                  </View>
-                )
-              );
-            }}
-            data={pastAssessments}
+            // ListFooterComponent={() => {
+            //   return (
+            //     pastAssessments?.length === 0 && (
+            //       <View
+            //         style={{
+            //           backgroundColor: 'rgba(0,0,0,0.2)',
+            //           borderRadius: width * 0.02,
+            //           height: height * 0.1,
+            //           width: width * 0.5,
+            //           justifyContent: 'center',
+            //           alignItems: 'center',
+            //           // marginTop:height * 0.2,
+            //           alignSelf: 'center',
+            //         }}>
+            //         <Heading
+            //           title="No Record, Swipe Down To Refresh"
+            //           passedStyle={{fontSize: width * 0.045, color: 'white'}}
+            //           fontType="semi-bold"
+            //         />
+            //       </View>
+            //     )
+            //   );
+            // }}
+            data={userReducer?.assessments}
             keyExtractor={({item, index}) => item?.id?.toString()}
             contentContainerStyle={{paddingBottom: height * 0.1}}
             renderItem={({item, index}) => (
-        <ParticipantsMapper item={item} index={index} />
+        <ParticipantsMapper item={item} index={index}  pastAssessment={pastAssessments}/>
      
             )}
           />

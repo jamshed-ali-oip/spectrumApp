@@ -31,6 +31,8 @@ import { showMessage } from 'react-native-flash-message';
 import { Shadow } from 'react-native-shadow-2';
 import OctIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
+import AwesomeAlert from 'react-native-awesome-alerts';
+import axios from 'axios';
 
 
 const { width, height } = Dimensions.get('window');
@@ -59,6 +61,7 @@ const GradingSystem = ({
   const [assessment_id, setassessment_id] = useState([]);
   const [reverse,setReverse]=useState("red")
   const [Uservalue, setUservalue] = useState({});
+  const [errorModal, setErrorModal] = useState(false)
   console.log('=======>', Uservalue);
   // const [resultColor, setResultColor] = useState(
   //   colors[0]?.WebColor || 'black',
@@ -111,6 +114,46 @@ const GradingSystem = ({
   useEffect(() => {
     setRanges(userReducer?.assessmentDetails?.assessment_scoring);
   }, [userReducer?.assessmentDetails]);
+
+  useEffect(() => {
+    // alert(JSON.stringify({
+    //   assessment_id: ITEM?.id,
+    //   participant_id: Uservalue.id
+    // }))
+    if (Uservalue.Firstname) {
+      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+        assessment_id: ITEM?.id,
+        participant_id: Uservalue.id
+      }).then((res) => {
+        // alert(JSON.stringify(res.data))
+        if (res.data?.data > 2) {
+          setErrorModal(true)
+        }
+      }).catch((Err)=>{
+        console.log(Err)
+        // alert(JSON.stringify(Err))
+      })
+    }
+  }, [Uservalue])
+
+  function nextCandidate() {
+    const newIndex = Uservalue.index + 1
+    const updatedMembers = [...Memebers].map((it) => {
+      if (it.id == Uservalue.id) {
+        return {
+          ...it,
+          disable: true
+        }
+      } else {
+        return it
+      }
+    })
+    setMembers(updatedMembers)
+    setUservalue({
+      ...Memebers[newIndex],
+      index: newIndex,
+    });
+  }
 
   const _onPressSave = async () => {
     let color_id = userReducer?.gameInfo[0]?.color_id;
@@ -258,6 +301,34 @@ const GradingSystem = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+          <AwesomeAlert
+          show={errorModal}
+          showProgress={false}
+          title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+          message={`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          // showCancelButton={true}
+          showConfirmButton={true}
+          // cancelText="No, cancel"
+          confirmText="Next"
+          confirmButtonColor="#DD6B55"
+          // onCancelPressed={() => {
+          //   setErrorModal(false)
+          // }}
+          onConfirmPressed={() => {
+            setErrorModal(false)
+
+            const newIndex = Uservalue.index + 1
+
+            if (newIndex < Memebers.length) {
+              nextCandidate()
+            } else {
+              navigation.navigate('home');
+
+            }
+          }}
+        />
         <View>
           <Heading
             title={ITEM?.Name}

@@ -264,9 +264,10 @@ const ParticipantFilterModal = ({
             }
             passedStyle={styles.textLAbel}
           />
+          {/* {alert(group?.group_type)} */}
           <Heading
             passedStyle={styles.label}
-            title={selectedGender == "Male" ? "Boys" : "Girls"}
+            title={group?.group_type}
             fontType="medium"
           />
         </TouchableOpacity>
@@ -593,7 +594,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'black',
-    fontSize: width * 0.05,
+    fontSize: width * 0.04,
   },
   message: {
     color: 'grey',

@@ -43,7 +43,7 @@ const ParticipantsScreen = ({
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [selectedGender, setSelectedGender] = useState("Boys-Girls");
+  const [selectedGender, setSelectedGender] = useState("Males-Females");
   const [participants, setParticipants] = useState([]);
 
   console.log('====================================');
@@ -280,6 +280,7 @@ const ParticipantsScreen = ({
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}
           showLoader={isLoading}
+          setSelectedGender1={setSelectedGender}
         />
       </ImageBackground>
     </>

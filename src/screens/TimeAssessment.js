@@ -40,6 +40,8 @@ import CheckIcon from "react-native-vector-icons/FontAwesome"
 import moment from 'moment';
 import { baseUrl } from '../config';
 import axios from 'axios';
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 const { width, height } = Dimensions.get('window');
 
 const TimeAssessment = ({
@@ -74,8 +76,9 @@ const TimeAssessment = ({
   const [highscore, sethighscore] = useState();
   const [player, setPlayer] = useState({})
   const [players, setPlayers] = useState([])
-const [reverse, setReverse] = useState("red")
-// console.log("ranges",ranges)
+  const [errorModal, setErrorModal] = useState(false)
+  const [reverse, setReverse] = useState("red")
+  // console.log("ranges",ranges)
 
   // console.log("my kasjm,ir",route.params.item.id,highscore)
   // console.log("time assement screen", Event)
@@ -116,7 +119,7 @@ const [reverse, setReverse] = useState("red")
   //   }
   // }, [reverse])
 
-  
+
   useEffect(() => {
     axios.post(`https://webprojectmockup.com/custom/spectrum-8/api/percentile`, {
       assessment_id: ITEM?.id
@@ -136,9 +139,9 @@ const [reverse, setReverse] = useState("red")
 
   useEffect(() => {
     // alert(JSON.stringify({per:"0.0" + Math.round(Number(player?.percent)),secs}))
-    const per=Math.round(Number(player?.percent))
-    const value=per.toString().length>1?`0.${per}`:`0.0${per}`
-    console.log(secs,value);
+    const per = Math.round(Number(player?.percent))
+    const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
+    console.log(secs, value);
 
     if (Number(secs) == value) {
       // alert("Beeeeeeeep");
@@ -308,6 +311,48 @@ const [reverse, setReverse] = useState("red")
     setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id).reverse())
     // setRanges(Value);
   }, [userReducer?.gameInfo]);
+
+  useEffect(() => {
+    if (Uservalue.id) {
+      setIsLoading(true)
+      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+        assessment_id: ITEM?.id,
+        participant_id: Uservalue.id
+      }).then((res) => {
+        // alert(JSON.stringify(res.data))
+        setIsLoading(false)
+        if (res.data?.data > 2) {
+          // alert(JSON.stringify({
+          //   a:Uservalue.Firstname,
+          //   d:res.data?.data
+          // }))
+          setErrorModal(true)
+        }
+      }).catch((err)=>{
+        setIsLoading(false)
+        console.log(err)
+      })
+    }
+  }, [Uservalue])
+
+  function nextCandidate() {
+    const newIndex = Uservalue.index + 1
+    const updatedMembers = [...Memebers].map((it) => {
+      if (it.id == Uservalue.id) {
+        return {
+          ...it,
+          disable: true
+        }
+      } else {
+        return it
+      }
+    })
+    setMembers(updatedMembers)
+    setUservalue({
+      ...Memebers[newIndex],
+      index: newIndex,
+    });
+  }
 
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
@@ -484,6 +529,7 @@ const [reverse, setReverse] = useState("red")
       // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
 
       // Play the sound with an onEnd callback
+      // whoosh.setNumberOfLoops(1)
       whoosh.play(success => {
         if (success) {
           console.log('successfully finished playing');
@@ -545,6 +591,12 @@ const [reverse, setReverse] = useState("red")
                   style={{ flexDirection: "row", alignItems: "center" }}
                   disabled={item.disable}
                   onPress={() => {
+                    setFlag(true)
+                    resetStopwatch();
+                    checkGame(false);
+                    setSecs(0);
+                    setScore('0');
+                    setShowTextField(false);
                     setUservalue({ ...item, index });
                   }}>
                   <Text
@@ -650,9 +702,9 @@ const [reverse, setReverse] = useState("red")
             {/* Meter and Button View Container  */}
             <View style={styles.configurations}>
               {/* Buttons and Timers View  */}
-              <View style={{ ...styles.innerLeftConfigView, width: '100%', flexDirection: 'row',justifyContent:'space-between',marginVertical:10,paddingHorizontal:10 }}>
+              <View style={{ ...styles.innerLeftConfigView, width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10, paddingHorizontal: 10 }}>
                 {/* Start Button  */}
-               
+
                 {!hasTimerStarted ? (
                   <>
                     <TouchableOpacity
@@ -678,7 +730,7 @@ const [reverse, setReverse] = useState("red")
                       />
                     </TouchableOpacity>
 
-                    {secs > 0 && (
+                    {showTextField > 0 && (
                       <TouchableOpacity
                         onPress={() => {
                           setFlag(true)
@@ -688,7 +740,7 @@ const [reverse, setReverse] = useState("red")
                           setScore('0');
                           setShowTextField(false);
                         }}
-                        style={{...styles.startBtnContainer,backgroundColor: themePurple}}>
+                        style={{ ...styles.startBtnContainer, backgroundColor: themePurple }}>
                         <Heading
                           title={'RESET'}
                           passedStyle={styles.startBtnStyle}
@@ -709,7 +761,7 @@ const [reverse, setReverse] = useState("red")
                       findScoreNow();
                       setShowTextField(true);
                     }}
-                    style={{...styles.startBtnContainer,backgroundColor: themeRed,}}>
+                    style={{ ...styles.startBtnContainer, backgroundColor: themeRed, }}>
                     <Heading
                       title={'STOP'}
                       passedStyle={styles.startBtnStyle}
@@ -717,11 +769,11 @@ const [reverse, setReverse] = useState("red")
                     />
                   </TouchableOpacity>
                 )}
-                 <TouchableOpacity
+                <TouchableOpacity
                   onPress={() => {
                     setResultvalue({})
                   }}
-                  style={{...styles.startBtnContainer,backgroundColor:'black'}}>
+                  style={{ ...styles.startBtnContainer, backgroundColor: 'black' }}>
 
                   <Heading
                     title={'N/A'}
@@ -941,7 +993,7 @@ const [reverse, setReverse] = useState("red")
             {showTextField && (
               <TouchableOpacity
                 onPress={_onPressSave}
-                style={{...styles.startBtnContainer,backgroundColor: themeFerozi,alignSelf:'center', marginVertical:10}}>
+                style={{ ...styles.startBtnContainer, backgroundColor: themeFerozi, alignSelf: 'center', marginVertical: 10 }}>
                 <Heading
                   title={'SAVE'}
                   passedStyle={styles.startBtnStyle}
@@ -985,6 +1037,34 @@ const [reverse, setReverse] = useState("red")
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+        <AwesomeAlert
+          show={errorModal}
+          showProgress={false}
+          title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+          message={`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          // showCancelButton={true}
+          showConfirmButton={true}
+          // cancelText="No, cancel"
+          confirmText="Next"
+          confirmButtonColor="#DD6B55"
+          // onCancelPressed={() => {
+          //   setErrorModal(false)
+          // }}
+          onConfirmPressed={() => {
+            setErrorModal(false)
+
+            const newIndex = Uservalue.index + 1
+
+            if (newIndex < Memebers.length) {
+              nextCandidate()
+            } else {
+              navigation.navigate('home');
+
+            }
+          }}
+        />
         <FlatList
           nestedScrollEnabled={true}
           data={[1, 2]}
