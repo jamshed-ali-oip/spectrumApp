@@ -71,6 +71,10 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
       });
     }
   } catch (err) {
+    showMessage({
+      message:'unauthorized',
+      type: 'danger',
+    });
     onLoginFailed();
     console.log(err);
   }

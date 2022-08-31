@@ -75,15 +75,20 @@ const ScaleScreen = ({
 
   useEffect(() => {
     if (Uservalue.Firstname) {
+      setIsLoading(true)
       axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
         assessment_id: ITEM?.id,
         participant_id: Uservalue.id
       }).then((res) => {
         // alert(JSON.stringify(res.data))
+        setIsLoading(false)
         if (res.data?.data > 2) {
           setErrorModal(true)
         }
-      }).catch((err)=>console.log(err))
+      }).catch((err)=>{
+        setIsLoading(false)
+        console.log(err)
+      })
     }
   }, [Uservalue])
 
@@ -223,6 +228,7 @@ const ScaleScreen = ({
   };
 
   const onSuccess = () => {
+    setResultvalue({})
     if ((Uservalue.index + 1) < Memebers.length) {
       const updatedMembers = [...Memebers].map((it) => {
         if (it.id == Uservalue.id) {
@@ -248,7 +254,7 @@ const ScaleScreen = ({
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
         disabled={item.disable}
-        style={{ flexDirection: "row", alignItems: "center", minWidth: width - 50 }}
+        style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10  }}
         onPress={() => {
           setUservalue({ ...item, index });
         }}>
@@ -309,7 +315,41 @@ const ScaleScreen = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-          <AwesomeAlert
+                  <Modal
+          visible={errorModal}
+          transparent={true}
+          style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
+        >
+          <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40, flex: 1 }}>
+            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10,padding:10 }}>
+              
+            <Text style={{ textAlign: 'center',fontSize:20,color:'black',marginBottom:10 }}>
+                  {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+                </Text>
+                <Text style={{ textAlign: 'center' }}>
+                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+                </Text>
+              <TouchableOpacity
+              style={{backgroundColor:'black',padding:5,borderRadius:20,paddingHorizontal:40,marginTop:20}}
+                onPress={() => {
+                  setErrorModal(false)
+
+                  const newIndex = Uservalue.index + 1
+
+                  if (newIndex < Memebers.length) {
+                    nextCandidate()
+                  } else {
+                    navigation.navigate('home');
+
+                  }
+                }}
+              >
+                <Text style={{color:'white'}}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+          {/* <AwesomeAlert
           show={errorModal}
           showProgress={false}
           title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
@@ -336,7 +376,7 @@ const ScaleScreen = ({
 
             }
           }}
-        />
+        /> */}
         <View style={styles.headingView}>
           <Heading
             title={ITEM?.Name}

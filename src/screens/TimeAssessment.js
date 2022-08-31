@@ -12,6 +12,7 @@ import {
   Platform,
   Button,
   FlatList,
+  Modal,
 } from 'react-native';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
@@ -328,7 +329,7 @@ const TimeAssessment = ({
           // }))
           setErrorModal(true)
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         setIsLoading(false)
         console.log(err)
       })
@@ -391,6 +392,7 @@ const TimeAssessment = ({
   };
 
   const onSuccess = () => {
+    setResultvalue({})
     if (Uservalue.index + 1 < Memebers.length) {
       const updatedMembers = [...Memebers].map((it) => {
         if (it.id == Uservalue.id) {
@@ -588,7 +590,7 @@ const TimeAssessment = ({
                 style={{ flexDirection: 'row', paddingVertical: 3 }}>
                 {/* {console.log(Memebers)} */}
                 <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center" }}
+                  style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
                   disabled={item.disable}
                   onPress={() => {
                     setFlag(true)
@@ -729,25 +731,18 @@ const TimeAssessment = ({
                         fontType="semi-bold"
                       />
                     </TouchableOpacity>
-
-                    {showTextField > 0 && (
+                    {showTextField && (
                       <TouchableOpacity
-                        onPress={() => {
-                          setFlag(true)
-                          resetStopwatch();
-                          checkGame(false);
-                          setSecs(0);
-                          setScore('0');
-                          setShowTextField(false);
-                        }}
-                        style={{ ...styles.startBtnContainer, backgroundColor: themePurple }}>
+                        onPress={_onPressSave}
+                        style={{ ...styles.startBtnContainer, backgroundColor: themeFerozi }}>
                         <Heading
-                          title={'RESET'}
+                          title={'SAVE'}
                           passedStyle={styles.startBtnStyle}
                           fontType="semi-bold"
                         />
                       </TouchableOpacity>
                     )}
+
                   </>
                 ) : (
                   // Stop Button
@@ -989,13 +984,19 @@ const TimeAssessment = ({
                 }}
               />
             )} */}
-
-            {showTextField && (
+            {showTextField > 0 && (
               <TouchableOpacity
-                onPress={_onPressSave}
-                style={{ ...styles.startBtnContainer, backgroundColor: themeFerozi, alignSelf: 'center', marginVertical: 10 }}>
+                onPress={() => {
+                  setFlag(true)
+                  resetStopwatch();
+                  checkGame(false);
+                  setSecs(0);
+                  setScore('0');
+                  setShowTextField(false);
+                }}
+                style={{ ...styles.startBtnContainer, backgroundColor: themePurple, alignSelf: 'center', marginVertical: 10 }}>
                 <Heading
-                  title={'SAVE'}
+                  title={'RESET'}
                   passedStyle={styles.startBtnStyle}
                   fontType="semi-bold"
                 />
@@ -1037,7 +1038,41 @@ const TimeAssessment = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <AwesomeAlert
+        <Modal
+          visible={errorModal}
+          transparent={true}
+          style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
+        >
+          <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40, flex: 1 }}>
+            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10,padding:10 }}>
+              
+            <Text style={{ textAlign: 'center',fontSize:20,color:'black',marginBottom:10 }}>
+                  {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+                </Text>
+                <Text style={{ textAlign: 'center' }}>
+                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+                </Text>
+              <TouchableOpacity
+              style={{backgroundColor:'black',padding:5,borderRadius:20,paddingHorizontal:40,marginTop:20}}
+                onPress={() => {
+                  setErrorModal(false)
+
+                  const newIndex = Uservalue.index + 1
+
+                  if (newIndex < Memebers.length) {
+                    nextCandidate()
+                  } else {
+                    navigation.navigate('home');
+
+                  }
+                }}
+              >
+                <Text style={{color:'white'}}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        {/* <AwesomeAlert
           show={errorModal}
           showProgress={false}
           title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
@@ -1064,7 +1099,7 @@ const TimeAssessment = ({
 
             }
           }}
-        />
+        /> */}
         <FlatList
           nestedScrollEnabled={true}
           data={[1, 2]}

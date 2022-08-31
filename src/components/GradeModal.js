@@ -352,7 +352,7 @@ const ParticipantFilterModal = ({
                 />
                 <Heading
                   passedStyle={styles.label}
-                  title={'All Group'}
+                  title={'All Groups'}
                   fontType="medium"
                 />
               </TouchableOpacity>

@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'black',
-    fontSize: width * 0.05,
+    fontSize: width * 0.04,
   },
   message: {
     color: 'grey',

@@ -77,7 +77,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
         />
         <Button
           title={'LOG OUT'}
-          btnStyle={{...styles.participantStyle,backgroundColor:'black'}}
+          btnStyle={{...styles.logout,backgroundColor:'black'}}
           onBtnPress={logoutRequest}
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
@@ -142,6 +142,12 @@ const styles = StyleSheet.create({
     height: height * 0.1,
     alignSelf: 'center',
     marginVertical: height * 0.03,
+  },
+  logout: {
+    backgroundColor: themeLightBlue,
+    alignSelf: 'center',
+    marginVertical: height * 0.01,
+    width:width/2.5
   },
   runAssessmentStyle: {
     backgroundColor: themePurple,
