@@ -26,6 +26,7 @@ import { showMessage } from 'react-native-flash-message';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { Modal } from 'react-native';
 
 
 const { width, height } = Dimensions.get('window');
@@ -68,7 +69,7 @@ const ScaleScreen = ({
   //     setRanges([...ranges].reverse())
   //   }
   // }, [reverse])
-
+console.log("event data",Event.id)
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
   }, [])
@@ -78,7 +79,8 @@ const ScaleScreen = ({
       setIsLoading(true)
       axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
         assessment_id: ITEM?.id,
-        participant_id: Uservalue.id
+        participant_id: Uservalue.id,
+        event_id: Event.id
       }).then((res) => {
         // alert(JSON.stringify(res.data))
         setIsLoading(false)
