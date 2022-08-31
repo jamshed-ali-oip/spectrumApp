@@ -309,7 +309,7 @@ const TimeAssessment = ({
   };
   useEffect(() => {
     // setRanges(userReducer?.assessmentDetails?.assessment_scoring);
-    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id).reverse())
+    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
     // setRanges(Value);
   }, [userReducer?.gameInfo]);
 
@@ -318,9 +318,13 @@ const TimeAssessment = ({
       setIsLoading(true)
       axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
         assessment_id: ITEM?.id,
-        participant_id: Uservalue.id
+        participant_id: Uservalue.id,
+        event_id: Event.id
       }).then((res) => {
-        // alert(JSON.stringify(res.data))
+        // alert(JSON.stringify({
+        //   a:Uservalue.Firstname,
+        //   d:res.data?.data
+        // }))
         setIsLoading(false)
         if (res.data?.data > 2) {
           // alert(JSON.stringify({
@@ -330,6 +334,7 @@ const TimeAssessment = ({
           setErrorModal(true)
         }
       }).catch((err) => {
+        // alert(err)
         setIsLoading(false)
         console.log(err)
       })
@@ -511,10 +516,12 @@ const TimeAssessment = ({
   const handleTimerComplete = () => alert('custom completion function');
 
   const getFormattedTime = time => {
-    currentTime = time;
+    if(time){
+      let currentTime = time;
     setSecs(
       Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
     );
+    }
   };
 
   // console.log(GROUP_DATA?.Name);

@@ -113,7 +113,7 @@ const GradingSystem = ({
   }, [userReducer?.colors]);
 
   useEffect(() => {
-    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+    setRanges(userReducer?.assessmentDetails?.assessment_scoring.reverse());
   }, [userReducer?.assessmentDetails]);
 
   useEffect(() => {
@@ -125,7 +125,8 @@ const GradingSystem = ({
       setIsLoading(true)
       axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
         assessment_id: ITEM?.id,
-        participant_id: Uservalue.id
+        participant_id: Uservalue.id,
+        event_id: Event.id
       }).then((res) => {
         // alert(JSON.stringify(res.data))
         setIsLoading(false)

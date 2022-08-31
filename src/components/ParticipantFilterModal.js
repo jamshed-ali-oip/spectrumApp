@@ -65,7 +65,7 @@ const ParticipantFilterModal = ({
     if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
     }
-  }, [counter])
+  }, [counter,age])
 
   useEffect(() => {
     fetchCall();
@@ -213,7 +213,7 @@ const ParticipantFilterModal = ({
           />
           <Heading
             passedStyle={styles.label}
-            title={selectedGender == "Male" ? "Boys" : "Girls"}
+            title={group?.group_type}
             fontType="medium"
           />
         </TouchableOpacity>

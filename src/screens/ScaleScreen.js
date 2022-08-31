@@ -176,7 +176,7 @@ console.log("event data",Event.id)
   }, [userReducer?.colors]);
 
   useEffect(() => {
-    setRanges(userReducer?.assessmentDetails?.assessment_scoring);
+    setRanges(userReducer?.assessmentDetails?.assessment_scoring.reverse());
   }, [userReducer?.assessmentDetails]);
 
   const _onPressSave = async () => {

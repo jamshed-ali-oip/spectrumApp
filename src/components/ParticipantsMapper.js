@@ -6,7 +6,7 @@ import { imageUrl } from '../config';
 import { connect } from 'react-redux';
 const { width, height } = Dimensions.get('window');
 
-const ParticipantsMapper = ({ item, index, userReducer,pastAssessment }) => {
+const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
   // const colors_reversed = colors.reverse();
 
   // userReducer?.colors.map(ele => console.log(ele.id,"-"));
@@ -16,31 +16,35 @@ const ParticipantsMapper = ({ item, index, userReducer,pastAssessment }) => {
   //     : userReducer?.colors.reverse();
 
   // console.log("assessment_scoring", item?.id, item?.assessment_id, item?.assessments[0]?.assessment_scoring);
-  function getGames(id){
-    const filterPast=pastAssessment.filter(it=>it.assessment_id==id)
-    const withColor=filterPast.map(it=>{
-      const color=it?.assessments[0]?.assessment_scoring.filter(it2=>(it2.MinValue==it.Score || it2.MaxValue==it.Score))[0]
+  function getGames(id, forDate) {
+    const filterPast = pastAssessment.filter(it => it.assessment_id == id)
+    const withColor = filterPast.map(it => {
+      const color = it?.assessments[0]?.assessment_scoring.filter(it2 => (it2.MinValue == it.Score || it2.MaxValue == it.Score))[0]
       return {
         ...it,
         color
       }
     })
-    if(withColor.length==2){
-      return ["gray",...withColor]
+    if (forDate) {
+      return withColor
     }
-    else if(withColor.length==1){
-      return ["gray","gray",...withColor]
-    }else if(withColor.length==0){
-      return ["gray","gray","gray",...withColor]
+    if (withColor.length == 2) {
+      return ["gray", ...withColor]
     }
-    return withColor.slice(0,3)
+    else if (withColor.length == 1) {
+      return ["gray", "gray", ...withColor]
+    } else if (withColor.length == 0) {
+      return ["gray", "gray", "gray", ...withColor]
+    }
+    return withColor.slice(0, 3)
+
   }
 
-  function getColor(id){
-    const filterColor=userReducer?.colors.filter(it=>it.id==id)[0]
+  function getColor(id) {
+    const filterColor = userReducer?.colors.filter(it => it.id == id)[0]
     return filterColor?.WebColor
   }
-  console.log("tt",pastAssessment)
+  // console.log("tt",pastAssessment)
   return (
     <View style={styles.container}>
       <View
@@ -65,25 +69,25 @@ const ParticipantsMapper = ({ item, index, userReducer,pastAssessment }) => {
         />
 
         <Heading
-          title={moment(getGames(item.id)[getGames(item.id).length-1].updated_at).format('DD MMMM')}
+          title={getGames(item.id, true)[0]?(moment(getGames(item.id, true)[0]?.updated_at).format('DD MMMM')):"----"}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />
       </View>
       <View style={styles.colorsViewStyle}>
-        {getGames(item.id).map((it,i)=>{
-          return(
+        {getGames(item.id).map((it, i) => {
+          return (
             <View
-            key={i}
-            style={{
-              backgroundColor:it=="gray"?"gray":(getColor(it.color?.color_id)?getColor(it.color?.color_id):"black"),
-              borderRadius: 9,
-              padding: width * 0.02,
-              marginLeft: 3,
-        
-            }}>
-           
-          </View>
+              key={i}
+              style={{
+                backgroundColor: it == "gray" ? "gray" : (getColor(it.color?.color_id) ? getColor(it.color?.color_id) : "black"),
+                borderRadius: 9,
+                padding: width * 0.02,
+                marginLeft: 3,
+
+              }}>
+
+            </View>
           )
         })}
       </View>
@@ -131,7 +135,7 @@ const ParticipantsMapper = ({ item, index, userReducer,pastAssessment }) => {
                   marginLeft: 3,
             
                 }}></View> */}
-     
+
     </View>
   );
 };
@@ -152,7 +156,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight:width*.06
+    paddingRight: width * .06
   },
   imageStyles: {
     width: width * 0.072,

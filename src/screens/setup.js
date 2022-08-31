@@ -169,7 +169,7 @@ import {
     },
     headingStyles: {
       color: 'white',
-      backgroundColor: themeLightBlue,
+      // backgroundColor: themeLightBlue,
       fontSize: width * 0.045,
       paddingVertical: height * 0.01,
       textAlign: 'center',
