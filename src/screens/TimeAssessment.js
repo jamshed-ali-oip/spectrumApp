@@ -526,20 +526,24 @@ const TimeAssessment = ({
   };
 
   // console.log(GROUP_DATA?.Name);
+  var whoosh = new Sound('my_beep.mp3', Sound.MAIN_BUNDLE, error => {
+    if (error) {
+      // console.log('failed to load the sound', error);
+      return;
+    }
+    // loaded successfully
+    // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+
+    // Play the sound with an onEnd callback
+    // whoosh.setNumberOfLoops(1)
+    
+  });
 
   const playSound = () => {
     // const sound = new Sound('beep.mp3');
     // alert("call")
-    var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, error => {
-      if (error) {
-        // console.log('failed to load the sound', error);
-        return;
-      }
-      // loaded successfully
-      // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
 
-      // Play the sound with an onEnd callback
-      // whoosh.setNumberOfLoops(1)
+    if(Platform.OS=="ios"){
       whoosh.play(success => {
         if (success) {
           console.log('successfully finished playing');
@@ -547,7 +551,11 @@ const TimeAssessment = ({
           console.log('playback failed due to audio decoding errors');
         }
       });
-    });
+    }else{
+      RNBeep.PlaySysSound(RNBeep.AndroidSoundIDs.TONE_CDMA_ANSWER)
+    }
+    
+
   };
   const RenderMembersData = ({ item, index }) => (
     <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
