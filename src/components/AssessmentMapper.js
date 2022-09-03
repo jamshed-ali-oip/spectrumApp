@@ -15,6 +15,7 @@ import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
 import {imageUrl} from '../config';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const AssessmentMapper = ({item, index, onPress, assessments}) => {
   let SHOW_IMAGE =
@@ -67,7 +68,8 @@ export default AssessmentMapper;
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.9,
+    width: '100%',
+    paddingHorizontal:responsiveFontSize(1.5),
     alignSelf: 'center',
     zIndex: 999,
     //   marginTop:-100,

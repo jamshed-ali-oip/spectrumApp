@@ -21,6 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import LottieView from 'lottie-react-native';
 import {showMessage} from 'react-native-flash-message';
+import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dimensions';
 
 const {width, height} = Dimensions.get('window');
 
@@ -170,9 +171,9 @@ export default connect(mapStateToProps, actions)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: width,
-    height: height,
+    flexGrow: 1,
+    width: '100%',
+    // height: height,
   },
   inputfield: {
     alignSelf: 'center',

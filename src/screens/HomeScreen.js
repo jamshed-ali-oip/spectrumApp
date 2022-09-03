@@ -24,6 +24,8 @@ import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
+import { ScrollView } from 'react-native-gesture-handler';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
   const accessToken = userReducer?.accessToken;
@@ -54,6 +56,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+        <ScrollView>
         <Image
           resizeMode="contain"
           source={require('../assets/images/new-logo.png')}
@@ -82,7 +85,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("FAQ")} style={{alignItems:"center"}}>
+        <TouchableOpacity onPress={() => navigation.navigate("FAQ")} style={{alignItems:"center",marginBottom:responsiveFontSize(2)}}>
           <Text style={{fontSize:width* 0.045,fontWeight:"600",color:"white",fontStyle:"italic"}}>
             FAQ
           </Text>
@@ -110,6 +113,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
             fontType="semi-bold"
           />
         </TouchableOpacity> */}
+        </ScrollView>
       </ImageBackground>
     </>
   );
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeDarkBlue,
   },
   logoStyle: {
-    marginTop: height * 0.15,
+    marginTop: responsiveFontSize(10),
     marginBottom: height * 0.05,
     width: width * 0.4,
     height: height * 0.2,

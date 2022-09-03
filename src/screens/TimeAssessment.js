@@ -42,6 +42,7 @@ import moment from 'moment';
 import { baseUrl } from '../config';
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -582,9 +583,9 @@ const TimeAssessment = ({
         </View>
         <ScrollView
           nestedScrollEnabled={true}
-          style={{
+          contentContainerStyle={{
             height: height * 0.2,
-            width: width * 0.9,
+            width: '95%',
             backgroundColor: themeDarkBlue,
             borderRadius: 10,
             paddingLeft: 20,
@@ -597,7 +598,7 @@ const TimeAssessment = ({
                 style={{ flexDirection: 'row', paddingVertical: 3 }}>
                 {/* {console.log(Memebers)} */}
                 <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
+                  style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10  }}
                   disabled={item.disable}
                   onPress={() => {
                     setFlag(true)
@@ -690,7 +691,7 @@ const TimeAssessment = ({
               </TouchableOpacity> */}
             <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
               <FlatList
-                style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                contentContainerStyle={{ marginTop: Platform.OS == "ios" ? 30 : 0,width:"100%" }}
                 data={ranges}
                 renderItem={RenderimageDAta}
                 keyExtractor={item => item.color_sort}
@@ -1020,7 +1021,7 @@ const TimeAssessment = ({
     <TouchableOpacity
       onPress={() => {
         setResultvalue(item)
-      }} style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+      }} style={{ width:"25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
           <CheckIcon name='check' color={"black"} size={30} />
@@ -1227,7 +1228,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   headingView: {
-    maxWidth: width * 0.9,
+    maxWidth: '100%',
     color: 'white',
     backgroundColor: themeFerozi,
     fontSize: width * 0.045,

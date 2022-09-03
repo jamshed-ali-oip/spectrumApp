@@ -279,7 +279,7 @@ const GradingSystem = ({
       onPress={() => {
         setResultvalue(item);
       }}
-      style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}
+      style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}
     >
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
@@ -369,7 +369,8 @@ const GradingSystem = ({
             }
           }}
         /> */}
-        <View>
+       <ScrollView style={{flexGrow:1}}>
+       <View>
           <Heading
             title={ITEM?.Name}
             passedStyle={styles.headingStyles}
@@ -387,7 +388,7 @@ const GradingSystem = ({
         <View
           style={{
             height: height * 0.20,
-            width: width * 0.9,
+            width: '95%',
             backgroundColor: themeDarkBlue,
             borderRadius: 10,
             paddingLeft: 20,
@@ -516,6 +517,7 @@ const GradingSystem = ({
             </ScrollView>
           </View>
         )}
+       </ScrollView>
       </ImageBackground>
     </>
   );

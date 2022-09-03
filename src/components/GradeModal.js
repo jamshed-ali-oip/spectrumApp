@@ -24,6 +24,7 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { baseUrl } from '../config';
+import { ScrollView } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 
 const ParticipantFilterModal = ({
@@ -279,6 +280,7 @@ const ParticipantFilterModal = ({
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
       <Modal isVisible={isModalVisible}>
+        <ScrollView contentContainerStyle={{flexGrow:1,justifyContent:'center',alignItems:'center'}}>
         <View style={styles.container}>
           <View
             style={{
@@ -566,6 +568,7 @@ const ParticipantFilterModal = ({
             )}
           </View>
         </View>
+        </ScrollView>
       </Modal>
     </View>
   );
@@ -587,7 +590,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    width: width * 0.9,
+    width: '100%',
     borderRadius: width * 0.06,
     paddingVertical: height * 0.05,
     paddingHorizontal: width * 0.05,

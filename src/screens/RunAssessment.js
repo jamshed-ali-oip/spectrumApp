@@ -24,21 +24,21 @@ import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
-import {imageUrl} from '../config';
-const {width, height} = Dimensions.get('window');
+import { imageUrl } from '../config';
+const { width, height } = Dimensions.get('window');
 
-const RunAssessment = ({navigation, route}) => {
-  const _onPressRunAssessment = () => {};
+const RunAssessment = ({ navigation, route }) => {
+  const _onPressRunAssessment = () => { };
   const ITEM = route.params.item;
 
   let SHOW_IMAGE =
     ITEM?.Name === 'Long Jump'
       ? LONG_JUMP
       : ITEM?.Name === 'Sprinting'
-      ? SPRINTING
-      : ITEM?.Name === 'Shot Put'
-      ? SHOT_PUT
-      : HURDLES;
+        ? SPRINTING
+        : ITEM?.Name === 'Shot Put'
+          ? SHOT_PUT
+          : HURDLES;
 
   return (
     <>
@@ -46,24 +46,24 @@ const RunAssessment = ({navigation, route}) => {
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <View style={styles.headingView}>
-          <Heading
-            title={'ASSESSMENTS'}
-            passedStyle={styles.headingStyles}
-            fontType="semi-bold"
-          />
-        </View>
+        <ScrollView contentContainerStyle={{flexGrow:1}}>
+          <View style={styles.headingView}>
+            <Heading
+              title={'ASSESSMENTS'}
+              passedStyle={styles.headingStyles}
+              fontType="semi-bold"
+            />
+          </View>
 
-        {/* Participants Head View  */}
-        {/* <ScrollView>
+          {/* Participants Head View  */}
+          {/* <ScrollView>
           
         </ScrollView> */}
-        <View
-          style={{
-            marginVertical: 10,
-            // marginLeft: width * 0.05,
-          }}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <View
+            style={{
+              marginVertical: 10,
+              // marginLeft: width * 0.05,
+            }}>
             <View style={styles.participantsViewStyle}>
               <Heading
                 title="Run Assessment"
@@ -76,41 +76,40 @@ const RunAssessment = ({navigation, route}) => {
                 passedStyle={styles.iconStyle}
               />
               <Heading
-                title={ITEM.Name?.length<18?ITEM.Name:(ITEM.Name.slice(0,18)+" ...")}
+                title={ITEM.Name?.length < 18 ? ITEM.Name : (ITEM.Name.slice(0, 18) + " ...")}
                 passedStyle={styles.participantsLabelStyle}
                 fontType="semi-bold"
               />
             </View>
-          </ScrollView>
-        </View>
+          </View>
 
-        {/* Colors  */}
-        <ColoredFlatlist />
+          {/* Colors  */}
+          <ColoredFlatlist />
 
-        <View style={styles.assessmentListStyle}>
-          <Image
-            resizeMode="contain"
-            source={{uri: `${imageUrl}/assessment_image/${ITEM.Image}`}}
-            style={{
-              width: width * 0.4,
-              height: height * 0.13,
-              //   marginVertical: height * 0.03,
-            }}
-          />
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.buttonContainerStyles}
-            onPress={() => navigation.navigate('grades', {item: ITEM})}>
-            <Heading
-              title={'START'}
-              passedStyle={[
-                styles.buttonStyles,
-                {backgroundColor: themeFerozi},
-              ]}
-              fontType="bold"
+          <View style={styles.assessmentListStyle}>
+            <Image
+              resizeMode="contain"
+              source={{ uri: `${imageUrl}/assessment_image/${ITEM.Image}` }}
+              style={{
+                width: width * 0.4,
+                height: height * 0.13,
+                //   marginVertical: height * 0.03,
+              }}
             />
-          </TouchableOpacity>
-          {/* <TouchableOpacity
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.buttonContainerStyles}
+              onPress={() => navigation.navigate('grades', { item: ITEM })}>
+              <Heading
+                title={'START'}
+                passedStyle={[
+                  styles.buttonStyles,
+                  { backgroundColor: themeFerozi },
+                ]}
+                fontType="bold"
+              />
+            </TouchableOpacity>
+            {/* <TouchableOpacity
             activeOpacity={0.9}
             style={[
               styles.buttonContainerStyles,
@@ -126,7 +125,7 @@ const RunAssessment = ({navigation, route}) => {
             />
            </TouchableOpacity> */}
 
-          {/* <TouchableOpacity
+            {/* <TouchableOpacity
             activeOpacity={0.9}
             style={[
               styles.buttonContainerStyles,
@@ -141,33 +140,34 @@ const RunAssessment = ({navigation, route}) => {
               fontType="semi-bold"
             />
            </TouchableOpacity> */}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => navigation.navigate('faciliator', {data: ITEM})}
-            style={[
-              styles.buttonContainerStyles,
-              {backgroundColor: themePink},
-            ]}>
-            <Heading
-              title={'FACILIATOR INSTRUCTIONS'}
-              passedStyle={[styles.buttonStyles, {backgroundColor: themePink}]}
-              fontType="bold"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => navigation.navigate('setup', {data: ITEM})}
-            style={[
-              styles.buttonContainerStyles,
-              {backgroundColor: "#F9A603"},
-            ]}>
-            <Heading
-              title={' SETUP'}
-              passedStyle={[styles.buttonStyles, {backgroundColor: "#F9A603"}]}
-              fontType="bold"
-            />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.navigate('faciliator', { data: ITEM })}
+              style={[
+                styles.buttonContainerStyles,
+                { backgroundColor: themePink },
+              ]}>
+              <Heading
+                title={'FACILIATOR INSTRUCTIONS'}
+                passedStyle={[styles.buttonStyles, { backgroundColor: themePink }]}
+                fontType="bold"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => navigation.navigate('setup', { data: ITEM })}
+              style={[
+                styles.buttonContainerStyles,
+                { backgroundColor: "#F9A603" },
+              ]}>
+              <Heading
+                title={' SETUP'}
+                passedStyle={[styles.buttonStyles, { backgroundColor: "#F9A603" }]}
+                fontType="bold"
+              />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </ImageBackground>
     </>
   );
@@ -220,11 +220,11 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.02,
   },
   assessmentListStyle: {
-    position: 'absolute',
-    bottom: height * 0.13,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    flex:1,
+    alignItems:'center'
     // marginTop:height*0.05
     // left: width * 0.05,
   },

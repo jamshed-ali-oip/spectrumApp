@@ -27,6 +27,7 @@ import ColoredFlatlist from '../components/ColoredFlatlist';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import ParticipantFilterModal from '../components/GradeModal';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -325,7 +326,8 @@ console.log("event detyail on screen",Eventdetails)
                       borderBottomWidth: 1,
                     },
                     {
-                      width: width * 0.9,
+                      width: '100%',
+                      paddingHorizontal:responsiveFontSize(1.5),
                       alignSelf: 'center',
                       zIndex: 999,
                       height: height * 0.07,

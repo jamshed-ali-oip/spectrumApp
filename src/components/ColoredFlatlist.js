@@ -1,26 +1,43 @@
 import {View, Dimensions, FlatList} from 'react-native';
 import React from 'react';
+import { responsiveScreenWidth, responsiveWidth } from 'react-native-responsive-dimensions';
 const {width, height} = Dimensions.get('window');
 
 const ColoredFlatlist = () => {
   return (
-    <FlatList
-      data={colors} showsHorizontalScrollIndicator={false}
-      horizontal={true}
-      keyExtractor={({item, index}) => item?.id?.toString()}
-      renderItem={({item, index}) => {
-        return (
+    <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+      {colors.map((item,index)=>{
+        return(
           <View
-            style={{
-              marginVertical: height * 0.01,
-              width: width * 0.143,
-              height: height * 0.005,
-              backgroundColor: item?.color,
-            }}
-          />
-        );
-      }}
-    />
+          key={index}
+          style={{
+            marginVertical: height * 0.01,
+            width: '14.285%',
+            height: height * 0.005,
+            backgroundColor: item?.color,
+          }}
+        />
+        )
+      })}
+    </View>
+    // <FlatList
+    //   data={colors} showsHorizontalScrollIndicator={false}
+    //   horizontal={true}
+    //   contentContainerStyle={{width:'100%',padding:0 }}
+    //   keyExtractor={({item, index}) => item?.id?.toString()}
+    //   renderItem={({item, index}) => {
+    //     return (
+    //       <View
+    //         style={{
+    //           marginVertical: height * 0.01,
+    //           width: '14.285%',
+    //           height: height * 0.005,
+    //           backgroundColor: item?.color,
+    //         }}
+    //       />
+    //     );
+    //   }}
+    // />
   );
 };
 

@@ -157,7 +157,7 @@ export default connect(mapStateToProps, actions)(ForgetPassword);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: width,
+    width: '100%',
     height: height,
   },
   inputfield: {

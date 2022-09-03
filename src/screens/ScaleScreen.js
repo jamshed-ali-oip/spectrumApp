@@ -256,7 +256,7 @@ console.log("event data",Event.id)
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
         disabled={item.disable}
-        style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10  }}
+        style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10 ,width:'100%' }}
         onPress={() => {
           setUservalue({ ...item, index });
         }}>
@@ -267,7 +267,8 @@ console.log("event data",Event.id)
             color: item.disable ? 'gray' : (Uservalue.id == item.id ? 'green' : 'white'),
             // textAlign: 'center',
             // textAlignVertical: 'center',
-            letterSpacing: 1
+            letterSpacing: 1,
+            width:'100%'
           }}>
           {`${item.Firstname} ${item.Lastname}`}
         </Text>
@@ -290,7 +291,7 @@ console.log("event data",Event.id)
     </View>
   );
   const RenderimageDAta = ({ item }) => (
-    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: width / 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+    <TouchableOpacity onPress={() => { setResultvalue(item) }} style={{ width: '25%', flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
 
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
@@ -379,7 +380,8 @@ console.log("event data",Event.id)
             }
           }}
         /> */}
-        <View style={styles.headingView}>
+       <ScrollView contentContainerStyle={{flexGrow:1}}>
+       <View style={styles.headingView}>
           <Heading
             title={ITEM?.Name}
             passedStyle={styles.headingStyles}
@@ -398,16 +400,16 @@ console.log("event data",Event.id)
         <View
           style={{
             height: height * 0.20,
-            width: width * 0.9,
+            width: '95%',
             backgroundColor: themeDarkBlue,
             borderRadius: 10,
             paddingLeft: 20,
-            paddingRight: width * .5,
             alignSelf: "center",
           }}>
           <FlatList
 
             data={Memebers}
+            contentContainerStyle={{width:'100%'}}
             renderItem={RenderMembersData}
             keyExtractor={item => item.color_sort}
           // scrollEnabled={false}
@@ -432,7 +434,7 @@ console.log("event data",Event.id)
             source={require('../assets/lottie/color-loader.json')}
           />
         ) : (
-          <ScrollView>
+          <ScrollView contentContainerStyle={{flexGrow:1}}>
 
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>
@@ -804,6 +806,7 @@ console.log("event data",Event.id)
             </View>
           </ScrollView>
         )}
+       </ScrollView>
       </ImageBackground>
     </>
   );
@@ -845,6 +848,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    width:'100%',
     backgroundColor: 'blue',
   },
   btnStyle: {

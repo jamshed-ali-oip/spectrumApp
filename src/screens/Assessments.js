@@ -17,6 +17,7 @@ import ColoredFlatlist from '../components/ColoredFlatlist';
 import Heading from '../components/Heading';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 const {width, height} = Dimensions.get('window');
 
 const Assessments = ({navigation, userReducer, getAssessments}) => {
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeFerozi,
     borderRadius: width * 0.05,
     width: width * 0.55,
-    marginBottom: height * 0.1,
+    marginBottom: responsiveFontSize(2),
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
