@@ -258,6 +258,7 @@ console.log("event data",Event.id)
         disabled={item.disable}
         style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10 ,width:'100%' }}
         onPress={() => {
+          setResultvalue({})
           setUservalue({ ...item, index });
         }}>
         <Text

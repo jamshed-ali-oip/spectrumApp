@@ -147,7 +147,7 @@ export default connect(mapStateToProps, null)(ParticipantsMapper);
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.9,
+    width: '95%',
     alignSelf: 'center',
     zIndex: 999,
     borderBottomColor: 'silver',

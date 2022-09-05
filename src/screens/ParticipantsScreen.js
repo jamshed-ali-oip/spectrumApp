@@ -11,6 +11,7 @@ import {
   FlatList,
   Platform,
   RefreshControl,
+  ScrollView
 } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import Heading from '../components/Heading';
@@ -44,6 +45,8 @@ const ParticipantsScreen = ({
   const [refreshing, setRefreshing] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Males-Females");
+  const [group, setGroup] = useState("All");
+  const [grade, setGrade] = useState("All");
   const [participants, setParticipants] = useState([]);
 
   console.log('====================================');
@@ -184,11 +187,42 @@ const ParticipantsScreen = ({
                   />
                 </TouchableOpacity>
 
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View style={styles.filterLabelViewStyle}>
                   <Heading
                     title="Filter"
                     passedStyle={styles.filterLabelStyle}
                     fontType="regular"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.rightIconStyle}
+                  />
+                  <Heading
+                    title="Grade - "
+                    passedStyle={styles.filterLabelStyle}
+                    fontType="regular"
+                  />
+                  <Heading
+                    title={grade}
+                    passedStyle={styles.selectFilterTextStyle}
+                    fontType="semi-bold"
+                  />
+                  <IconComp
+                    iconName={'chevron-right'}
+                    type="Feather"
+                    passedStyle={styles.rightIconStyle}
+                  />
+                  <Heading
+                    title="Group - "
+                    passedStyle={styles.filterLabelStyle}
+                    fontType="regular"
+                  />
+                  <Heading
+                    title={group}
+                    passedStyle={styles.selectFilterTextStyle}
+                    fontType="semi-bold"
                   />
                   <IconComp
                     iconName={'chevron-right'}
@@ -206,6 +240,7 @@ const ParticipantsScreen = ({
                     fontType="semi-bold"
                   />
                 </View>
+                </ScrollView>
 
                 {/* Colors  */}
                 <ColoredFlatlist />
@@ -223,7 +258,7 @@ const ParticipantsScreen = ({
                     navigation?.navigate('viewParticipants', { data: item })
                   }
                   style={{
-                    width: width * 0.9,
+                    width: '95%',
                     alignSelf: 'center',
                     zIndex: 999,
                     borderBottomColor: 'silver',
@@ -281,6 +316,8 @@ const ParticipantsScreen = ({
           onPress={filterParticipants}
           showLoader={isLoading}
           setSelectedGender1={setSelectedGender}
+          setGrade1={setGrade}
+          setGroup1={setGroup}
         />
       </ImageBackground>
     </>

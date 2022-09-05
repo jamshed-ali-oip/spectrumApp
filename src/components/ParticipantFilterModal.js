@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import Heading from './Heading';
 import Inputbox from './Inputbox';
@@ -33,7 +34,9 @@ const ParticipantFilterModal = ({
   onPress,
   showLoader,
   userReducer,
-  setSelectedGender1
+  setSelectedGender1,
+  setGrade1,
+  setGroup1
 }) => {
   const [age, setAge] = useState(0);
   const [grade, setGrade] = useState(0);
@@ -64,6 +67,7 @@ const ParticipantFilterModal = ({
   useEffect(() => {
     if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
+      setGroup1(selectedGroupsData[counter].Name)
     }
   }, [counter,age])
 
@@ -87,6 +91,7 @@ const ParticipantFilterModal = ({
     const response = await axios.get(URL, headers);
     setGrades(response.data.data);
     setSelectedGrade(response.data.data.find(o => o.id === age + 1));
+    setGrade1(response.data.data.find(o => o.id === age + 1)?.Name)
   };
 
   const gradeHandlerGrade = param => {
@@ -104,6 +109,7 @@ const ParticipantFilterModal = ({
   useEffect(() => {
     // setSelectedGrade(Grades.find(o => o.id === age - 1));
     setSelectedGrade(Grades[age]);
+    setGrade1(Grades[age]?.Name)
   }, [age])
 
 
@@ -225,7 +231,8 @@ const ParticipantFilterModal = ({
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
       <Modal isVisible={isModalVisible}>
-        <View style={styles.container}>
+       <View style={styles.container}>
+          <ScrollView>
           <View
             style={{
               flexDirection: 'column',
@@ -400,6 +407,7 @@ const ParticipantFilterModal = ({
               </>
             )}
           </View>
+          </ScrollView>
         </View>
       </Modal>
     </View>
@@ -422,7 +430,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    width: width * 0.9,
+    width: '100%',
     borderRadius: width * 0.06,
     paddingVertical: height * 0.05,
     paddingHorizontal: width * 0.05,

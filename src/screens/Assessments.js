@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeFerozi,
     borderRadius: width * 0.05,
     width: width * 0.55,
-    marginBottom: responsiveFontSize(2),
+    marginBottom:height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',

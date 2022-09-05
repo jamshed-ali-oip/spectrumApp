@@ -240,6 +240,7 @@ const GradingSystem = ({
         style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10  }}
         disabled={item.disable}
         onPress={() => {
+          setResultvalue({})
           setUservalue({ ...item, index });
         }}>
         <Text

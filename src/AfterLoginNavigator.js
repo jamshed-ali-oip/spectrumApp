@@ -143,7 +143,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               onPress={() => {
                 navigation.navigate('home');
               }}
-              style={{padding: 10}}
+              style={{padding: 10,paddingRight:responsiveFontSize(3)}}
               activeOpacity={0.9}>
               <Image
                 resizeMode="contain"

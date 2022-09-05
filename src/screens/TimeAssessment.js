@@ -398,6 +398,12 @@ const TimeAssessment = ({
   };
 
   const onSuccess = () => {
+    setFlag(true)
+    resetStopwatch();
+    checkGame(false);
+    setSecs(0);
+    setScore('0');
+    setShowTextField(false);
     setResultvalue({})
     if (Uservalue.index + 1 < Memebers.length) {
       const updatedMembers = [...Memebers].map((it) => {
@@ -609,6 +615,7 @@ const TimeAssessment = ({
                   style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10  }}
                   disabled={item.disable}
                   onPress={() => {
+                    setResultvalue({})
                     setFlag(true)
                     resetStopwatch();
                     checkGame(false);
@@ -1009,6 +1016,7 @@ const TimeAssessment = ({
                   setSecs(0);
                   setScore('0');
                   setShowTextField(false);
+                  setResultvalue({})
                 }}
                 style={{ ...styles.startBtnContainer, backgroundColor: themePurple, alignSelf: 'center', marginVertical: 10 }}>
                 <Heading
@@ -1066,7 +1074,7 @@ const TimeAssessment = ({
                   {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
                 </Text>
                 <Text style={{ textAlign: 'center' }}>
-                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times`}
                 </Text>
               <TouchableOpacity
               style={{backgroundColor:'black',padding:5,borderRadius:20,paddingHorizontal:40,marginTop:20}}

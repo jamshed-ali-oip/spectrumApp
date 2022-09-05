@@ -58,12 +58,11 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
         style={styles.container}>
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <View style={{paddingBottom: height * 0.3}}>
+            <View>
               <Image
                 source={require('../assets/images/new-logo.png')}
                 style={{
-                  marginTop: height * 0.15,
-                  marginBottom: height * 0.05,
+                  marginTop: responsiveFontSize(10),
                   width: width * 0.4,
                   height: height * 0.2,
                   alignSelf: 'center',
@@ -75,7 +74,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 placeholderTextColor="#565B66"
                 style={[
                   styles.inputfield,
-                  {marginBottom: width * 0.04, marginTop: height * 0.1},
+                  {marginBottom: width * 0.04, marginTop:responsiveFontSize(10)},
                 ]}
                 onChangeText={e => {
                   if (e == ' ' || isLoading) {
@@ -146,7 +145,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 onPress={() => {
                   navigation.navigate('forgetPassword');
                 }}
-                style={{marginTop: height * 0.03}}>
+                style={{marginVertical: height * 0.03}}>
                 <Heading
                   title="Forgot Password"
                   passedStyle={{
