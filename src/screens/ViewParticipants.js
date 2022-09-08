@@ -39,7 +39,8 @@ const ViewParticipants = ({
   getPastAssessment,
   userReducer,
   getColors,
-  getAssessments
+  getAssessments,
+  socket
 }) => {
   const DATA = route.params.data;
   const accessToken = userReducer.accessToken;
@@ -50,7 +51,7 @@ const ViewParticipants = ({
   const apiData = {
     id: DATA?.id,
   };
-  const socketRef = userReducer?.socket;
+  const socketRef = socket;
   useEffect(() => {
     // socketRef.emit('addUser', userId);
 
@@ -110,7 +111,7 @@ const ViewParticipants = ({
   console.log("result screen")
   useEffect(() => {
     var ably = new Ably.Realtime(
-      'Wcbs9w.CsxYNQ:uHtRcafdNc-nEHWjbTjN791dfR0FBm9ls10J2aQBxk4',
+      'GB15rw.5ontmA:MBH5BOzcml0w-JEGUwQN39_3YQSD1S9hs4qYu4qOtBY',
     );
     ably.connection.on('connected', function () {
       // alert('Connected, that was easy');
@@ -158,7 +159,7 @@ const ViewParticipants = ({
       }),
       ...pastAssessments,
     ];
-    console.log(assessments, '======');
+    // console.log(pastAssessments, '======');
     // setPastAssessments(assessCopy);
     // }
   };

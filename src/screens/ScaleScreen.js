@@ -74,25 +74,25 @@ console.log("event data",Event.id)
     setMembers(route.params?.memberData)
   }, [])
 
-  useEffect(() => {
-    if (Uservalue.Firstname) {
-      setIsLoading(true)
-      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
-        assessment_id: ITEM?.id,
-        participant_id: Uservalue.id,
-        event_id: Event.id
-      }).then((res) => {
-        // alert(JSON.stringify(res.data))
-        setIsLoading(false)
-        if (res.data?.data > 2) {
-          setErrorModal(true)
-        }
-      }).catch((err)=>{
-        setIsLoading(false)
-        console.log(err)
-      })
-    }
-  }, [Uservalue])
+  // useEffect(() => {
+  //   if (Uservalue.Firstname) {
+  //     setIsLoading(true)
+  //     axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+  //       assessment_id: ITEM?.id,
+  //       participant_id: Uservalue.id,
+  //       event_id: Event.id
+  //     }).then((res) => {
+  //       // alert(JSON.stringify(res.data))
+  //       setIsLoading(false)
+  //       if (res.data?.data > 2) {
+  //         setErrorModal(true)
+  //       }
+  //     }).catch((err)=>{
+  //       setIsLoading(false)
+  //       console.log(err)
+  //     })
+  //   }
+  // }, [Uservalue])
 
   function nextCandidate() {
     const newIndex = Uservalue.index + 1

@@ -48,6 +48,8 @@ const ParticipantFilterModal = ({
   const [selectedgirl, setSelectedgirl] = useState(false);
   const [selectedboy, setSelectedboy] = useState(false);
   const [selectedGender, setSelectedGender] = useState("Both");
+  const [selectedGender1, setSelectedGender1] = useState("Both");
+
   const [gradeAll, setGradeAll] = useState(false);
   const [allGroud, setAllGroup] = useState(false);
 
@@ -140,9 +142,49 @@ const ParticipantFilterModal = ({
     setSelectedEvent(Eventdata[event]);
   }, [event])
 
+  useEffect(()=>{
+    if(allGroud){
+      // alert(JSON.stringify(selectedGroupsData))
+      let fem=false
+      let mal=false
+      let bo=false
+
+      selectedGroupsData
+      .map(it=>it.group_type)
+      .forEach(it=>{
+        if(it=="Female"){
+          fem=true
+        }else if(it=="Male"){
+          mal=true
+        }
+        else if(it=="Both"){
+          bo=true
+        }
+      })
+
+      if(bo){
+        setSelectedGender1("Both")
+        return
+      }
+      else if(fem && mal){
+        setSelectedGender1("Both")
+        return 
+      }
+      else if(fem){
+        setSelectedGender1("Female")
+        return
+      }
+      else if(mal){
+        setSelectedGender1("Male")
+        return
+      }
+
+    }
+  },[allGroud])
+
 
   function renderGenders(group) {
-    if (group?.group_type == "Both") {
+    if ((allGroud?selectedGender1:group?.group_type) == "Both") {
       return (
         <>
           {/* All */}
@@ -268,7 +310,7 @@ const ParticipantFilterModal = ({
           {/* {alert(group?.group_type)} */}
           <Heading
             passedStyle={styles.label}
-            title={group?.group_type}
+            title={allGroud?selectedGender1:group?.group_type}
             fontType="medium"
           />
         </TouchableOpacity>
@@ -544,6 +586,7 @@ const ParticipantFilterModal = ({
                         group_id: selectedGroupsData[counter]?.id,
                         GROUP_DATA: selectedGroupsData[counter],
                         gradeAll,
+                        allGroud,
                         event: selectedEvent || "not selected"
                       });
                       setIsModalVisible(false);

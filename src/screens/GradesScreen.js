@@ -103,32 +103,56 @@ console.log("event detyail on screen",Eventdetails)
     setEventdetails(data.event)
     if (data.gender == "Both") {
       if(data.gradeAll){
-        const filtered = userReducer.participants.filter((participant) => {
-          return participant.group_id == data.group_id
-        });
-        setParticipants(filtered)
+        if(data.allGroud){
+          setParticipants(userReducer.participants)
+        }else{
+          const filtered = userReducer.participants.filter((participant) => {
+            return participant.group_id == data.group_id
+          });
+          setParticipants(filtered)
+        }
       }else{
+        // alert("done2")
+
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+          if(data.allGroud){
+            return participant.grade_id == data.grade_id
+          }else{
+            return participant.group_id == data.group_id && participant.grade_id == data.grade_id
+          }
         });
         setParticipants(filtered)
       }
     } else {
       if(data.gradeAll){
-        const filtered = userReducer.participants.filter((participant) => {
-          return (
-            participant.group_id == data.group_id &&
-            participant.Gender == data.gender
-          )
-        });
-        setParticipants(filtered)
+        // alert("done3")
+        if(data.allGroud){
+          setParticipants(userReducer.participants)
+        }else{
+          const filtered = userReducer.participants.filter((participant) => {
+            return (
+              participant.group_id == data.group_id &&
+              participant.Gender == data.gender
+            )
+          });
+          setParticipants(filtered)
+        }
       }else{
+        // alert("done4")
+
         const filtered = userReducer.participants.filter((participant) => {
-          return (
-            participant.group_id == data.group_id &&
-            participant.grade_id == data.grade_id &&
-            participant.Gender == data.gender
-          )
+          if(data.allGroud){
+            return (
+              participant.grade_id == data.grade_id &&
+              participant.Gender == data.gender
+            )
+          }else{
+            return (
+              participant.group_id == data.group_id &&
+              participant.grade_id == data.grade_id &&
+              participant.Gender == data.gender
+            )
+          }
         });
         setParticipants(filtered)
       }
@@ -139,6 +163,8 @@ console.log("event detyail on screen",Eventdetails)
   const onSuccess = () => {
     setShowFilterModal(false);
   };
+
+  // alert(participants.length)
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

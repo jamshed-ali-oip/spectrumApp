@@ -16,6 +16,8 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
   //     : userReducer?.colors.reverse();
 
   // console.log("assessment_scoring", item?.id, item?.assessment_id, item?.assessments[0]?.assessment_scoring);
+  console.log("tt",pastAssessment)
+
   function getGames(id, forDate) {
     const filterPast = pastAssessment.filter(it => it.assessment_id == id)
     const withColor = filterPast.map(it => {
@@ -40,11 +42,11 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
 
   }
 
+  // console.log("itttttttt",item)
   function getColor(id) {
     const filterColor = userReducer?.colors.filter(it => it.id == id)[0]
     return filterColor?.WebColor
   }
-  // console.log("tt",pastAssessment)
   return (
     <View style={styles.container}>
       <View
@@ -69,7 +71,7 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
         />
 
         <Heading
-          title={getGames(item.id, true)[0]?(moment(getGames(item.id, true)[0]?.updated_at).format('DD MMMM')):"----"}
+          title={getGames(item.id, true)[0]?(getGames(item.id, true)[0]?.participant_event_result?.name):"----"}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />

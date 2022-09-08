@@ -58,7 +58,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
   const socket = useRef();
   useEffect(() => {
     socket.current = io('http://webprojectmockup.com:9444');
-    saveSocketRef(socket.current);
+    // saveSocketRef(socket.current);
     requestUserPermission();
     messaging()
       .subscribeToTopic('spectrum' + userReducer?.userData?.id?.toString())
@@ -210,8 +210,9 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
             </TouchableOpacity>
           ),
         })}
-        component={ViewParticipants}
-      />
+        >
+          {(props)=><ViewParticipants {...props} socket={socket.current}/>}
+        </AfterLoginStack.Screen>
 
       <AfterLoginStack.Screen
         name="assessments"

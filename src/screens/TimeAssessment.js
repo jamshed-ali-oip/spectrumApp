@@ -314,33 +314,33 @@ const TimeAssessment = ({
     // setRanges(Value);
   }, [userReducer?.gameInfo]);
 
-  useEffect(() => {
-    if (Uservalue.id) {
-      setIsLoading(true)
-      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
-        assessment_id: ITEM?.id,
-        participant_id: Uservalue.id,
-        event_id: Event.id
-      }).then((res) => {
-        // alert(JSON.stringify({
-        //   a:Uservalue.Firstname,
-        //   d:res.data?.data
-        // }))
-        setIsLoading(false)
-        if (res.data?.data > 2) {
-          // alert(JSON.stringify({
-          //   a:Uservalue.Firstname,
-          //   d:res.data?.data
-          // }))
-          setErrorModal(true)
-        }
-      }).catch((err) => {
-        // alert(err)
-        setIsLoading(false)
-        console.log(err)
-      })
-    }
-  }, [Uservalue])
+  // useEffect(() => {
+  //   if (Uservalue.id) {
+  //     setIsLoading(true)
+  //     axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+  //       assessment_id: ITEM?.id,
+  //       participant_id: Uservalue.id,
+  //       event_id: Event.id
+  //     }).then((res) => {
+  //       // alert(JSON.stringify({
+  //       //   a:Uservalue.Firstname,
+  //       //   d:res.data?.data
+  //       // }))
+  //       setIsLoading(false)
+  //       if (res.data?.data > 2) {
+  //         // alert(JSON.stringify({
+  //         //   a:Uservalue.Firstname,
+  //         //   d:res.data?.data
+  //         // }))
+  //         setErrorModal(true)
+  //       }
+  //     }).catch((err) => {
+  //       // alert(err)
+  //       setIsLoading(false)
+  //       console.log(err)
+  //     })
+  //   }
+  // }, [Uservalue])
 
   function nextCandidate() {
     const newIndex = Uservalue.index + 1

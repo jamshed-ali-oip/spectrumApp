@@ -116,30 +116,30 @@ const GradingSystem = ({
     setRanges(userReducer?.assessmentDetails?.assessment_scoring.reverse());
   }, [userReducer?.assessmentDetails]);
 
-  useEffect(() => {
-    // alert(JSON.stringify({
-    //   assessment_id: ITEM?.id,
-    //   participant_id: Uservalue.id
-    // }))
-    if (Uservalue.Firstname) {
-      setIsLoading(true)
-      axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
-        assessment_id: ITEM?.id,
-        participant_id: Uservalue.id,
-        event_id: Event.id
-      }).then((res) => {
-        // alert(JSON.stringify(res.data))
-        setIsLoading(false)
-        if (res.data?.data > 2) {
-          setErrorModal(true)
-        }
-      }).catch((Err)=>{
-        setIsLoading(false)
-        console.log(Err)
-        // alert(JSON.stringify(Err))
-      })
-    }
-  }, [Uservalue])
+  // useEffect(() => {
+  //   // alert(JSON.stringify({
+  //   //   assessment_id: ITEM?.id,
+  //   //   participant_id: Uservalue.id
+  //   // }))
+  //   if (Uservalue.Firstname) {
+  //     setIsLoading(true)
+  //     axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+  //       assessment_id: ITEM?.id,
+  //       participant_id: Uservalue.id,
+  //       event_id: Event.id
+  //     }).then((res) => {
+  //       // alert(JSON.stringify(res.data))
+  //       setIsLoading(false)
+  //       if (res.data?.data > 2) {
+  //         setErrorModal(true)
+  //       }
+  //     }).catch((Err)=>{
+  //       setIsLoading(false)
+  //       console.log(Err)
+  //       // alert(JSON.stringify(Err))
+  //     })
+  //   }
+  // }, [Uservalue])
 
   function nextCandidate() {
     const newIndex = Uservalue.index + 1

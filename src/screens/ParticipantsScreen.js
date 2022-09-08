@@ -84,6 +84,9 @@ const ParticipantsScreen = ({
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    setSelectedGender("Males-Females")
+    setGrade("All")
+    setGroup("All")
     wait(1500).then(() => {
       setRefreshing(false);
       getAllParticipants();
@@ -310,7 +313,8 @@ const ParticipantsScreen = ({
           />
         )}
 
-        <ParticipantFilterModal
+        {showFilterModal &&(
+          <ParticipantFilterModal
           isModalVisible={showFilterModal}
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}
@@ -319,6 +323,7 @@ const ParticipantsScreen = ({
           setGrade1={setGrade}
           setGroup1={setGroup}
         />
+        )}
       </ImageBackground>
     </>
   );

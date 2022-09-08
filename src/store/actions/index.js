@@ -58,6 +58,7 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
     const URL = `${apiUrl}/login`;
     const response = await axios.post(URL, data);
     if (response.data.success) {
+      console.log(response.data.data,"======================")
       dispatch({
         type: LOGIN_REQUEST,
         payload: response.data.data,
@@ -382,14 +383,14 @@ export const getParticipants = accessToken => async dispatch => {
         type: GET_PARTICIPANTS_REQUEST,
         payload: [],
       });
-      showMessage({
-        message:
-          response?.data.data?.error ||
-          response.data.message ||
-          response.data.msg ||
-          'Something went wrong',
-        type: 'danger',
-      });
+      // showMessage({
+      //   message:
+      //     response?.data.data?.error ||
+      //     response.data.message ||
+      //     response.data.msg ||
+      //     'Something went wrong',
+      //   type: 'danger',
+      // });
     }
   } catch (err) {
     showMessage({
@@ -415,6 +416,7 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
     };
 
     const response = await axios.post(URL, data, headers);
+    console.log("ddddd",response)
     if (response.data.success) {
       // console.log(response.data.data, 'Data of past assessment');
       dispatch({

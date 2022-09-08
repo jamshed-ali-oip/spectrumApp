@@ -61,13 +61,13 @@ const ParticipantFilterModal = ({
       setGroupsData(
         userReducer?.groups?.filter(group => group.grade_id.includes(`${selectedGrade.id}`)) || [],
       )
+      setGroup1((userReducer?.groups?.filter(group => group.grade_id.includes(`${selectedGrade.id}`)) || [])[counter]?.Name)
     }
   }, [selectedGrade]);
 
   useEffect(() => {
     if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
-      setGroup1(selectedGroupsData[counter].Name)
     }
   }, [counter,age])
 
@@ -353,7 +353,9 @@ const ParticipantFilterModal = ({
                 <>
                   {renderGenders(selectedGroupsData[counter])}
                 </>
-              ) : <Text>Something went wrong!</Text>
+              ) : null
+              // ) : <Text>Something went wrong!</Text>
+
             }
           </View>
           {/* Buttons Container  */}
