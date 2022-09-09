@@ -396,7 +396,7 @@ const GradingSystem = ({
             alignSelf: "center"
           }}>
           <FlatList
-
+          nestedScrollEnabled={true}
             data={Memebers}
             renderItem={RenderMembersData}
             keyExtractor={item => item.id}

@@ -408,7 +408,7 @@ console.log("event data",Event.id)
             alignSelf: "center",
           }}>
           <FlatList
-
+          nestedScrollEnabled={true}
             data={Memebers}
             contentContainerStyle={{width:'100%'}}
             renderItem={RenderMembersData}
@@ -435,7 +435,7 @@ console.log("event data",Event.id)
             source={require('../assets/lottie/color-loader.json')}
           />
         ) : (
-          <ScrollView contentContainerStyle={{flexGrow:1}}>
+          <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow:1}}>
 
             {/* Child Name  */}
             {/* <View style={styles.headingStyle2View}>

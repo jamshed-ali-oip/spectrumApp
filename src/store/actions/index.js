@@ -183,14 +183,14 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
         type: GET_GROUP_MEMBERS_REQUEST,
         payload: [],
       });
-      showMessage({
-        message:
-          response?.data.data?.error ||
-          response.data.message ||
-          response.data.msg ||
-          'Something went wrong',
-        type: 'danger',
-      });
+      // showMessage({
+      //   message:
+      //     response?.data.data?.error ||
+      //     response.data.message ||
+      //     response.data.msg ||
+      //     'Something went wrong',
+      //   type: 'danger',
+      // });
     }
   } catch (err) {
     showMessage({

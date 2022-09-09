@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
+import KeepAwake from 'react-native-keep-awake';
 import Heading from '../components/Heading';
 // import {Timer, Countdown} from 'react-native-element-timer';
 import {
@@ -550,12 +551,42 @@ const TimeAssessment = ({
     // alert("call")
 
     if(Platform.OS=="ios"){
-      whoosh.play(success => {
-        if (success) {
-          console.log('successfully finished playing');
-        } else {
-          console.log('playback failed due to audio decoding errors');
+      // var whoosh = new Sound('my_beep.mp3', Sound.MAIN_BUNDLE, error => {
+      //   if (error) {
+      //     // console.log('failed to load the sound', error);
+      //     return;
+      //   }
+      //   whoosh.play(success => {
+      //     if (success) {
+      //       console.log('successfully finished playing');
+      //     } else {
+      //       console.log('playback failed due to audio decoding errors');
+      //     }
+      //   });
+      //   // loaded successfully
+      //   // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+    
+      //   // Play the sound with an onEnd callback
+      //   // whoosh.setNumberOfLoops(1)
+        
+      // });
+
+      var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
         }
+        // loaded successfully
+        console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+      
+        // Play the sound with an onEnd callback
+        whoosh.play((success) => {
+          if (success) {
+            console.log('successfully finished playing');
+          } else {
+            console.log('playback failed due to audio decoding errors');
+          }
+        });
       });
     }else{
       RNBeep.PlaySysSound(RNBeep.AndroidSoundIDs.TONE_CDMA_ANSWER)
@@ -597,8 +628,8 @@ const TimeAssessment = ({
         </View>
         <ScrollView
           nestedScrollEnabled={true}
+          style={{height:height*0.2}}
           contentContainerStyle={{
-            height: height * 0.2,
             width: '95%',
             backgroundColor: themeDarkBlue,
             borderRadius: 10,
@@ -1136,6 +1167,7 @@ const TimeAssessment = ({
             }
           }}
         />
+        <KeepAwake/>
       </ImageBackground>
     </>
   );

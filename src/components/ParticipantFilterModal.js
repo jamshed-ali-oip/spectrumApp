@@ -68,6 +68,7 @@ const ParticipantFilterModal = ({
   useEffect(() => {
     if (selectedGroupsData[counter] && selectedGroupsData[counter].group_type) {
       setSelectedGender(selectedGroupsData[counter].group_type || "Not Possible")
+      setGroup1(selectedGroupsData[counter].Name)
     }
   }, [counter,age])
 
