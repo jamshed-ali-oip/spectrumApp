@@ -390,9 +390,9 @@ export default connect(mapStateToProps, actions)(ViewParticipants);
 
 const styles = StyleSheet.create({
   lottieStyle: {
-    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    marginTop: height * 0.098,
-    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
+    // width:'100%',
+    // alignItems:'center',
+    // height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
   },
   container: {
     flex: 1,

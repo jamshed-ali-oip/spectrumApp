@@ -34,6 +34,7 @@ const ParticipantFilterModal = ({
   onPress,
   showLoader,
   userReducer,
+  setFields
 }) => {
   const [age, setAge] = useState(0);
   const [grade, setGrade] = useState(0);
@@ -580,6 +581,12 @@ const ParticipantFilterModal = ({
                   title={buttonText || 'OK'}
                   onBtnPress={() => {
                     if (onPress) {
+                      setFields({
+                        event:selectedEvent?.name,
+                        gender:selectedGender,
+                        group:allGroud?"All":selectedGroupsData[counter]?.Name,
+                        grade:gradeAll?"All":selectedGrade?.Name
+                      })
                       onPress({
                         grade_id: selectedGrade?.id,
                         gender: selectedGender || selectedGroupsData[counter]?.group_type || "Both",

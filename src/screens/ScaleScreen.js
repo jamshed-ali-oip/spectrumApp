@@ -861,9 +861,9 @@ const styles = StyleSheet.create({
     width: width * 0.41,
   },
   lottieStyle: {
-    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    marginTop: height * 0.038,
-    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
+    // height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    // marginTop: height * 0.038,
+    // marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   headingStyles: {
     color: 'white',

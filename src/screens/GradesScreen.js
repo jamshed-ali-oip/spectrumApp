@@ -53,10 +53,11 @@ const GradesScreen = ({
   const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
-  const [Eventdetails,setEventdetails]=useState([]);
-console.log("event detyail on screen",Eventdetails)
+  const [Eventdetails, setEventdetails] = useState([]);
+  const [fields, setFields] = useState({})
+  console.log("event detyail on screen", Eventdetails)
   // console.log("GROUP_DATA",GROUP_DATA)
-  console.log("participants",participants)
+  console.log("participants", participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
@@ -102,33 +103,33 @@ console.log("event detyail on screen",Eventdetails)
     // console.log("eevent datacon screen/////",)
     setEventdetails(data.event)
     if (data.gender == "Both") {
-      if(data.gradeAll){
-        if(data.allGroud){
+      if (data.gradeAll) {
+        if (data.allGroud) {
           setParticipants(userReducer.participants)
-        }else{
+        } else {
           const filtered = userReducer.participants.filter((participant) => {
             return participant.group_id == data.group_id
           });
           setParticipants(filtered)
         }
-      }else{
+      } else {
         // alert("done2")
 
         const filtered = userReducer.participants.filter((participant) => {
-          if(data.allGroud){
+          if (data.allGroud) {
             return participant.grade_id == data.grade_id
-          }else{
+          } else {
             return participant.group_id == data.group_id && participant.grade_id == data.grade_id
           }
         });
         setParticipants(filtered)
       }
     } else {
-      if(data.gradeAll){
+      if (data.gradeAll) {
         // alert("done3")
-        if(data.allGroud){
+        if (data.allGroud) {
           setParticipants(userReducer.participants)
-        }else{
+        } else {
           const filtered = userReducer.participants.filter((participant) => {
             return (
               participant.group_id == data.group_id &&
@@ -137,16 +138,16 @@ console.log("event detyail on screen",Eventdetails)
           });
           setParticipants(filtered)
         }
-      }else{
+      } else {
         // alert("done4")
 
         const filtered = userReducer.participants.filter((participant) => {
-          if(data.allGroud){
+          if (data.allGroud) {
             return (
               participant.grade_id == data.grade_id &&
               participant.Gender == data.gender
             )
-          }else{
+          } else {
             return (
               participant.group_id == data.group_id &&
               participant.grade_id == data.grade_id &&
@@ -292,8 +293,64 @@ console.log("event detyail on screen",Eventdetails)
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
                     />
+
                     <Heading
-                      title="Groups"
+                      title="Event - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.event}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+
+                    <Heading
+                      title="Groups - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.group}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+
+                    <Heading
+                      title="Grade - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.grade}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title="Gender - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.gender}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -326,7 +383,7 @@ console.log("event detyail on screen",Eventdetails)
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
                         memberData: participants,
-                        event:Eventdetails
+                        event: Eventdetails
                       });
                     } else if (ITEM?.Type === 'Distance') {
                       navigation?.navigate('scaleScreen', {
@@ -334,7 +391,7 @@ console.log("event detyail on screen",Eventdetails)
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
                         memberData: participants,
-                        event:Eventdetails,
+                        event: Eventdetails,
                       });
                     } else {
                       navigation?.navigate('gradingScreen', {
@@ -342,7 +399,7 @@ console.log("event detyail on screen",Eventdetails)
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
                         memberData: participants,
-                        event:Eventdetails
+                        event: Eventdetails
                       });
                     }
                   }}
@@ -353,7 +410,7 @@ console.log("event detyail on screen",Eventdetails)
                     },
                     {
                       width: '100%',
-                      paddingHorizontal:responsiveFontSize(1.5),
+                      paddingHorizontal: responsiveFontSize(1.5),
                       alignSelf: 'center',
                       zIndex: 999,
                       height: height * 0.07,
@@ -381,6 +438,7 @@ console.log("event detyail on screen",Eventdetails)
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}
           showLoader={isLoading}
+          setFields={setFields}
           setGender={setGender}
         />
       </ImageBackground>
@@ -399,9 +457,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
   lottieStyle: {
-    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    marginTop: height * 0.098,
-    marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
+    // height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    // marginTop: height * 0.098,
+    // marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   btnStyle: {
     height: height * 0.06,
