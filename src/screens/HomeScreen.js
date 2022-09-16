@@ -21,7 +21,7 @@ import {
 } from '../assets/colors/colors';
 import * as actions from '../store/actions';
 import {connect} from 'react-redux';
-
+import deviceInfo from "react-native-device-info"
 const {width, height} = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -90,7 +90,9 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
             FAQ
           </Text>
         </TouchableOpacity>
-
+        <View style={{flex:1}}>
+          <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(1.5)}}>App Version: {deviceInfo.getVersion()}</Text>
+        </View>
         {/* <Button
           title={'RUN AN ASSESSMENT'}
           btnStyle={styles.runAssessmentStyle}

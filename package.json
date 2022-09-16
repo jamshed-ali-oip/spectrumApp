@@ -34,6 +34,7 @@
     "react-native-a-beep": "^1.2.0",
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-background-timer": "^2.4.1",
+    "react-native-device-info": "^10.1.2",
     "react-native-element-timer": "^1.5.2",
     "react-native-flash-message": "^0.2.1",
     "react-native-gesture-handler": "^2.4.2",
