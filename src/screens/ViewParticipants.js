@@ -12,7 +12,7 @@ import {
   RefreshControl,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Heading from '../components/Heading';
 import Echo from 'laravel-echo';
 import * as Ably from 'ably';
@@ -29,9 +29,10 @@ import * as actions from '../store/actions';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import ParticipantsMapper from '../components/ParticipantsMapper';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 // sd
 const ViewParticipants = ({
   navigation,
@@ -40,13 +41,16 @@ const ViewParticipants = ({
   userReducer,
   getColors,
   getAssessments,
-  socket
+  socket,
+  changeStatus,
+  getParticipants
 }) => {
   const DATA = route.params.data;
   const accessToken = userReducer.accessToken;
   const [pastAssessments, setPastAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [status, setStatus] = useState(undefined)
   const [record, setRecord] = useState(null);
   const apiData = {
     id: DATA?.id,
@@ -58,6 +62,8 @@ const ViewParticipants = ({
     // socketRef.on('getMessage', data => {
     //   console.log(data, 'Text Recieved========');
     // });
+    // alert(JSON.stringify(DATA.Status))
+    setStatus(DATA.Status)
     getDetail();
   }, []);
   // console.log(DATA)
@@ -173,6 +179,8 @@ const ViewParticipants = ({
       setRecord(null);
     }
   }, [record]);
+
+
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -320,6 +328,60 @@ const ViewParticipants = ({
                   />
                 </View>
 
+
+                <View
+                  style={{
+                    backgroundColor: themeDarkBlue,
+                    borderRadius: 25,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    width: width * 0.9,
+                    height: height * 0.07,
+                    marginTop: height * 0.02,
+                  }}>
+                  <Heading
+                    title="Status"
+                    passedStyle={{
+                      color: 'white',
+                      fontSize: width * 0.045,
+                      marginLeft: width * 0.06,
+                    }}
+                    fontType="semi-bold"
+                  />
+                  <Heading
+                    title={status == 0 ?"Activate": "Deactivate" }
+                    passedStyle={{
+                      color: 'white',
+                      marginLeft: width * 0.1,
+                      fontSize: width * 0.045,
+                    }}
+                    fontType="regular"
+                  />
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: status == 0 ?"red":"green",
+                      borderRadius: 25,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: responsiveWidth(25),
+                      height: height * 0.05,
+                      marginLeft: responsiveWidth(8)
+                    }}
+                    onPress={() => {
+                      changeStatus(DATA.id)
+                        .then(res => {
+                          getParticipants(accessToken)
+                        })
+                        .catch(err => console.log(err))
+                      setStatus(status ? 0 : 1)
+                    }}
+                  >
+                    <Text style={{ color: 'white' }}>{status == 0 ?"Deactivate":"Activate"}</Text>
+                  </TouchableOpacity>
+                </View>
+
                 {/* <Heading
                 title={'PAST ASSESSMENTS'}
                 passedStyle={styles.pastAssessmentHeadingStyles}
@@ -370,11 +432,11 @@ const ViewParticipants = ({
             //   );
             // }}
             data={userReducer?.assessments}
-            keyExtractor={({item, index}) => item?.id?.toString()}
-            contentContainerStyle={{paddingBottom: height * 0.1}}
-            renderItem={({item, index}) => (
-        <ParticipantsMapper item={item} index={index}  pastAssessment={pastAssessments}/>
-     
+            keyExtractor={({ item, index }) => item?.id?.toString()}
+            contentContainerStyle={{ paddingBottom: height * 0.1 }}
+            renderItem={({ item, index }) => (
+              <ParticipantsMapper item={item} index={index} pastAssessment={pastAssessments} />
+
             )}
           />
         )}
@@ -383,8 +445,8 @@ const ViewParticipants = ({
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(ViewParticipants);
 
@@ -410,7 +472,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeLightBlue,
     borderRadius: width * 0.05,
     width: width * 0.57,
-    marginBottom: height * 0.1,
+    marginBottom: height * 0.02,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',

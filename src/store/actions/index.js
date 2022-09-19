@@ -637,3 +637,8 @@ export const getFaciliatorInstructions = accessToken => async dispatch => {
     console.log(err?.response?.data?.msg || err?.response?.data?.message);
   }
 };
+
+export const changeStatus = id => async dispatch => {
+  const res=await axios.post(`${apiUrl}/participant_status`,{id})
+  return res
+}
