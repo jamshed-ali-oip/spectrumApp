@@ -713,13 +713,15 @@ const TimeAssessment = ({
     return (
       <>
         {isLoading || colors?.length === 0 ? (
-          <LottieView
+          <View style={{justifyContent:'center',alignItems:'center'}}>
+            <LottieView
             speed={1}
             style={styles.lottieStyle}
             autoPlay
             loop
             source={require('../assets/lottie/color-loader.json')}
           />
+          </View>
         ) : (
           <>
             {/* Heading  */}
@@ -1244,8 +1246,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   lottieStyle: {
-    // height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    // marginTop: height * 0.038,
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.038,
     // marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
   saveBtnStyle: {
