@@ -13,6 +13,7 @@ import {
   Button,
   FlatList,
   Modal,
+  AppState
 } from 'react-native';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
@@ -121,6 +122,24 @@ const TimeAssessment = ({
   //     setRanges([...ranges].reverse())
   //   }
   // }, [reverse])
+
+  useEffect(()=>{
+    const stateListen=AppState.addEventListener('blur',(status)=>{
+      setFlag(true)
+      resetStopwatch();
+      checkGame(false);
+      setSecs(0);
+      setScore('0');
+      setShowTextField(false);
+      setResultvalue({})
+      setHasTimerStarted(false);
+    })
+    const unsubscribe = navigation.addListener('blur', () => {
+      stateListen.remove()
+    });
+
+    return unsubscribe;
+  },[navigation])
 
 
   useEffect(() => {
