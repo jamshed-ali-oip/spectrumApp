@@ -365,9 +365,9 @@ const ViewParticipants = ({
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      width: responsiveWidth(25),
-                      height: height * 0.05,
-                      marginLeft: responsiveWidth(8)
+                      width: responsiveWidth(20),
+                      height: height * 0.035,
+                      marginLeft: responsiveWidth(4)
                     }}
                     onPress={() => {
                       changeStatus(DATA.id)

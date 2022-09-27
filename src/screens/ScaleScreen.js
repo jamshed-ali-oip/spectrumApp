@@ -427,13 +427,15 @@ console.log("event data",Event.id)
           />
         </View>
         {isLoading ? (
+          <View style={{justifyContent:'center',alignItems:'center'}}>
           <LottieView
-            speed={1}
-            style={styles.lottieStyle}
-            autoPlay
-            loop
-            source={require('../assets/lottie/color-loader.json')}
-          />
+          speed={1}
+          style={styles.lottieStyle}
+          autoPlay
+          loop
+          source={require('../assets/lottie/color-loader.json')}
+        />
+        </View>
         ) : (
           <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow:1}}>
 
@@ -861,10 +863,11 @@ const styles = StyleSheet.create({
     width: width * 0.41,
   },
   lottieStyle: {
-    // height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
-    // marginTop: height * 0.038,
+    height: Platform?.OS === 'ios' ? height * 0.33 : height * 0.38,
+    marginTop: height * 0.038,
     // marginLeft: Platform?.OS === 'ios' ? width * 0.05 : width * 0.07,
   },
+
   headingStyles: {
     color: 'white',
     backgroundColor: themeFerozi,
