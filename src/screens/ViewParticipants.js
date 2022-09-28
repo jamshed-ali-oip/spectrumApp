@@ -45,11 +45,11 @@ const ViewParticipants = ({
   changeStatus,
   getParticipants
 }) => {
-  const DATA = route.params.data;
   const accessToken = userReducer.accessToken;
   const [pastAssessments, setPastAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [DATA,SETDATA]=useState(route.params.data)
   const [status, setStatus] = useState(undefined)
   const [record, setRecord] = useState(null);
   const apiData = {
@@ -63,7 +63,6 @@ const ViewParticipants = ({
     //   console.log(data, 'Text Recieved========');
     // });
     // alert(JSON.stringify(DATA.Status))
-    setStatus(DATA.Status)
     getDetail();
   }, []);
   // console.log(DATA)
@@ -71,7 +70,17 @@ const ViewParticipants = ({
     setPastAssessments(userReducer?.pastAssessment);
   }, [userReducer?.pastAssessment]);
 
+  useEffect(()=>{
+    // alert('cccc')
+    const updatedData=userReducer.participants.filter(it=>it.id=DATA.id)[0]
+    SETDATA(updatedData)
+    setStatus(updatedData.Status)
+
+  },[userReducer.participants])
+
   const getDetail = async () => {
+    // alert("call")
+    getParticipants(accessToken)
     setIsLoading(true);
     await getPastAssessment(apiData, accessToken);
     await getAssessments(accessToken)

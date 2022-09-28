@@ -421,7 +421,7 @@ console.log("event data",Event.id)
         </View>
         <View style={styles.headingStyle2View}>
           <Heading
-            title={`${GROUP_DATA?.Name}`}
+            title={GROUP_DATA.group?"All":`${GROUP_DATA?.Name}`}
             passedStyle={styles.headingStyles2}
             fontType="regular"
           />

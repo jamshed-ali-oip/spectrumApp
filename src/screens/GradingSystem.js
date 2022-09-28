@@ -421,7 +421,7 @@ const GradingSystem = ({
             <ScrollView>
               <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
                 <Heading
-                  title={`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                  title={GROUP_DATA.group?"All":`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
                   passedStyle={styles.headingStyles2}
                   fontType="regular"
                 />

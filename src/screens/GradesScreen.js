@@ -99,7 +99,7 @@ const GradesScreen = ({
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    SET_GROUP_DATA(data.GROUP_DATA)
+    SET_GROUP_DATA({...data.GROUP_DATA,group:data.allGroud})
     // console.log("eevent datacon screen/////",)
     setEventdetails(data.event)
     if (data.gender == "Both") {
