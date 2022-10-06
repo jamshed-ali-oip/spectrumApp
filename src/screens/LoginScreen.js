@@ -25,7 +25,7 @@ import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dim
 
 const {width, height} = Dimensions.get('window');
 
-const LoginScreen = ({navigation, userReducer, loginRequest}) => {
+const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -59,8 +59,9 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View>
-              <Image
-                source={require('../assets/images/new-logo.png')}
+              {false && (
+                <Image
+                source={{uri:logo}}
                 style={{
                   marginTop: responsiveFontSize(10),
                   width: width * 0.4,
@@ -69,6 +70,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
                 }}
                 resizeMode="contain"
               />
+              )}
               <TextInput
                 placeholder="Email Address"
                 placeholderTextColor="#565B66"
@@ -163,8 +165,8 @@ const LoginScreen = ({navigation, userReducer, loginRequest}) => {
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({userReducer,logo}) => {
+  return {userReducer,logo};
 };
 export default connect(mapStateToProps, actions)(LoginScreen);
 

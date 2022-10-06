@@ -14,9 +14,10 @@ import {
   GET_FILTERED_PARTICIPANTS,
   CHECK_GAME,
   SAVE_SOCKET_REF,
+  GET_LOGIN_IMG,
 } from './actionType';
 import axios from 'axios';
-import {apiUrl} from '../../config';
+import {apiUrl,imageUrl} from '../../config';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 
 export const checkGame = bool => dispatch => {
@@ -641,4 +642,12 @@ export const getFaciliatorInstructions = accessToken => async dispatch => {
 export const changeStatus = id => async dispatch => {
   const res=await axios.post(`${apiUrl}/participant_status`,{id})
   return res
+}
+
+export const getLoginImg = id => async dispatch => {
+  const res=await axios.get(`${apiUrl}/logo`)
+  dispatch({
+    type:GET_LOGIN_IMG,
+    payload:imageUrl+"/"+res.data?.data[0]?.logo
+  })
 }
