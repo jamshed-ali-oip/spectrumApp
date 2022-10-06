@@ -29,6 +29,7 @@ const ResetPasswordScreen = ({
   userReducer,
   route,
   resetPassword,
+  logo
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
@@ -76,11 +77,15 @@ const ResetPasswordScreen = ({
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={{paddingBottom: height * 0.3}}>
-              <Image
-                source={require('../assets/images/new-logo.png')}
+              {
+                false &&(
+                  <Image
+                source={{uri:logo}}
                 style={styles.logoStyle}
                 resizeMode="contain"
               />
+                )
+              }
 
               {/* New Password  */}
               <View style={styles.passwordViewContainer}>
@@ -180,8 +185,8 @@ const ResetPasswordScreen = ({
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({userReducer,logo}) => {
+  return {userReducer,logo};
 };
 export default connect(mapStateToProps, actions)(ResetPasswordScreen);
 

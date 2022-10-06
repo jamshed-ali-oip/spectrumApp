@@ -11,7 +11,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
 import Heading from '../components/Heading';
 // import {Timer, Countdown} from 'react-native-element-timer';
@@ -27,12 +27,12 @@ import {
   themeYellow,
 } from '../assets/colors/colors';
 // import WheelOfFortune from 'react-native-wheel-of-fortune';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
-import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
-import {showMessage} from 'react-native-flash-message';
-const {width, height} = Dimensions.get('window');
+import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import { showMessage } from 'react-native-flash-message';
+const { width, height } = Dimensions.get('window');
 
 const TimeAssessment = ({
   navigation,
@@ -42,6 +42,7 @@ const TimeAssessment = ({
   submitResult,
   getGameInfo,
   checkGame,
+  logo
 }) => {
   const ITEM = route.params.item;
   const CHILD_DATA = route.params.childData;
@@ -110,7 +111,7 @@ const TimeAssessment = ({
     knobSource: require('../assets/images/knob.png'),
     getWinner: (value, index) => {
       setWheelState(prev => {
-        return {...prev, winnerValue: value, winnerIndex: index};
+        return { ...prev, winnerValue: value, winnerIndex: index };
       });
     },
     onRef: ref => setChild(ref),
@@ -286,11 +287,13 @@ const TimeAssessment = ({
             </View>
 
             {/* Image Logo  */}
-            <Image
-              resizeMode="contain"
-              source={require('../assets/images/new-logo.png')}
-              style={styles.logoStyles}
-            />
+            {false && (
+              <Image
+                resizeMode="contain"
+                source={{uri:logo}}
+                style={styles.logoStyles}
+              />
+            )}
 
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
@@ -417,99 +420,99 @@ const TimeAssessment = ({
 
               {/* Game Meter  */}
               <RNSpeedometer
-                wrapperStyle={{marginRight: width * 0.05}}
+                wrapperStyle={{ marginRight: width * 0.05 }}
                 value={parseInt(meterValue)}
                 minValue
                 size={200}
-                labelStyle={{color: 'transparent'}}
-                labelNoteStyle={{color: 'transparent'}}
+                labelStyle={{ color: 'transparent' }}
+                labelNoteStyle={{ color: 'transparent' }}
                 labels={
-                  
+
                   colors?.length > 0
                     ? [
-                        {
-                          name: 'Too Slow',
-                          labelColor: colors[0]?.WebColor || 'red',
-                          activeBarColor: colors[0]?.WebColor || 'red',
-                        },
-                        {
-                          name: 'Very Slow',
-                          labelColor: colors[1]?.WebColor || 'orange',
-                          activeBarColor: colors[1]?.WebColor || 'orange',
-                        },
-                        {
-                          name: 'Slow',
-                          labelColor: colors[2]?.WebColor || 'yellow',
-                          activeBarColor: colors[2]?.WebColor || 'yellow',
-                        },
-                        {
-                          name: 'Normal',
-                          labelColor: colors[3]?.WebColor || 'lightgreen',
-                          activeBarColor: colors[3]?.WebColor || 'lightgreen',
-                        },
-                        {
-                          name: 'Fast',
-                          labelColor: colors[4]?.WebColor || 'darkgreen',
-                          activeBarColor: colors[4]?.WebColor || 'darkgreen',
-                        },
-                        {
-                          name: 'Unbelievably Fast',
-                          labelColor: colors[5]?.WebColor || 'blue',
-                          activeBarColor: colors[5]?.WebColor || 'blue',
-                        },
-                        {
-                          name: 'Unsastifactory',
-                          labelColor: colors[6]?.WebColor || 'darkblue',
-                          activeBarColor: colors[6]?.WebColor || 'darkblue',
-                        },
-                        {
-                          name: 'None',
-                          labelColor: colors[7]?.WebColor || 'purple',
-                          activeBarColor: colors[7]?.WebColor || 'purple',
-                        },
-                      ]
+                      {
+                        name: 'Too Slow',
+                        labelColor: colors[0]?.WebColor || 'red',
+                        activeBarColor: colors[0]?.WebColor || 'red',
+                      },
+                      {
+                        name: 'Very Slow',
+                        labelColor: colors[1]?.WebColor || 'orange',
+                        activeBarColor: colors[1]?.WebColor || 'orange',
+                      },
+                      {
+                        name: 'Slow',
+                        labelColor: colors[2]?.WebColor || 'yellow',
+                        activeBarColor: colors[2]?.WebColor || 'yellow',
+                      },
+                      {
+                        name: 'Normal',
+                        labelColor: colors[3]?.WebColor || 'lightgreen',
+                        activeBarColor: colors[3]?.WebColor || 'lightgreen',
+                      },
+                      {
+                        name: 'Fast',
+                        labelColor: colors[4]?.WebColor || 'darkgreen',
+                        activeBarColor: colors[4]?.WebColor || 'darkgreen',
+                      },
+                      {
+                        name: 'Unbelievably Fast',
+                        labelColor: colors[5]?.WebColor || 'blue',
+                        activeBarColor: colors[5]?.WebColor || 'blue',
+                      },
+                      {
+                        name: 'Unsastifactory',
+                        labelColor: colors[6]?.WebColor || 'darkblue',
+                        activeBarColor: colors[6]?.WebColor || 'darkblue',
+                      },
+                      {
+                        name: 'None',
+                        labelColor: colors[7]?.WebColor || 'purple',
+                        activeBarColor: colors[7]?.WebColor || 'purple',
+                      },
+                    ]
                     : [
-                        {
-                          name: 'Too Slow',
-                          labelColor: 'green',
-                          activeBarColor: 'green',
-                        },
-                        {
-                          name: 'Very Slow',
-                          labelColor: 'orange',
-                          activeBarColor: 'orange',
-                        },
-                        {
-                          name: 'Slow',
-                          labelColor: 'yellow',
-                          activeBarColor: 'yellow',
-                        },
-                        {
-                          name: 'Normal',
-                          labelColor: 'lightgreen',
-                          activeBarColor: 'lightgreen',
-                        },
-                        {
-                          name: 'Fast',
-                          labelColor: 'darkgreen',
-                          activeBarColor: 'darkgreen',
-                        },
-                        {
-                          name: 'Unbelievably Fast',
-                          labelColor: 'blue',
-                          activeBarColor: 'blue',
-                        },
-                        {
-                          name: 'Unsastifactory',
-                          labelColor: 'darkblue',
-                          activeBarColor: 'darkblue',
-                        },
-                        {
-                          name: 'None',
-                          labelColor: 'purple',
-                          activeBarColor: 'purple',
-                        },
-                      ]
+                      {
+                        name: 'Too Slow',
+                        labelColor: 'green',
+                        activeBarColor: 'green',
+                      },
+                      {
+                        name: 'Very Slow',
+                        labelColor: 'orange',
+                        activeBarColor: 'orange',
+                      },
+                      {
+                        name: 'Slow',
+                        labelColor: 'yellow',
+                        activeBarColor: 'yellow',
+                      },
+                      {
+                        name: 'Normal',
+                        labelColor: 'lightgreen',
+                        activeBarColor: 'lightgreen',
+                      },
+                      {
+                        name: 'Fast',
+                        labelColor: 'darkgreen',
+                        activeBarColor: 'darkgreen',
+                      },
+                      {
+                        name: 'Unbelievably Fast',
+                        labelColor: 'blue',
+                        activeBarColor: 'blue',
+                      },
+                      {
+                        name: 'Unsastifactory',
+                        labelColor: 'darkblue',
+                        activeBarColor: 'darkblue',
+                      },
+                      {
+                        name: 'None',
+                        labelColor: 'purple',
+                        activeBarColor: 'purple',
+                      },
+                    ]
                 }
               />
             </View>
@@ -587,7 +590,7 @@ const TimeAssessment = ({
                 />
               </TouchableOpacity>
             )}
-            <View style={{paddingBottom: 150}} />
+            <View style={{ paddingBottom: 150 }} />
           </ScrollView>
         )}
       </ImageBackground>
@@ -595,8 +598,8 @@ const TimeAssessment = ({
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer,logo }) => {
+  return { userReducer,logo };
 };
 export default connect(mapStateToProps, actions)(TimeAssessment);
 

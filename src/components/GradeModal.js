@@ -51,7 +51,7 @@ const ParticipantFilterModal = ({
   const [selectedGender, setSelectedGender] = useState("Both");
   const [selectedGender1, setSelectedGender1] = useState("Both");
 
-  const [gradeAll, setGradeAll] = useState(false);
+  const [gradeAll, setGradeAll] = useState(true);
   const [allGroud, setAllGroup] = useState(false);
 
   const [Eventdata, setEventdata] = useState([]);
@@ -447,7 +447,7 @@ const ParticipantFilterModal = ({
             )}
 
             {/* Grade  */}
-            <View style={{
+            {/* <View style={{
               paddingVertical: height * 0.001,
               marginBottom: height * 0.02,
               borderWidth: 1,
@@ -478,8 +478,10 @@ const ParticipantFilterModal = ({
                   fontType="medium"
                 />
               </TouchableOpacity>
-            </View>
-            {!gradeAll && (
+            </View> */}
+
+            
+            {/* {!gradeAll && (
               <View style={styles.filterContainer}>
                 <Heading
                   passedStyle={styles.label}
@@ -516,7 +518,7 @@ const ParticipantFilterModal = ({
                   </TouchableOpacity>
                 </View>
               </View>
-            )}
+            )} */}
 
 
           </View>
@@ -542,7 +544,10 @@ const ParticipantFilterModal = ({
           ) : (
             <Text>nill</Text>
           )} */}
-          <View
+
+
+
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -557,7 +562,9 @@ const ParticipantFilterModal = ({
               ) :null
               // ) : <Text>Something went wrong!</Text>
             }
-          </View>
+          </View> */}
+
+
           {/* Buttons Container  */}
           <View style={styles.flexRow}>
             {showLoader ? (

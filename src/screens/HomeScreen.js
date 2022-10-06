@@ -27,7 +27,7 @@ import messaging from '@react-native-firebase/messaging';
 import { ScrollView } from 'react-native-gesture-handler';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
-const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
+const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) => {
   const accessToken = userReducer?.accessToken;
   // console.log("parti",userReducer?.accessToken)
   useEffect(() => {
@@ -57,11 +57,15 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
         <ScrollView>
-        <Image
+        {
+          false && (
+            <Image
           resizeMode="contain"
-          source={require('../assets/images/new-logo.png')}
+          source={{uri:logo}}
           style={styles.logoStyle}
         />
+          )
+        }
 
         <Button
           title={'ASSESSMENTS'}
@@ -120,8 +124,8 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken}) => {
     </>
   );
 };
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({userReducer,logo}) => {
+  return {userReducer,logo};
 };
 export default connect(mapStateToProps, actions)(HomeScreen);
 
