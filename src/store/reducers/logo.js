@@ -2,8 +2,7 @@ import {
     GET_LOGIN_IMG
   } from '../actions/actionType';
   
-  const INITIAL_STATE = {
-  };
+  const INITIAL_STATE = null
   
 const logo = (state = INITIAL_STATE, action) => {
     switch (action.type) {

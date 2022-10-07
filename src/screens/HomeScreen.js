@@ -58,7 +58,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
         style={styles.container}>
         <ScrollView>
         {
-          false && (
+          logo && (
             <Image
           resizeMode="contain"
           source={{uri:logo}}

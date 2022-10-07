@@ -287,7 +287,7 @@ const TimeAssessment = ({
             </View>
 
             {/* Image Logo  */}
-            {false && (
+            {logo && (
               <Image
                 resizeMode="contain"
                 source={{uri:logo}}

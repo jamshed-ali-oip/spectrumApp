@@ -648,6 +648,6 @@ export const getLoginImg = id => async dispatch => {
   const res=await axios.get(`${apiUrl}/logo`)
   dispatch({
     type:GET_LOGIN_IMG,
-    payload:imageUrl+"/"+res.data?.data[0]?.logo
+    payload:imageUrl+"/logo/"+res.data?.data[0]?.logo
   })
 }

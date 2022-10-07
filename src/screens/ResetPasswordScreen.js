@@ -78,7 +78,7 @@ const ResetPasswordScreen = ({
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={{paddingBottom: height * 0.3}}>
               {
-                false &&(
+                logo &&(
                   <Image
                 source={{uri:logo}}
                 style={styles.logoStyle}

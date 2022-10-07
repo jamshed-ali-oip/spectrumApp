@@ -59,7 +59,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
         <ScrollView>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View>
-              {false && (
+              {logo && (
                 <Image
                 source={{uri:logo}}
                 style={{

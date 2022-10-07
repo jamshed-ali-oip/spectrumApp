@@ -54,7 +54,7 @@ const forFade = ({ current, closing }) => ({
     opacity: current.progress,
   },
 });
-const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
+const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
   const socket = useRef();
   useEffect(() => {
     socket.current = io('http://webprojectmockup.com:9444');
@@ -148,7 +148,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -191,7 +191,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -235,7 +235,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -278,7 +278,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -321,7 +321,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -364,7 +364,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -415,7 +415,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -466,7 +466,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -510,7 +510,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -553,7 +553,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -596,7 +596,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -638,7 +638,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
               <Image
                 resizeMode="contain"
                 style={{height: height * 0.06, width: width * 0.12}}
-                source={require('./assets/images/round-icon.png')}
+                source={{uri:logo}}
               />
             </TouchableOpacity>
           ),
@@ -665,9 +665,10 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef}) => {
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
+const mapStateToProps = ({userReducer,logo}) => {
   return {
     userReducer,
+    logo
   };
 };
 export default connect(mapStateToProps, actions)(AfterLoginNavigator);
