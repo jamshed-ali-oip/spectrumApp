@@ -163,13 +163,17 @@ const TimeAssessment = ({
     // alert(JSON.stringify({per:"0.0" + Math.round(Number(player?.percent)),secs}))
     const per = Math.round(Number(player?.percent))
     const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
-    console.log(secs, value);
-
+    console.log("sec",secs);
+    const seletedCheck=ranges.filter((it)=>it.minTime==secs)
+    if(seletedCheck.length>0){
+      setResultvalue(seletedCheck[0])
+    }
     if (Number(secs) == value) {
       // alert("Beeeeeeeep");
       playSound()
     }
   }, [secs])
+  // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
 
   const apiData = {
     assessment_score_id: Resultvalue.id || 0,
