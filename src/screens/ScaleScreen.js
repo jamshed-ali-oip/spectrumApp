@@ -217,7 +217,7 @@ console.log("event data",Event.id)
         grade_id: CHILD_DATA?.grade_id,
         assessment_id: userReducer?.assessmentDetails?.id,
         Distance: null,
-        group_id: GROUP_DATA?.id,
+        group_id: CHILD_DATA?.group_id,
         event_id: Event.id
       };
 

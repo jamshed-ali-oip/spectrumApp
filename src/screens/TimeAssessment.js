@@ -174,7 +174,7 @@ const TimeAssessment = ({
     }
   }, [secs])
   // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
-
+console.log("child",CHILD_DATA)
   const apiData = {
     assessment_score_id: Resultvalue.id || 0,
     participant_id: Uservalue?.id,
@@ -182,7 +182,7 @@ const TimeAssessment = ({
     grade_id: CHILD_DATA?.grade_id,
     assessment_id: ITEM?.id,
     Duration: secs,
-    group_id: GROUP_DATA?.id,
+    group_id: CHILD_DATA?.group_id,
     event_id: Event.id
   };
   // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
