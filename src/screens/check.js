@@ -131,11 +131,11 @@ const TimeAssessment = ({
     //   child._onPress();
     // }
   };
-  console.log(
-    'colors',
-    colors[0]
-    // userReducer?.gameInfo?.filter(game => game.assessment_id == 8),
-  );
+  // console.log(
+  //   'colors',
+  //   colors[0]
+  //   // userReducer?.gameInfo?.filter(game => game.assessment_id == 8),
+  // );
   useEffect(() => {
     // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
   }, [secs]);
@@ -147,7 +147,7 @@ const TimeAssessment = ({
     );
     let color_id = thisGameScorePeers[0]?.color_id;
     for (const thisGame of thisGameScorePeers) {
-      console.log('YYYYYYY', thisGame, color_id);
+      // console.log('YYYYYYY', thisGame, color_id);
       if (thisGame?.MinValue <= secs && thisGame?.MaxValue >= secs) {
         color_id = thisGame?.color_id;
         setAssessmentScoreId(thisGame?.id);
@@ -208,7 +208,7 @@ const TimeAssessment = ({
 
   const _onPressSave = async () => {
     setIsLoading(true);
-    console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
+    // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -257,7 +257,7 @@ const TimeAssessment = ({
 
   const getFormattedTime = time => {
     currentTime = time;
-    console.log(currentTime.substring(6, 8));
+    // console.log(currentTime.substring(6, 8));
     setSecs(currentTime.substring(6, 8));
   };
   // console.log(GROUP_DATA?.Name);

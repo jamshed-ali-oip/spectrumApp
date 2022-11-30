@@ -97,7 +97,7 @@ import {
                   marginBottom: height * 0.05,
                 }}
               />
-  {console.log("my setup",DATA.Setup)}
+  {/* {console.log("my setup",DATA.Setup)} */}
               <Heading
                 title={DATA?.Setup}
                 fontType="medium"

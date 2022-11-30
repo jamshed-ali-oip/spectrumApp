@@ -27,7 +27,7 @@ export const checkGame = bool => dispatch => {
       payload: bool,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -49,9 +49,9 @@ export const sendFCMToken = (data, accessToken) => async dispatch => {
     };
 
     const response = await axios.post(URL, data, headers);
-    console.log(response.data);
+    // console.log(response.data);
   } catch (err) {
-    console.log(err?.response?.data?.message);
+    // console.log(err?.response?.data?.message);
   }
 };
 export const loginRequest = (data, onLoginFailed) => async dispatch => {
@@ -59,7 +59,7 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
     const URL = `${apiUrl}/login`;
     const response = await axios.post(URL, data);
     if (response.data.success) {
-      console.log(response.data.data,"======================")
+      // console.log(response.data.data,"======================")
       dispatch({
         type: LOGIN_REQUEST,
         payload: response.data.data,
@@ -78,7 +78,7 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
       type: 'danger',
     });
     onLoginFailed();
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -117,7 +117,7 @@ export const getAssessments = accessToken => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    // console.log(err?.response?.data?.msg || err?.response?.data?.message);
   }
 };
 
@@ -156,10 +156,10 @@ export const getGroups = accessToken => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(
-      err?.response?.data?.msg || err?.response?.data?.message,
-      'GET_GROUPS_REQUEST',
-    );
+    // console.log(
+    //   err?.response?.data?.msg || err?.response?.data?.message,
+    //   'GET_GROUPS_REQUEST',
+    // );
   }
 };
 
@@ -198,10 +198,10 @@ export const getGroupMembers = (data, accessToken) => async dispatch => {
       message: 'Network Error',
       type: 'danger',
     });
-    console.log(
-      err?.response?.data?.msg || err?.response?.data?.message,
-      'GET_GROUP_MEMBERS_REQUEST',
-    );
+    // console.log(
+    //   err?.response?.data?.msg || err?.response?.data?.message,
+    //   'GET_GROUP_MEMBERS_REQUEST',
+    // );
   }
 };
 
@@ -219,7 +219,7 @@ export const getFilteredParticipants =
       };
 
       const response = await axios.post(URL, data, headers);
-      console.log(response.data);
+      // console.log(response.data);
       // alert(JSON.stringify(response.data))
       onSuccess();
       if (response.data.success) {
@@ -246,11 +246,11 @@ export const getFilteredParticipants =
         message: 'Network Error',
         type: 'danger',
       });
-      console.log(
-        err?.response?.data?.msg || err?.response?.data?.message,
-        'GET_FILTERED_PARTICIPANTS',
-        err,
-      );
+      // console.log(
+      //   err?.response?.data?.msg || err?.response?.data?.message,
+      //   'GET_FILTERED_PARTICIPANTS',
+      //   err,
+      // );
     }
   };
 
@@ -278,10 +278,10 @@ export const getColors = accessToken => async dispatch => {
       });
     }
   } catch (err) {
-    console.log(
-      err?.response?.data?.msg || err?.response?.data?.message,
-      'GET_COLORS_REQUEST',
-    );
+    // console.log(
+    //   err?.response?.data?.msg || err?.response?.data?.message,
+    //   'GET_COLORS_REQUEST',
+    // );
   }
 };
 
@@ -291,7 +291,7 @@ export const logoutRequest = data => async dispatch => {
       type: LOGOUT_REQUEST,
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -331,7 +331,7 @@ export const submitResult =
         message: 'Network Error',
         type: 'danger',
       });
-      console.log(err?.response?.data?.msg || err?.response?.data?.message);
+      // console.log(err?.response?.data?.msg || err?.response?.data?.message);
     }
   };
 
@@ -359,11 +359,12 @@ export const getGameInfo = accessToken => async dispatch => {
       });
     }
   } catch (err) {
-    console.log(err?.response?.data?.msg || err?.response?.data?.message);
+    // console.log(err?.response?.data?.msg || err?.response?.data?.message);
   }
 };
 
 export const getParticipants = accessToken => async dispatch => {
+  console.log("aaa",accessToken)
   try {
     const URL = `${apiUrl}/participant/data`;
     const headers = {

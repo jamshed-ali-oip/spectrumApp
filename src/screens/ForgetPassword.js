@@ -54,7 +54,7 @@ const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
   };
 
   useEffect(() => {
-    console.log(wordCount);
+    // console.log(wordCount);
   }, [wordCount]);
 
   useEffect(() => {

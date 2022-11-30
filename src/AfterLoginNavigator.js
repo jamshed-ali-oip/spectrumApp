@@ -46,7 +46,7 @@ const requestUserPermission = async () => {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    console.log('FCM Authorization:', authStatus);
+    // console.log('FCM Authorization:', authStatus);
   }
 };
 const forFade = ({ current, closing }) => ({
@@ -63,7 +63,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
     messaging()
       .subscribeToTopic('spectrum' + userReducer?.userData?.id?.toString())
       .then(() => {
-        console.log('NOTIFICATIONS SUBSCRIBED');
+        // console.log('NOTIFICATIONS SUBSCRIBED');
       });
 
     try {
@@ -74,24 +74,24 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
       //     // setFCMToken(token);
       //   });
       messaging().onNotificationOpenedApp(remoteMessage => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification,
-        );
+        // console.log(
+        //   'Notification caused app to open from background state:',
+        //   remoteMessage.notification,
+        // );
       });
       messaging()
         .getInitialNotification()
         .then(remoteMessage => {
           if (remoteMessage) {
-            console.log(
-              'Notification caused app to open from quit state:',
-              remoteMessage.notification,
-            );
+            // console.log(
+            //   'Notification caused app to open from quit state:',
+            //   remoteMessage.notification,
+            // );
           }
         });
 
       const unsubscribe = messaging().onMessage(async remoteMessage => {
-        console.log(remoteMessage, 'notification');
+        // console.log(remoteMessage, 'notification');
 
         // Call api to get notifications data
         // if (remoteMessage?.data?.type == 'likePost') {
@@ -113,7 +113,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
       });
       return unsubscribe;
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }, []);
   return (
@@ -408,7 +408,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
                     message: 'Stop game to navigate.',
                   });
                 }
-                console.log(userReducer?.hasStartedGame);
+                // console.log(userReducer?.hasStartedGame);
               }}
               style={{padding: 10,paddingRight:responsiveFontSize(3)}}
               activeOpacity={0.9}>

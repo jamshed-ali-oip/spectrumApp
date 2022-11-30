@@ -72,7 +72,8 @@ const ViewParticipants = ({
 
   useEffect(()=>{
     // alert('cccc')
-    const updatedData=userReducer.participants.filter(it=>it.id=DATA.id)[0]
+    console.log("5555",userReducer)
+    const updatedData=[...userReducer.participants].filter(it=>it.id==DATA.id)[0]
     SETDATA(updatedData)
     setStatus(updatedData.Status)
 
@@ -80,7 +81,7 @@ const ViewParticipants = ({
 
   const getDetail = async () => {
     // alert("call")
-    getParticipants(accessToken)
+    // getParticipants(accessToken)
     setIsLoading(true);
     await getPastAssessment(apiData, accessToken);
     await getAssessments(accessToken)
@@ -183,7 +184,7 @@ const ViewParticipants = ({
     if (record !== null) {
       const assessCopy = [record, ...pastAssessments];
       // console.log(userReducer?.pastAssessment);
-      console.log(JSON.stringify(assessCopy?.length, null, 2), ' length');
+      // console.log(JSON.stringify(assessCopy?.length, null, 2), ' length');
       setPastAssessmenkts(assessCopy);
       setRecord(null);
     }

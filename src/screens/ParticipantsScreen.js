@@ -49,9 +49,9 @@ const ParticipantsScreen = ({
   const [grade, setGrade] = useState("All");
   const [participants, setParticipants] = useState([]);
 
-  console.log('====================================');
-  console.log(userReducer);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(userReducer);
+  // console.log('====================================');
 
   useEffect(() => {
     getAllParticipants();
@@ -95,11 +95,11 @@ const ParticipantsScreen = ({
   }, []);
 
   const filterParticipants = async data => {
-    console.log("selected", data);
-    console.log("selected Gender", data.gender);
-    console.log("selected Grade Id", data.grade_id);
-    console.log("selected Group Id", data.group_id);
-    console.log("participants", participants)
+    // console.log("selected", data);
+    // console.log("selected Gender", data.gender);
+    // console.log("selected Grade Id", data.grade_id);
+    // console.log("selected Group Id", data.group_id);
+    // console.log("participants", participants)
     setIsLoading(true);
     // SET_GROUP_DATA(data.GROUP_DATA)
     if (data.gender == "Both") {
@@ -258,7 +258,7 @@ const ParticipantsScreen = ({
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation?.navigate('viewParticipants', { data: item })
+                    navigation?.push('viewParticipants', { data: item })
                   }
                   style={{
                     width: '95%',

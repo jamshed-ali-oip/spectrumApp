@@ -18,7 +18,7 @@ import { useEffect, useState  } from 'react';
 const { width, height } = Dimensions.get('window');
 const FAQ = () => {
     const [faqdata,setfaqdata]=useState([]);
-    console.log("setfaqdata",faqdata);
+    // console.log("setfaqdata",faqdata);
     const FAQDATA = ({ item }) => (
         <View style={{paddingVertical:width*0.03,paddingHorizontal:width*0.045}}>
             <Text style={{fontSize:width*0.049,color:"white",fontStyle:"italic",textDecorationLine:"underline"}}>

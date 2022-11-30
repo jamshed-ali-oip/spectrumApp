@@ -163,7 +163,7 @@ const TimeAssessment = ({
     // alert(JSON.stringify({per:"0.0" + Math.round(Number(player?.percent)),secs}))
     const per = Math.round(Number(player?.percent))
     const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
-    console.log("sec",secs);
+    // console.log("sec",secs);
     const seletedCheck=ranges.filter((it)=>it.minTime==secs)
     if(seletedCheck.length>0){
       setResultvalue(seletedCheck[0])
@@ -182,7 +182,7 @@ const TimeAssessment = ({
     grade_id: CHILD_DATA?.grade_id,
     assessment_id: ITEM?.id,
     Duration: secs,
-    group_id: GROUP_DATA?.id,
+    group_id: CHILD_DATA?.group_id,
     event_id: Event.id
   };
   // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
@@ -596,18 +596,18 @@ const TimeAssessment = ({
 
       var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
         if (error) {
-          console.log('failed to load the sound', error);
+          // console.log('failed to load the sound', error);
           return;
         }
         // loaded successfully
-        console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+        // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
       
         // Play the sound with an onEnd callback
         whoosh.play((success) => {
           if (success) {
-            console.log('successfully finished playing');
+            // console.log('successfully finished playing');
           } else {
-            console.log('playback failed due to audio decoding errors');
+            // console.log('playback failed due to audio decoding errors');
           }
         });
       });

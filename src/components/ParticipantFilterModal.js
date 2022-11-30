@@ -79,7 +79,7 @@ const ParticipantFilterModal = ({
     }
   }, [userReducer?.groups]);
 
-  console.log(age, counter, selectedGroupsData, userReducer?.groups);
+  // console.log(age, counter, selectedGroupsData, userReducer?.groups);
 
   const fetchCall = async () => {
     const URL = `${baseUrl}/api/grade`;
