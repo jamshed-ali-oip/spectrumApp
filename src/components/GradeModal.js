@@ -95,7 +95,11 @@ const ParticipantFilterModal = ({
     };
     fetch(`${baseUrl}/api/event`, requestOptions)
       .then(response => response.json())
-      .then(result => setEventdata(result.data))
+      .then(result => {
+        if(result.success){
+          setEventdata(result.data)
+        }
+      })
     // .catch(error => console.log('error', error));
   }
 
@@ -357,7 +361,7 @@ const ParticipantFilterModal = ({
                   fontType="medium"
                 />
                 <TouchableOpacity
-                  disabled={event >= (Eventdata.length - 1)}
+                  disabled={event >= (Eventdata?.length - 1)}
                   onPress={() => {
                     eventhandle('incress');
                   }}>
