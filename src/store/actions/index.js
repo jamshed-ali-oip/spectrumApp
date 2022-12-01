@@ -370,7 +370,7 @@ export const getParticipants = accessToken => async dispatch => {
     const headers = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     };
 
