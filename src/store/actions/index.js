@@ -127,7 +127,7 @@ export const getGroups = accessToken => async dispatch => {
     const headers = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${accessToken}`,
       },
     };
 
@@ -366,11 +366,11 @@ export const getGameInfo = accessToken => async dispatch => {
 export const getParticipants = accessToken => async dispatch => {
   console.log("aaa",accessToken)
   try {
-    const URL = `${apiUrl}/participant/data`;
+    const URL = `${apiUrl}/participant`;
     const headers = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${accessToken}`,
       },
     };
 
