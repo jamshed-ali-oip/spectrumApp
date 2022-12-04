@@ -123,7 +123,7 @@ const GradingSystem = ({
   //   // }))
   //   if (Uservalue.Firstname) {
   //     setIsLoading(true)
-  //     axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+  //     axios.post('https://webprojectmockup.com/custom/spectrum-8-v2/api/participantCount', {
   //       assessment_id: ITEM?.id,
   //       participant_id: Uservalue.id,
   //       event_id: Event.id
@@ -292,8 +292,8 @@ const GradingSystem = ({
         source={{
           uri:
             item.image === null
-              ? 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png'
-              : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`,
+              ? 'https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/error.png'
+              : `https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/${item.image}`,
         }}
       />
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>

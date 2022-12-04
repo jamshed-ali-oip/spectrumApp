@@ -117,7 +117,7 @@ const ParticipantFilterModal = ({
     const headers = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer 22|lNXltijPdHHOyVPYSxlmgiym5OLPjenZOFZcRYhO`,
+        Authorization: `Bearer ${userReducer.accessToken}`,
       },
     };
     const response = await axios.get(URL, headers);

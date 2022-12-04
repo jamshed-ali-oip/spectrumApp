@@ -143,8 +143,13 @@ const TimeAssessment = ({
 
 
   useEffect(() => {
-    axios.post(`https://webprojectmockup.com/custom/spectrum-8/api/percentile`, {
+    axios.post(`https://webprojectmockup.com/custom/spectrum-8-v2/api/percentile`, {
       assessment_id: ITEM?.id
+    },{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userReducer.accessToken}`,
+      }
     }).then(res => {
       // alert(JSON.stringify(res.data.data))
       setPlayers(res.data.data)
@@ -341,7 +346,7 @@ const TimeAssessment = ({
   // useEffect(() => {
   //   if (Uservalue.id) {
   //     setIsLoading(true)
-  //     axios.post('https://webprojectmockup.com/custom/spectrum-8/api/participantCount', {
+  //     axios.post('https://webprojectmockup.com/custom/spectrum-8-v2/api/participantCount', {
   //       assessment_id: ITEM?.id,
   //       participant_id: Uservalue.id,
   //       event_id: Event.id
@@ -1104,7 +1109,7 @@ const TimeAssessment = ({
 
         source={{
           uri:
-            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/${item.image}`
         }}
       />
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>

@@ -51,6 +51,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     case LOGIN_REQUEST:
       return {
         ...state,
+        name:action.payload.Firstname+" "+action.payload.Lastname,
         isLogin: true,
         accessToken: action.payload.token,
         userData: action.payload,
@@ -72,7 +73,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         groups: action?.payload?.map(group => {
-          return { ...group, grade_id: group.grade_id.split(',') }
+          return { ...group, grade_id: "1".split(',') }
+          // return { ...group, grade_id: group.grade_id.split(',') }
         })
       };
 
