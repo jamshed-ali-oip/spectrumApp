@@ -16,26 +16,146 @@ import {
 
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Heading from '../components/Heading';
-import Button from '../components/Button';
 import {
-  themeBlue,
   themeDarkBlue,
   themeFerozi,
   themeLightBlue,
-  themePurple,
 } from '../assets/colors/colors';
-import { Svg, Polygon, Rect, Styles, G, Path } from 'react-native-svg';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
-import { showMessage } from 'react-native-flash-message';
-import { Shadow } from 'react-native-shadow-2';
-import OctIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
-import AwesomeAlert from 'react-native-awesome-alerts';
-import axios from 'axios';
 
-
+const r = [
+  {
+    "id": 24,
+    "assessment_id": 3,
+    "color_id": 2,
+    "MinValue": "71",
+    "MaxValue": "80",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:25:03.000000Z",
+    "image": "red_1660267503.png",
+    "minTime": "0.36",
+    "maxTime": "0.40"
+  },
+  {
+    "id": 23,
+    "assessment_id": 3,
+    "color_id": 7,
+    "MinValue": "61",
+    "MaxValue": "70",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-09T18:53:30.000000Z",
+    "image": "blue_1660071210.png",
+    "minTime": "0.31",
+    "maxTime": "0.35"
+  },
+  {
+    "id": 22,
+    "assessment_id": 3,
+    "color_id": 14,
+    "MinValue": "51",
+    "MaxValue": "60",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:24:43.000000Z",
+    "image": "green_1660267483.png",
+    "minTime": "0.26",
+    "maxTime": "0.30"
+  },
+  {
+    "id": 21,
+    "assessment_id": 3,
+    "color_id": 6,
+    "MinValue": "41",
+    "MaxValue": "50",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:24:21.000000Z",
+    "image": "orange_1660267461.png",
+    "minTime": "0.21",
+    "maxTime": "0.25"
+  },
+  {
+    "id": 20,
+    "assessment_id": 3,
+    "color_id": 8,
+    "MinValue": "31",
+    "MaxValue": "40",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:24:04.000000Z",
+    "image": "purple_1660267444.png",
+    "minTime": "0.16",
+    "maxTime": "0.20"
+  },
+  {
+    "id": 19,
+    "assessment_id": 3,
+    "color_id": 3,
+    "MinValue": "21",
+    "MaxValue": "30",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-09T18:54:29.000000Z",
+    "image": "yellow_1660071269.png",
+    "minTime": "0.11",
+    "maxTime": "0.15"
+  },
+  {
+    "id": 18,
+    "assessment_id": 3,
+    "color_id": 4,
+    "MinValue": "11",
+    "MaxValue": "20",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:23:39.000000Z",
+    "image": "pink_1660267419.png",
+    "minTime": "0.06",
+    "maxTime": "0.10"
+  },
+  {
+    "id": 17,
+    "assessment_id": 3,
+    "color_id": 13,
+    "MinValue": "1",
+    "MaxValue": "10",
+    "Duration": "00:00:00",
+    "Beep": null,
+    "Distance": null,
+    "Score_target": "Duration",
+    "created_at": "2022-06-21T02:12:57.000000Z",
+    "updated_at": "2022-08-12T01:23:18.000000Z",
+    "image": "white_1660267398.png",
+    "minTime": "0.01",
+    "maxTime": "0.05"
+  }
+]
 const { width, height } = Dimensions.get('window');
 
 const GradingSystem = ({
@@ -57,37 +177,17 @@ const GradingSystem = ({
   const [isLoading, setIsLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [score, setScore] = useState('');
-  const [ranges, setRanges] = useState([]);
+  const [ranges, setRanges] = useState(r);
   const [Resultvalue, setResultvalue] = useState({});
   const [assessment_id, setassessment_id] = useState([]);
-  const [reverse,setReverse]=useState("red")
+  const [reverse, setReverse] = useState("red")
   const [Uservalue, setUservalue] = useState({});
   const [errorModal, setErrorModal] = useState(false)
   console.log('=======>', Uservalue);
-  // const [resultColor, setResultColor] = useState(
-  //   colors[0]?.WebColor || 'black',
-  // );
-  // console.log("result vaue", Resultvalue)
-  // console.log("sjdk", CHILD_DATA.grade_id)
-  // console.log("Grading screen", Event)
-  //  useEffect(() => {
-  //     setRes(ranges[0]?.MaxValue);
-  //   }, []);
+
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
   }, [])
-  // console.log("firsttttttttttttttttttttttttt",userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id)
-  // useEffect=(()=>{
-  //   setassessment_id(userReducer?.assessmentDetails.assessment_scoring[0]?.assessment_id)
-  // },[assessment_id])
-
-
-  // const Resulting =
-  //   userReducer?.assessmentDetails?.assessment_scoring[0].MaxValue;
-  // console.log('Areaaa', userReducer?.assessmentDetails?.assessment_scoring);
-  // useEffect(() => {
-  //   findResult();
-  // }, [score]);
 
   useEffect(() => {
     setUservalue(route.params.childData)
@@ -96,50 +196,20 @@ const GradingSystem = ({
 
   const getAllColors = async () => {
     setIsLoading(true);
-    await getGameInfo(accessToken);
-    await getColors(accessToken);
+    // await getGameInfo(accessToken);
+    // await getColors(accessToken);
     await getAssessmentDetails(ITEM?.id, accessToken);
     setIsLoading(false);
   };
-
-  // useEffect(()=>{
-  //   if(ranges.length>0){
-  //       setRanges([...ranges].reverse())
-  //   }
-  // },[reverse])
 
   useEffect(() => {
     setColors(userReducer?.colors);
   }, [userReducer?.colors]);
 
   useEffect(() => {
-    setRanges(userReducer?.assessmentDetails?.assessment_scoring.reverse());
+    // setRanges(userReducer?.assessmentDetails?.assessment_scoring.reverse());
   }, [userReducer?.assessmentDetails]);
 
-  // useEffect(() => {
-  //   // alert(JSON.stringify({
-  //   //   assessment_id: ITEM?.id,
-  //   //   participant_id: Uservalue.id
-  //   // }))
-  //   if (Uservalue.Firstname) {
-  //     setIsLoading(true)
-  //     axios.post('https://webprojectmockup.com/custom/spectrum-8-v2/api/participantCount', {
-  //       assessment_id: ITEM?.id,
-  //       participant_id: Uservalue.id,
-  //       event_id: Event.id
-  //     }).then((res) => {
-  //       // alert(JSON.stringify(res.data))
-  //       setIsLoading(false)
-  //       if (res.data?.data > 2) {
-  //         setErrorModal(true)
-  //       }
-  //     }).catch((Err)=>{
-  //       setIsLoading(false)
-  //       console.log(Err)
-  //       // alert(JSON.stringify(Err))
-  //     })
-  //   }
-  // }, [Uservalue])
 
   function nextCandidate() {
     const newIndex = Uservalue.index + 1
@@ -181,8 +251,6 @@ const GradingSystem = ({
       event_id: Event.id
     };
     setIsLoading(true);
-    // console.log(JSON.stringify(apiData, null, 2));
-    // console.log("+++++++++++++++++=", userReducer?.assessmentDetails?.id);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -207,37 +275,13 @@ const GradingSystem = ({
       navigation.navigate('home');
     }
   };
-  // var RangeValue = parseInt(ranges[0]?.MaxValue);
 
-  // console.log("first",ranges[0].MaxValue)
-
-  // const findResult = () => {
-  //   if (score > parseInt(ranges[0]?.MaxValue)) {
-  //     setResultColor(colors[0]?.WebColor);
-  //   } else if (score > parseInt(ranges[1]?.MaxValue)) {
-  //     setResultColor(colors[7]?.WebColor);
-  //   } else if (score > parseInt(ranges[2]?.MaxValue)) {
-  //     setResultColor(colors[6]?.WebColor);
-  //   } else if (score > parseInt(ranges[3]?.MaxValue)) {
-  //     setResultColor(colors[5]?.WebColor);
-  //   } else if (score > parseInt(ranges[4]?.MaxValue)) {
-  //     setResultColor(colors[4]?.WebColor);
-  //   } else if (score > parseInt(ranges[5]?.MaxValue)) {
-  //     setResultColor(colors[3]?.WebColor);
-  //   } else if (score > parseInt(ranges[6]?.MaxValue)) {
-  //     setResultColor(colors[2]?.WebColor);
-  //   } else if (score > parseInt(ranges[7]?.MaxValue)) {
-  //     setResultColor(colors[1]?.WebColor);
-  //   } else {
-  //     setResultColor(colors[0]?.WebColor);
-  //   }
-  // };
 
   const RenderMembersData = ({ item, index }) => (
     <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
       {/* {console.log(Memebers)} */}
       <TouchableOpacity
-        style={{ flexDirection: "row", alignItems: "center",flex:1,marginRight:10  }}
+        style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
         disabled={item.disable}
         onPress={() => {
           setResultvalue({})
@@ -288,12 +332,12 @@ const GradingSystem = ({
         </View>
       )}
       <Image
-        style={{ height: height * .095, width: width / 6,  resizeMode: "contain" }}
+        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
         source={{
           uri:
             item.image === null
-              ? 'https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/error.png'
-              : `https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/${item.image}`,
+              ? 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png'
+              : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`,
         }}
       />
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
@@ -301,29 +345,29 @@ const GradingSystem = ({
      </Text> */}
     </TouchableOpacity>
   );
-  console.log("=============================", Resultvalue, !Resultvalue.id ? 1 : .5);
+
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-                  <Modal
+        <Modal
           visible={errorModal}
           transparent={true}
           style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
         >
           <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40, flex: 1 }}>
-            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10,padding:10 }}>
-              
-            <Text style={{ textAlign: 'center',fontSize:20,color:'black',marginBottom:10 }}>
-                  {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
-                </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
-                </Text>
+            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10, padding: 10 }}>
+
+              <Text style={{ textAlign: 'center', fontSize: 20, color: 'black', marginBottom: 10 }}>
+                {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+              </Text>
+              <Text style={{ textAlign: 'center' }}>
+                {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
+              </Text>
               <TouchableOpacity
-              style={{backgroundColor:'black',padding:5,borderRadius:20,paddingHorizontal:40,marginTop:20}}
+                style={{ backgroundColor: 'black', padding: 5, borderRadius: 20, paddingHorizontal: 40, marginTop: 20 }}
                 onPress={() => {
                   setErrorModal(false)
 
@@ -337,190 +381,98 @@ const GradingSystem = ({
                   }
                 }}
               >
-                <Text style={{color:'white'}}>Next</Text>
+                <Text style={{ color: 'white' }}>Next</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
-          {/* <AwesomeAlert
-          show={errorModal}
-          showProgress={false}
-          title={`${Uservalue.Firstname} ${Uservalue.Lastname}`}
-          message={`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times in a month`}
-          closeOnTouchOutside={false}
-          closeOnHardwareBackPress={false}
-          // showCancelButton={true}
-          showConfirmButton={true}
-          // cancelText="No, cancel"
-          confirmText="Next"
-          confirmButtonColor="#DD6B55"
-          // onCancelPressed={() => {
-          //   setErrorModal(false)
-          // }}
-          onConfirmPressed={() => {
-            setErrorModal(false)
-
-            const newIndex = Uservalue.index + 1
-
-            if (newIndex < Memebers.length) {
-              nextCandidate()
-            } else {
-              navigation.navigate('home');
-
-            }
-          }}
-        /> */}
-       <ScrollView style={{flexGrow:1}}>
-       <View>
-          <Heading
-            title={ITEM?.Name}
-            passedStyle={styles.headingStyles}
-            fontType="semi-bold"
-          />
-        </View>
-
-        {/* <Image
-              resizeMode="contain"
-              source={require('../assets/images/logo.png')}
-              style={styles.bgimage}
-            /> */}
-
-        {/* Grade  */}
-        <View
-          style={{
-            height: height * 0.20,
-            width: '95%',
-            backgroundColor: themeDarkBlue,
-            borderRadius: 10,
-            paddingLeft: 20,
-            alignSelf: "center"
-          }}>
-          <FlatList
-          nestedScrollEnabled={true}
-            data={Memebers}
-            renderItem={RenderMembersData}
-            keyExtractor={item => item.id}
-          // scrollEnabled={false}
-          // contentContainerStyle={{
-          //   flexGrow: 1,
-          // }}
-          />
-        </View>
-        {isLoading ? (
-          <View style={{justifyContent:'center',alignItems:'center'}}>
-          <LottieView
-          speed={1}
-          style={styles.lottieStyle}
-          autoPlay
-          loop
-          source={require('../assets/lottie/color-loader.json')}
-        />
-        </View>
-        ) : (
-          <View showsVerticalScrollIndicator={false}>
-            <ScrollView>
-              <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
-                <Heading
-                  title={GROUP_DATA.group?"All":`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
-                  passedStyle={styles.headingStyles2}
-                  fontType="regular"
-                />
-              </View>
-              {/* <TouchableOpacity 
-              onPress={()=>{
-                if(reverse=="red"){
-                  setReverse("white")
-                }else{
-                  setReverse("red")
-                }
-              }}
-              style={[styles.headingStyle2View, { marginTop:0,marginBottom: 20 }]}>
-                <Heading
-                  title={reverse=="red"?'White to Red ---->':'Red to White ---->'}
-                  passedStyle={styles.headingStyles2}
-                  fontType="regular"
-                />
-              </TouchableOpacity> */}
-              {/* Child Name  */}
-              {/* <View style={styles.headingStyle2View}>
-              <Heading
-                title={`${CHILD_DATA?.Firstname} ${CHILD_DATA?.Lastname}`}
-                passedStyle={styles.headingStyles2}
-                fontType="regular"
+        <ScrollView style={{ flexGrow: 1 }}>
+          <View>
+            <Heading
+              title={ITEM?.Name}
+              passedStyle={styles.headingStyles}
+              fontType="semi-bold"
+            />
+          </View>
+          <View
+            style={{
+              height: height * 0.20,
+              width: '95%',
+              backgroundColor: themeDarkBlue,
+              borderRadius: 10,
+              paddingLeft: 20,
+              alignSelf: "center"
+            }}>
+            <FlatList
+              nestedScrollEnabled={true}
+              data={Memebers}
+              renderItem={RenderMembersData}
+              keyExtractor={item => item.id}
+            />
+          </View>
+          {isLoading ? (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <LottieView
+                speed={1}
+                style={styles.lottieStyle}
+                autoPlay
+                loop
+                source={require('../assets/lottie/color-loader.json')}
               />
-            </View> */}
-
-              <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
-                <FlatList
-                  style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
-                  data={ranges}
-                  renderItem={RenderimageDAta}
-                  keyExtractor={item => item.color_sort}
-                  numColumns={4}
-                />
-              </View>
-              {/* <Text>haz,a</Text> */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent:'space-between',
-                  marginVertical:10,
-                  paddingHorizontal:10
-                }}>
-                {/* <TextInput
-                value={score}
-                keyboardType="numeric"
-                placeholder={`Enter Score 0-${Resulting} `}
-                placeholderTextColor={'grey'}
-                style={styles.scoreFieldStyle}
-                onChangeText={text => {
-                  if (parseInt(text) > parseInt(Resulting)) {
-                    showMessage({
-                      type: 'danger',
-                      message: 'Score is exceeding the scale values.',
-                    });
-                    return;
-                  }
-                  setScore(text);
-                }}
-              /> */}
-                         
-
-                {
-                  <TouchableOpacity
-                    onPress={_onPressSave}
-                    style={styles.saveBtnStyle}>
-                    <Heading
-                      title={'SAVE'}
-                      passedStyle={styles.startBtnStyle}
-                      fontType="bold"
-                    />
-                  </TouchableOpacity>
-                }
-                   <TouchableOpacity
-                onPress={() => { setResultvalue({}) }}
-                style={{...styles.saveBtnStyle,backgroundColor:'black'}}
-              >
-                {/* <Image
-                  source={require('../assets/images/black.png')}
+            </View>
+          ) : (
+            <View showsVerticalScrollIndicator={false}>
+              <ScrollView>
+                <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
+                  <Heading
+                    title={GROUP_DATA.group ? "All" : `${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                    passedStyle={styles.headingStyles2}
+                    fontType="regular"
+                  />
+                </View>
+                <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+                  <FlatList
+                    style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
+                    data={ranges}
+                    renderItem={RenderimageDAta}
+                    keyExtractor={item => item.color_sort}
+                    numColumns={4}
+                  />
+                </View>
+                <View
                   style={{
-                    height:height*.1, 
-                    width:width*.185,
-                    marginLeft: width * 0.05,
-                    opacity: Resultvalue.length == 0 ? 1 : .5
-                  }}
-                /> */}
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 10,
+                    paddingHorizontal: 10
+                  }}>
+
+                  {
+                    <TouchableOpacity
+                      onPress={_onPressSave}
+                      style={styles.saveBtnStyle}>
+                      <Heading
+                        title={'SAVE'}
+                        passedStyle={styles.startBtnStyle}
+                        fontType="bold"
+                      />
+                    </TouchableOpacity>
+                  }
+                  <TouchableOpacity
+                    onPress={() => { setResultvalue({}) }}
+                    style={{ ...styles.saveBtnStyle, backgroundColor: 'black' }}
+                  >
                     <Heading
                       title={'N/A'}
                       passedStyle={styles.startBtnStyle}
                       fontType="bold"
                     />
-              </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </View>
-        )}
-       </ScrollView>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
+          )}
+        </ScrollView>
       </ImageBackground>
     </>
   );
