@@ -408,8 +408,9 @@ export const getParticipants = accessToken => async dispatch => {
 
 export const getPastAssessment = (data, accessToken) => async dispatch => {
   // console.log(data);
+  alert(JSON.stringify(data))
   try {
-    const URL = `${apiUrl}/participant/show`;
+    const URL = `${apiUrl}/participant/${data.id}`;
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -417,8 +418,7 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
       },
     };
 
-    const response = await axios.post(URL, data, headers);
-    console.log("ddddd",response)
+    const response = await axios.get(URL,headers);
     if (response.data.success) {
       // console.log(response.data.data, 'Data of past assessment');
       dispatch({
@@ -441,7 +441,7 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
     }
   } catch (err) {
     showMessage({
-      message: 'Network Error',
+      message: 'Network Error1',
       type: 'danger',
     });
     console.log(err?.response?.data?.msg || err?.response?.data?.message);

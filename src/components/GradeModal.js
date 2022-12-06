@@ -91,7 +91,10 @@ const ParticipantFilterModal = ({
   const Event = () => {
     var requestOptions = {
       method: 'GET',
-      redirect: 'follow'
+      redirect: 'follow',
+      headers:{
+        Authorization: `Bearer ${userReducer.accessToken}`
+      }
     };
     fetch(`${baseUrl}/api/event`, requestOptions)
       .then(response => response.json())
@@ -357,7 +360,7 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
                 <Heading
                   passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                  title={selectedEvent?.name?.slice(0,12)+'...' || "Nill"}
+                  title={selectedEvent?.Name?.slice(0,12)+'...' || "Nill"}
                   fontType="medium"
                 />
                 <TouchableOpacity

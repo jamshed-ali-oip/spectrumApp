@@ -73,7 +73,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         groups: action?.payload?.map(group => {
-          return { ...group, grade_id: "1".split(',') }
+          // return { ...group, grade_id: "1".split(',') }
+          return { ...group, grade_id: group.group_grade.map(it=>it.GradeID.toString()) }
           // return { ...group, grade_id: group.grade_id.split(',') }
         })
       };
@@ -99,7 +100,17 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     case GET_PARTICIPANTS_REQUEST:
       return {
         ...state,
-        participants: action.payload,
+        participants: action.payload.map(it=>{
+          console.log("aa",it.GradeID)
+          return{
+            ...it,
+            grade_id:it.GradeID,
+            // group_id:it.,
+            Gender:it.gender.Gender,
+            JerseyColor:it.color.Name,
+            grade_name:it.grade.Name
+          }
+        }),
       };
 
     case GET_PAST_ASSESSMENT:
