@@ -231,24 +231,26 @@ const GradingSystem = ({
   }
 
   const _onPressSave = async () => {
-    let color_id = userReducer?.gameInfo[0]?.color_id;
-    for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
-      if (
-        userReducer?.gameInfo[i]?.MinValue <= score &&
-        userReducer?.gameInfo[i]?.MaxValue >= score
-      ) {
-        color_id = userReducer?.gameInfo[i]?.color_id;
-      }
-    }
+    // let color_id = userReducer?.gameInfo[0]?.color_id;
+    // for (let i = 0; i <= userReducer?.gameInfo?.length; i++) {
+    //   if (
+    //     userReducer?.gameInfo[i]?.MinValue <= score &&
+    //     userReducer?.gameInfo[i]?.MaxValue >= score
+    //   ) {
+    //     color_id = userReducer?.gameInfo[i]?.color_id;
+    //   }
+    // }
     const apiData = {
-      assessment_score_id: Resultvalue.id || 0,
+      event_id: Event.id,
       participant_id: Uservalue?.id,
-      Score: Resultvalue.MaxValue || "0",
+      assessment_id: ITEM?.id,
       grade_id: CHILD_DATA?.grade_id,
-      assessment_id: userReducer?.assessmentDetails?.id,
-      Beep: null,
-      group_id: CHILD_DATA?.group_id,
-      event_id: Event.id
+      gender_id:ITEM.times.GenderID,
+      color_id:1,
+      results:25,
+      dt_recorded:'12-10-22',
+      attempt:1,
+      percent:ITEM.times?.Percent
     };
     setIsLoading(true);
     await submitResult(apiData, accessToken, onSuccess);

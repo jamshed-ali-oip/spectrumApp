@@ -85,6 +85,8 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
 export const getAssessments = accessToken => async dispatch => {
   try {
     const URL = `${apiUrl}/assessment`;
+    const URL2 = `${apiUrl}/ninty_five`;
+
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -93,10 +95,12 @@ export const getAssessments = accessToken => async dispatch => {
     };
 
     const response = await axios.get(URL, headers);
+    const response2 = await axios.get(URL2, headers);
+
     if (response.data.success) {
       dispatch({
         type: GET_ASSESSMENTS_REQUEST,
-        payload: response.data.data,
+        payload: response.data.data.map((it,i)=>({...it,times:response2.data.data[i]})),
       });
     } else {
       dispatch({
@@ -408,7 +412,7 @@ export const getParticipants = accessToken => async dispatch => {
 
 export const getPastAssessment = (data, accessToken) => async dispatch => {
   // console.log(data);
-  alert(JSON.stringify(data))
+  // alert(JSON.stringify(data))
   try {
     const URL = `${apiUrl}/participant/${data.id}`;
     const headers = {

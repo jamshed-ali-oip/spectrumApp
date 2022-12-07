@@ -377,7 +377,7 @@ const GradesScreen = ({
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    if (ITEM?.Type === 'Duration') {
+                    if (ITEM?.assessment_type?.Timed == 1) {
                       navigation?.navigate('timeAssessment', {
                         item: ITEM,
                         childData: { ...item, index },
@@ -385,15 +385,8 @@ const GradesScreen = ({
                         memberData: participants,
                         event: Eventdetails
                       });
-                    } else if (ITEM?.Type === 'Distance') {
-                      navigation?.navigate('scaleScreen', {
-                        item: ITEM,
-                        childData: { ...item, index },
-                        groupData: GROUP_DATA,
-                        memberData: participants,
-                        event: Eventdetails,
-                      });
-                    } else {
+                    }
+                     else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
                         childData: { ...item, index },

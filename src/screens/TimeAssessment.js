@@ -76,7 +76,136 @@ const TimeAssessment = ({
   // const [NA, setNA] = useState(true)
   const [flag, setFlag] = useState(true)
   const [showTextField, setShowTextField] = useState(false);
-  const [ranges, setRanges] = useState([]);
+  const [ranges, setRanges] = useState([
+    {
+      "id": 24,
+      "assessment_id": 3,
+      "color_id": 2,
+      "MinValue": ITEM.times.RL,
+      "MaxValue": ITEM.times.RU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:25:03.000000Z",
+      "image": "red_1660267503.png",
+      "minTime": "0.36",
+      "maxTime": "0.40"
+    },
+    {
+      "id": 23,
+      "assessment_id": 3,
+      "color_id": 7,
+      "MinValue": ITEM.times.BL,
+      "MaxValue": ITEM.times.BU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-09T18:53:30.000000Z",
+      "image": "blue_1660071210.png",
+      "minTime": "0.31",
+      "maxTime": "0.35"
+    },
+    {
+      "id": 22,
+      "assessment_id": 3,
+      "color_id": 14,
+      "MinValue": ITEM.times.GL,
+      "MaxValue": ITEM.times.GU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:24:43.000000Z",
+      "image": "green_1660267483.png",
+      "minTime": "0.26",
+      "maxTime": "0.30"
+    },
+    {
+      "id": 21,
+      "assessment_id": 3,
+      "color_id": 6,
+      "MinValue": ITEM.times.OL,
+      "MaxValue": ITEM.times.OU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:24:21.000000Z",
+      "image": "orange_1660267461.png",
+      "minTime": "0.21",
+      "maxTime": "0.25"
+    },
+    {
+      "id": 20,
+      "assessment_id": 3,
+      "color_id": 8,
+      "MinValue": ITEM.times.PL,
+      "MaxValue": ITEM.times.PU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:24:04.000000Z",
+      "image": "purple_1660267444.png",
+      "minTime": "0.16",
+      "maxTime": "0.20"
+    },
+    {
+      "id": 19,
+      "assessment_id": 3,
+      "color_id": 3,
+      "MinValue": ITEM.times.YL,
+      "MaxValue": ITEM.times.YU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-09T18:54:29.000000Z",
+      "image": "yellow_1660071269.png",
+      "minTime": "0.11",
+      "maxTime": "0.15"
+    },
+    {
+      "id": 18,
+      "assessment_id": 3,
+      "color_id": 4,
+      "MinValue": ITEM.times.PL,
+      "MaxValue": ITEM.times.PU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:23:39.000000Z",
+      "image": "pink_1660267419.png",
+      "minTime": "0.06",
+      "maxTime": "0.10"
+    },
+    {
+      "id": 17,
+      "assessment_id": 3,
+      "color_id": 13,
+      "MinValue": ITEM.times.WL,
+      "MaxValue": ITEM.times.WU,
+      "Duration": "00:00:00",
+      "Beep": null,
+      "Distance": null,
+      "Score_target": "Duration",
+      "created_at": "2022-06-21T02:12:57.000000Z",
+      "updated_at": "2022-08-12T01:23:18.000000Z",
+      "image": "white_1660267398.png",
+      "minTime": "0.01",
+      "maxTime": "0.05"
+    }
+  ]);
   const [highscore, sethighscore] = useState();
   const [player, setPlayer] = useState({})
   const [players, setPlayers] = useState([])
@@ -143,17 +272,17 @@ const TimeAssessment = ({
 
 
   useEffect(() => {
-    axios.post(`https://webprojectmockup.com/custom/spectrum-8-v2/api/percentile`, {
-      assessment_id: ITEM?.id
-    },{
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userReducer.accessToken}`,
-      }
-    }).then(res => {
-      // alert(JSON.stringify(res.data.data))
-      setPlayers(res.data.data)
-    })
+    // axios.post(`https://webprojectmockup.com/custom/spectrum-8-v2/api/percentile`, {
+    //   assessment_id: ITEM?.id
+    // },{
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${userReducer.accessToken}`,
+    //   }
+    // }).then(res => {
+    //   // alert(JSON.stringify(res.data.data))
+    //   setPlayers(res.data.data)
+    // })
   }, [])
 
   useEffect(() => {
@@ -165,30 +294,37 @@ const TimeAssessment = ({
   }, [Uservalue, players])
 
   useEffect(() => {
-    // alert(JSON.stringify({per:"0.0" + Math.round(Number(player?.percent)),secs}))
-    const per = Math.round(Number(player?.percent))
-    const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
-    // console.log("sec",secs);
-    const seletedCheck=ranges.filter((it)=>it.minTime==secs)
-    if(seletedCheck.length>0){
-      setResultvalue(seletedCheck[0])
-    }
-    if (Number(secs) == value) {
-      // alert("Beeeeeeeep");
-      playSound()
+    // const per = Math.round(Number(player?.percent))
+    // const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
+    // const seletedCheck=ranges.filter((it)=>it.minTime==secs)
+    // if(seletedCheck.length>0){
+    //   setResultvalue(seletedCheck[0])
+    // }
+    // if (Number(secs) == value) {
+    //   playSound()
+    // }
+    console.log(secs)
+    if(secs){
+      ranges.forEach(it=>{
+        if(secs>=(it.MinValue/100) && secs<=(it.MaxValue/100)){
+          setResultvalue(it)
+        }
+      })
     }
   }, [secs])
   // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
 
   const apiData = {
-    assessment_score_id: Resultvalue.id || 0,
+    event_id: Event.id,
     participant_id: Uservalue?.id,
-    Score: Resultvalue.MaxValue || "0",
-    grade_id: CHILD_DATA?.grade_id,
     assessment_id: ITEM?.id,
-    Duration: secs,
-    group_id: CHILD_DATA?.group_id,
-    event_id: Event.id
+    grade_id: CHILD_DATA?.grade_id,
+    gender_id:ITEM.times.GenderID,
+    color_id:1,
+    results:25,
+    dt_recorded:'12-10-22',
+    attempt:1,
+    percent:ITEM.times?.Percent
   };
   // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
   const [timer, setTimer] = useState({
@@ -293,53 +429,53 @@ const TimeAssessment = ({
     // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
   }, [secs]);
 
-  const findScoreNow = () => {
-    // console.log("color id",color_id)
-    const thisGameScorePeers = userReducer?.gameInfo?.filter(
-      game => game.assessment_id == 8,
-    );
-    let color_id = thisGameScorePeers[0]?.color_id;
-    for (const thisGame of thisGameScorePeers) {
-      // console.log('YYYYYYY', thisGame, color_id);
-      if (thisGame?.MinValue <= secs && thisGame?.MaxValue >= secs) {
-        color_id = thisGame?.color_id;
-        setAssessmentScoreId(thisGame?.id);
-      }
-    }
-    for (let i = 8; i <= userReducer?.gameInfo?.length; i++) {
-      if (
-        userReducer?.gameInfo[i]?.MinValue <= secs &&
-        userReducer?.gameInfo[i]?.MaxValue >= secs
-      ) {
-        color_id = userReducer?.gameInfo[i]?.color_id;
-        setAssessmentScoreId(userReducer?.gameInfo[i]?.id);
-      }
-    }
-    // if (color_id === 1) {
-    //   setMeterValue(5);
-    // } else if (color_id === 2) {
-    //   setMeterValue(15);
-    // } else if (color_id === 3) {
-    //   setMeterValue(25);
-    // } else if (color_id === 4) {
-    //   setMeterValue(35);
-    // } else if (color_id === 5) {
-    //   setMeterValue(45);
-    // } else if (color_id === 6) {
-    //   setMeterValue(55);
-    // } else if (color_id === 7) {
-    //   setMeterValue(65);
-    // } else if (color_id === 8) {
-    //   setMeterValue(75);
-    // } else if (color_id === 9) {
-    //   setMeterValue(85);
-    // } else {
-    //   setMeterValue(95);
-    // }
-  };
+  // const findScoreNow = () => {
+  //   // console.log("color id",color_id)
+  //   const thisGameScorePeers = userReducer?.gameInfo?.filter(
+  //     game => game.assessment_id == 8,
+  //   );
+  //   let color_id = thisGameScorePeers[0]?.color_id;
+  //   for (const thisGame of thisGameScorePeers) {
+  //     // console.log('YYYYYYY', thisGame, color_id);
+  //     if (thisGame?.MinValue <= secs && thisGame?.MaxValue >= secs) {
+  //       color_id = thisGame?.color_id;
+  //       setAssessmentScoreId(thisGame?.id);
+  //     }
+  //   }
+  //   for (let i = 8; i <= userReducer?.gameInfo?.length; i++) {
+  //     if (
+  //       userReducer?.gameInfo[i]?.MinValue <= secs &&
+  //       userReducer?.gameInfo[i]?.MaxValue >= secs
+  //     ) {
+  //       color_id = userReducer?.gameInfo[i]?.color_id;
+  //       setAssessmentScoreId(userReducer?.gameInfo[i]?.id);
+  //     }
+  //   }
+  //   // if (color_id === 1) {
+  //   //   setMeterValue(5);
+  //   // } else if (color_id === 2) {
+  //   //   setMeterValue(15);
+  //   // } else if (color_id === 3) {
+  //   //   setMeterValue(25);
+  //   // } else if (color_id === 4) {
+  //   //   setMeterValue(35);
+  //   // } else if (color_id === 5) {
+  //   //   setMeterValue(45);
+  //   // } else if (color_id === 6) {
+  //   //   setMeterValue(55);
+  //   // } else if (color_id === 7) {
+  //   //   setMeterValue(65);
+  //   // } else if (color_id === 8) {
+  //   //   setMeterValue(75);
+  //   // } else if (color_id === 9) {
+  //   //   setMeterValue(85);
+  //   // } else {
+  //   //   setMeterValue(95);
+  //   // }
+  // };
   useEffect(() => {
     // setRanges(userReducer?.assessmentDetails?.assessment_scoring);
-    setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
+    // setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
     // setRanges(Value);
   }, [userReducer?.gameInfo]);
 
@@ -837,7 +973,7 @@ const TimeAssessment = ({
                       checkGame(false);
                       toggleStopwatch();
                       setHasTimerStarted(false);
-                      findScoreNow();
+                      // findScoreNow();
                       setShowTextField(true);
                     }}
                     style={{ ...styles.startBtnContainer, backgroundColor: themeRed, }}>
@@ -1109,7 +1245,7 @@ const TimeAssessment = ({
 
         source={{
           uri:
-            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8-v2/public/images/assessment_image/scoring/${item.image}`
+            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
         }}
       />
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>

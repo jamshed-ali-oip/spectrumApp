@@ -433,7 +433,7 @@ const ParticipantFilterModal = ({
                 </TouchableOpacity>
                 <Heading
                   passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                  title={selectedGroupsData[counter]?.Name || "Unknow"}
+                  title={selectedGroupsData[counter]?.Name || "Unavailable"}
                   fontType="medium"
                 />
 

@@ -95,7 +95,10 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
           </Text>
         </TouchableOpacity>
         <View style={{flex:1}}>
-          <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>App Version: {deviceInfo.getVersion()}</Text>
+          <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
+            App Version: 2.0
+            {/* {deviceInfo.getVersion()} */}
+            </Text>
         </View>
         {/* <Button
           title={'RUN AN ASSESSMENT'}
