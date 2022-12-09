@@ -99,65 +99,34 @@ const GradesScreen = ({
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    SET_GROUP_DATA({...data.GROUP_DATA,group:data.allGroud})
+    SET_GROUP_DATA({ ...data.GROUP_DATA, group: data.allGroud })
     // console.log("eevent datacon screen/////",)
     setEventdetails(data.event)
-    if (data.gender == "Both") {
-      if (data.gradeAll) {
-        if (data.allGroud) {
-          setParticipants(userReducer.participants)
-        } else {
-          const filtered = userReducer.participants.filter((participant) => {
-            return participant.group_id == data.group_id
-          });
-          setParticipants(filtered)
-        }
-      } else {
-        // alert("done2")
-
+    // alert(JSON.stringify({
+    //   gender:data.gender.GenderID
+    // }))
+    if (data.group=="All" || (data.gender=="All" && data.grade=="All")) {
+      setParticipants(userReducer.participants)
+    } else {
+      if(data.grade=="All" && data.gender!="All"){
         const filtered = userReducer.participants.filter((participant) => {
-          if (data.allGroud) {
-            return participant.grade_id == data.grade_id
-          } else {
-            return participant.group_id == data.group_id && participant.grade_id == data.grade_id
-          }
+          return participant.GenderID == data.grade.GradeID
         });
         setParticipants(filtered)
       }
-    } else {
-      if (data.gradeAll) {
-        // alert("done3")
-        if (data.allGroud) {
-          setParticipants(userReducer.participants)
-        } else {
-          const filtered = userReducer.participants.filter((participant) => {
-            return (
-              participant.group_id == data.group_id &&
-              participant.Gender == data.gender
-            )
-          });
-          setParticipants(filtered)
-        }
-      } else {
-        // alert("done4")
-
+      else if(data.grade!="All" && data.gender=="All"){
         const filtered = userReducer.participants.filter((participant) => {
-          if (data.allGroud) {
-            return (
-              participant.grade_id == data.grade_id &&
-              participant.Gender == data.gender
-            )
-          } else {
-            return (
-              participant.group_id == data.group_id &&
-              participant.grade_id == data.grade_id &&
-              participant.Gender == data.gender
-            )
-          }
+          return participant.GradeID == data.gender.GenderID
+        });
+        setParticipants(filtered)
+      }else{
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.GradeID == data.gender.GenderID && participant.GenderID == data.grade.GradeID
         });
         setParticipants(filtered)
       }
     }
+
     setIsLoading(false);
   };
 
@@ -386,7 +355,7 @@ const GradesScreen = ({
                         event: Eventdetails
                       });
                     }
-                     else {
+                    else {
                       navigation?.navigate('gradingScreen', {
                         item: ITEM,
                         childData: { ...item, index },

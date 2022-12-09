@@ -6,6 +6,41 @@ import { imageUrl } from '../config';
 import { connect } from 'react-redux';
 const { width, height } = Dimensions.get('window');
 
+const colors=[
+  {
+    id:1,
+    color:"red"
+  },
+  {
+    id:2,
+    color:"blue"
+  },
+  {
+    id:3,
+    color:"green"
+  },
+  {
+    id:4,
+    color:"orange"
+  },
+  {
+    id:5,
+    color:"violet"
+  },
+  {
+    id:6,
+    color:"yellow"
+  },
+  {
+    id:7,
+    color:"pink"
+  },
+  {
+    id:8,
+    color:"white"
+  },
+]
+
 const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
   // const colors_reversed = colors.reverse();
 
@@ -16,15 +51,13 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
   //     : userReducer?.colors.reverse();
 
   // console.log("assessment_scoring", item?.id, item?.assessment_id, item?.assessments[0]?.assessment_scoring);
-  console.log("tt",pastAssessment)
+  // console.log("tt",pastAssessment)
 
   function getGames(id, forDate) {
-    const filterPast = pastAssessment.filter(it => it.assessment_id == id)
-    const withColor = filterPast.map(it => {
-      const color = it?.assessments[0]?.assessment_scoring.filter(it2 => (it2.MinValue == it.Score || it2.MaxValue == it.Score))[0]
+    const withColor = [...pastAssessment].map(it=>{
       return {
         ...it,
-        color
+        color:colors.filter(itSub=>itSub.id==it.ColorID)[0].color
       }
     })
     if (forDate) {
@@ -71,7 +104,7 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
         />
 
         <Heading
-          title={getGames(item.id, true)[0]?(getGames(item.id, true)[0]?.participant_event_result?.name):"----"}
+          title={new Date(pastAssessment[0]?.created_at).toDateString()}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />
@@ -82,7 +115,7 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
             <View
               key={i}
               style={{
-                backgroundColor: it == "gray" ? "gray" : (getColor(it.color?.color_id) ? getColor(it.color?.color_id) : "black"),
+                backgroundColor: it == "gray" ? "gray" : (it.color? it.color : "black"),
                 borderRadius: 9,
                 padding: width * 0.02,
                 marginLeft: 3,

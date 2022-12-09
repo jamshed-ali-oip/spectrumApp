@@ -80,7 +80,7 @@ const TimeAssessment = ({
     {
       "id": 24,
       "assessment_id": 3,
-      "color_id": 2,
+      "color_id": 1,
       "MinValue": ITEM.times.RL,
       "MaxValue": ITEM.times.RU,
       "Duration": "00:00:00",
@@ -96,7 +96,7 @@ const TimeAssessment = ({
     {
       "id": 23,
       "assessment_id": 3,
-      "color_id": 7,
+      "color_id": 2,
       "MinValue": ITEM.times.BL,
       "MaxValue": ITEM.times.BU,
       "Duration": "00:00:00",
@@ -112,7 +112,7 @@ const TimeAssessment = ({
     {
       "id": 22,
       "assessment_id": 3,
-      "color_id": 14,
+      "color_id": 3,
       "MinValue": ITEM.times.GL,
       "MaxValue": ITEM.times.GU,
       "Duration": "00:00:00",
@@ -128,7 +128,7 @@ const TimeAssessment = ({
     {
       "id": 21,
       "assessment_id": 3,
-      "color_id": 6,
+      "color_id": 4,
       "MinValue": ITEM.times.OL,
       "MaxValue": ITEM.times.OU,
       "Duration": "00:00:00",
@@ -144,7 +144,7 @@ const TimeAssessment = ({
     {
       "id": 20,
       "assessment_id": 3,
-      "color_id": 8,
+      "color_id": 5,
       "MinValue": ITEM.times.PL,
       "MaxValue": ITEM.times.PU,
       "Duration": "00:00:00",
@@ -160,7 +160,7 @@ const TimeAssessment = ({
     {
       "id": 19,
       "assessment_id": 3,
-      "color_id": 3,
+      "color_id": 6,
       "MinValue": ITEM.times.YL,
       "MaxValue": ITEM.times.YU,
       "Duration": "00:00:00",
@@ -176,7 +176,7 @@ const TimeAssessment = ({
     {
       "id": 18,
       "assessment_id": 3,
-      "color_id": 4,
+      "color_id": 7,
       "MinValue": ITEM.times.PL,
       "MaxValue": ITEM.times.PU,
       "Duration": "00:00:00",
@@ -192,7 +192,7 @@ const TimeAssessment = ({
     {
       "id": 17,
       "assessment_id": 3,
-      "color_id": 13,
+      "color_id": 8,
       "MinValue": ITEM.times.WL,
       "MaxValue": ITEM.times.WU,
       "Duration": "00:00:00",
@@ -318,9 +318,9 @@ const TimeAssessment = ({
     event_id: Event.id,
     participant_id: Uservalue?.id,
     assessment_id: ITEM?.id,
-    grade_id: CHILD_DATA?.grade_id,
+    grade_id: CHILD_DATA?.GradeID,
     gender_id:ITEM.times.GenderID,
-    color_id:1,
+    color_id:Resultvalue.color_id,
     results:25,
     dt_recorded:'12-10-22',
     attempt:1,

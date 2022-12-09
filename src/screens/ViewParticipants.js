@@ -84,8 +84,8 @@ const ViewParticipants = ({
     // getParticipants(accessToken)
     setIsLoading(true);
     await getPastAssessment(apiData, accessToken);
-    await getAssessments(accessToken)
-    await getColors(accessToken);
+    // await getAssessments(accessToken)
+    // await getColors(accessToken);
     setIsLoading(false);
   };
 
@@ -441,11 +441,11 @@ const ViewParticipants = ({
             //     )
             //   );
             // }}
-            data={userReducer?.assessments}
+            data={pastAssessments}
             keyExtractor={({ item, index }) => item?.id?.toString()}
             contentContainerStyle={{ paddingBottom: height * 0.1 }}
             renderItem={({ item, index }) => (
-              <ParticipantsMapper item={item} index={index} pastAssessment={pastAssessments} />
+              <ParticipantsMapper item={item} index={index} pastAssessment={item.participant_results} />
 
             )}
           />

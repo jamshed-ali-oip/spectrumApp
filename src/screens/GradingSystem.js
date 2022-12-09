@@ -30,7 +30,7 @@ const r = [
   {
     "id": 24,
     "assessment_id": 3,
-    "color_id": 2,
+    "color_id": 1,
     "MinValue": "71",
     "MaxValue": "80",
     "Duration": "00:00:00",
@@ -46,7 +46,7 @@ const r = [
   {
     "id": 23,
     "assessment_id": 3,
-    "color_id": 7,
+    "color_id": 2,
     "MinValue": "61",
     "MaxValue": "70",
     "Duration": "00:00:00",
@@ -62,7 +62,7 @@ const r = [
   {
     "id": 22,
     "assessment_id": 3,
-    "color_id": 14,
+    "color_id": 3,
     "MinValue": "51",
     "MaxValue": "60",
     "Duration": "00:00:00",
@@ -78,7 +78,7 @@ const r = [
   {
     "id": 21,
     "assessment_id": 3,
-    "color_id": 6,
+    "color_id": 4,
     "MinValue": "41",
     "MaxValue": "50",
     "Duration": "00:00:00",
@@ -94,7 +94,7 @@ const r = [
   {
     "id": 20,
     "assessment_id": 3,
-    "color_id": 8,
+    "color_id": 5,
     "MinValue": "31",
     "MaxValue": "40",
     "Duration": "00:00:00",
@@ -110,7 +110,7 @@ const r = [
   {
     "id": 19,
     "assessment_id": 3,
-    "color_id": 3,
+    "color_id": 6,
     "MinValue": "21",
     "MaxValue": "30",
     "Duration": "00:00:00",
@@ -126,7 +126,7 @@ const r = [
   {
     "id": 18,
     "assessment_id": 3,
-    "color_id": 4,
+    "color_id": 7,
     "MinValue": "11",
     "MaxValue": "20",
     "Duration": "00:00:00",
@@ -142,7 +142,7 @@ const r = [
   {
     "id": 17,
     "assessment_id": 3,
-    "color_id": 13,
+    "color_id": 8,
     "MinValue": "1",
     "MaxValue": "10",
     "Duration": "00:00:00",
@@ -244,14 +244,15 @@ const GradingSystem = ({
       event_id: Event.id,
       participant_id: Uservalue?.id,
       assessment_id: ITEM?.id,
-      grade_id: CHILD_DATA?.grade_id,
-      gender_id:ITEM.times.GenderID,
-      color_id:1,
+      grade_id: CHILD_DATA?.GradeID,
+      gender_id:CHILD_DATA.GenderID,
+      color_id:Resultvalue.color_id,
       results:25,
       dt_recorded:'12-10-22',
       attempt:1,
-      percent:ITEM.times?.Percent
+      percent:5
     };
+    // alert(JSON.stringify(apiData))
     setIsLoading(true);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);

@@ -100,7 +100,14 @@ export const getAssessments = accessToken => async dispatch => {
     if (response.data.success) {
       dispatch({
         type: GET_ASSESSMENTS_REQUEST,
-        payload: response.data.data.map((it,i)=>({...it,times:response2.data.data[i]})),
+        payload: response.data.data.map((it,i)=>{
+          const d=response2.data.data.find(({AssessmentID})=>AssessmentID==it.id)
+          if(d){
+            return {...it,times:d}
+          }else{
+            return it
+          }
+        }),
       });
     } else {
       dispatch({
@@ -414,7 +421,7 @@ export const getPastAssessment = (data, accessToken) => async dispatch => {
   // console.log(data);
   // alert(JSON.stringify(data))
   try {
-    const URL = `${apiUrl}/participant/${data.id}`;
+    const URL = `${apiUrl}/assessment_results_participant/${data.id}`;
     const headers = {
       headers: {
         'Content-Type': 'application/json',
