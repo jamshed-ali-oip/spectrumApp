@@ -241,7 +241,7 @@ const GradingSystem = ({
     //   }
     // }
     const apiData = {
-      event_id: Event.id,
+      event_id: 1,
       participant_id: Uservalue?.id,
       assessment_id: ITEM?.id,
       grade_id: CHILD_DATA?.GradeID,

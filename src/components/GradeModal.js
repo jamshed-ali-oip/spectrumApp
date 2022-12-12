@@ -331,9 +331,9 @@ const ParticipantFilterModal = ({
                     onBtnPress={() => {
                       if (onPress) {
                         setFields({
-                          gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0].gender.Name,
+                          gender: allGender ||allGroud ? "All" : selectedGroupsData[counter]?.group_gender[0].gender.Gender,
                           group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
-                          grade: allGender ? "All" : selectedGroupsData[counter]?.group_grade[0].grade.Name,
+                          grade: allGrade || allGroud ? "All" : selectedGroupsData[counter]?.group_grade[0].grade.Name,
                         })
                         onPress({
                           gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0],

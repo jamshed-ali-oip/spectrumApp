@@ -29,7 +29,7 @@ import ColoredFlatlist from '../components/ColoredFlatlist';
 import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
-import ParticipantFilterModal from '../components/ParticipantFilterModal';
+import ParticipantFilterModal from '../components/GradeModal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -48,6 +48,9 @@ const ParticipantsScreen = ({
   const [group, setGroup] = useState("All");
   const [grade, setGrade] = useState("All");
   const [participants, setParticipants] = useState([]);
+  const [fields, setFields] = useState({})
+  const [gender, setGender] = useState("all")
+
 
   // console.log('====================================');
   // console.log(userReducer);
@@ -99,24 +102,29 @@ const ParticipantsScreen = ({
     // console.log("selected Gender", data.gender);
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
-    // console.log("participants", participants)
     setIsLoading(true);
-    // SET_GROUP_DATA(data.GROUP_DATA)
-    if (data.gender == "Both") {
-      const filtered = userReducer.participants.filter((participant) => {
-        return participant.group_id == data.group_id && participant.grade_id == data.grade_id
-      });
-      setParticipants(filtered)
+    if (data.group == "All" || (data.gender == "All" && data.grade == "All")) {
+      setParticipants(userReducer.participants)
     } else {
-      const filtered = userReducer.participants.filter((participant) => {
-        return (
-          participant.group_id == data.group_id &&
-          participant.grade_id == data.grade_id &&
-          participant.Gender == data.gender
-        )
-      });
-      setParticipants(filtered)
+      if (data.grade == "All" && data.gender != "All") {
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.GenderID == data.grade.GradeID
+        });
+        setParticipants(filtered)
+      }
+      else if (data.grade != "All" && data.gender == "All") {
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.GradeID == data.gender.GenderID
+        });
+        setParticipants(filtered)
+      } else {
+        const filtered = userReducer.participants.filter((participant) => {
+          return participant.GradeID == data.gender.GenderID && participant.GenderID == data.grade.GradeID
+        });
+        setParticipants(filtered)
+      }
     }
+
     setIsLoading(false);
   };
 
@@ -190,59 +198,66 @@ const ParticipantsScreen = ({
                   />
                 </TouchableOpacity>
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View style={styles.filterLabelViewStyle}>
-                  <Heading
-                    title="Filter"
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Grade - "
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <Heading
-                    title={grade}
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Group - "
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <Heading
-                    title={group}
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                  <Heading
-                    title="Gender - "
-                    passedStyle={styles.filterLabelStyle}
-                    fontType="regular"
-                  />
-                  <Heading
-                    title={selectedGender}
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                </View>
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
+
+                  <View style={styles.filterLabelViewStyle}>
+                    <Heading
+                      title="Groups - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.group?fields.group:"All"}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+
+                    <Heading
+                      title="Grade - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.grade?fields.grade:"All"}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    <Heading
+                      title="Gender - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.gender?fields.gender:"All"}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                    {/* <Heading
+                      title={`${GROUP_DATA?.Name} - ${selectedGender}`}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    /> */}
+                  </View>
                 </ScrollView>
 
                 {/* Colors  */}
@@ -313,17 +328,29 @@ const ParticipantsScreen = ({
           />
         )}
 
-        {showFilterModal &&(
+        {
+          showFilterModal && (
+            <ParticipantFilterModal
+              isModalVisible={showFilterModal}
+              setIsModalVisible={setShowFilterModal}
+              onPress={filterParticipants}
+              showLoader={isLoading}
+              setFields={setFields}
+              setGender={setGender}
+            />
+          )
+        }
+        {/* {showFilterModal && (
           <ParticipantFilterModal
-          isModalVisible={showFilterModal}
-          setIsModalVisible={setShowFilterModal}
-          onPress={filterParticipants}
-          showLoader={isLoading}
-          setSelectedGender1={setSelectedGender}
-          setGrade1={setGrade}
-          setGroup1={setGroup}
-        />
-        )}
+            isModalVisible={showFilterModal}
+            setIsModalVisible={setShowFilterModal}
+            onPress={filterParticipants}
+            showLoader={isLoading}
+            setSelectedGender1={setSelectedGender}
+            setGrade1={setGrade}
+            setGroup1={setGroup}
+          />
+        )} */}
       </ImageBackground>
     </>
   );

@@ -263,16 +263,16 @@ const GradesScreen = ({
                       passedStyle={styles.rightIconStyle}
                     />
 
-                    <Heading
+                    {/* <Heading
                       title="Event - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
-                    />
-                    <Heading
+                    /> */}
+                    {/* <Heading
                       title={fields.event}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
-                    />
+                    /> */}
 
                     <IconComp
                       iconName={'chevron-right'}
