@@ -28,6 +28,7 @@ import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import ParticipantFilterModal from '../components/GradeModal';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import RNPickerSelect from 'react-native-picker-select';
 
 const { width, height } = Dimensions.get('window');
 
@@ -55,6 +56,7 @@ const GradesScreen = ({
   const [participants, setParticipants] = useState([])
   const [Eventdetails, setEventdetails] = useState([]);
   const [fields, setFields] = useState({})
+  const [sort, setSort] = useState("asc")
   console.log("event detyail on screen", Eventdetails)
   // console.log("GROUP_DATA",GROUP_DATA)
   console.log("participants", participants)
@@ -105,21 +107,21 @@ const GradesScreen = ({
     // alert(JSON.stringify({
     //   gender:data.gender.GenderID
     // }))
-    if (data.group=="All" || (data.gender=="All" && data.grade=="All")) {
+    if (data.group == "All" || (data.gender == "All" && data.grade == "All")) {
       setParticipants(userReducer.participants)
     } else {
-      if(data.grade=="All" && data.gender!="All"){
+      if (data.grade == "All" && data.gender != "All") {
         const filtered = userReducer.participants.filter((participant) => {
           return participant.GenderID == data.grade.GradeID
         });
         setParticipants(filtered)
       }
-      else if(data.grade!="All" && data.gender=="All"){
+      else if (data.grade != "All" && data.gender == "All") {
         const filtered = userReducer.participants.filter((participant) => {
           return participant.GradeID == data.gender.GenderID
         });
         setParticipants(filtered)
-      }else{
+      } else {
         const filtered = userReducer.participants.filter((participant) => {
           return participant.GradeID == data.gender.GenderID && participant.GenderID == data.grade.GradeID
         });
@@ -223,20 +225,33 @@ const GradesScreen = ({
                     />
                   </View>
                 </TouchableOpacity> */}
-                <TouchableOpacity
-                  style={styles.selectFilterStyle}
-                  onPress={() => setShowFilterModal(true)}>
-                  <Heading
-                    title="Select Filter"
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                </TouchableOpacity>
+                <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
+                  <TouchableOpacity
+                    style={styles.selectFilterStyle}
+                    onPress={() => setShowFilterModal(true)}>
+                    <Heading
+                      title="Select Filter"
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
+                    <RNPickerSelect
+                      value={sort}
+                      style={{viewContainer:{marginVertical:0}}}
+                      onValueChange={(value) => setSort(value)}
+                      items={[
+                        { label: 'Asc', value: 'asc' },
+                        { label: 'Des', value: 'des' },
+                      ]}
+                    />
+                  </View>
+                </View>
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
@@ -340,7 +355,13 @@ const GradesScreen = ({
                 <ColoredFlatlist />
               </>
             }
-            data={participants}
+            data={participants.sort((a, b) => {
+              if (sort == "asc") {
+                return a.Firstname - b.Firstname
+              } else {
+                return b.Firstname - a.Firstname
+              }
+            })}
             keyExtractor={({ item, index }) => item?.id?.toString()}
             renderItem={({ item, index }) => {
               return (

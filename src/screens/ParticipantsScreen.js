@@ -27,9 +27,12 @@ import { template } from '@babel/core';
 import IconComp from '../components/IconComp';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import { connect } from 'react-redux';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import ParticipantFilterModal from '../components/GradeModal';
+import RNPickerSelect from 'react-native-picker-select';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,6 +53,8 @@ const ParticipantsScreen = ({
   const [participants, setParticipants] = useState([]);
   const [fields, setFields] = useState({})
   const [gender, setGender] = useState("all")
+  const [sort, setSort] = useState("asc")
+
 
 
   // console.log('====================================');
@@ -182,7 +187,7 @@ const ParticipantsScreen = ({
                     fontType="semi-bold"
                   />
                 </View>
-
+                <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
                 <TouchableOpacity
                   style={styles.selectFilterStyle}
                   onPress={() => setShowFilterModal(true)}>
@@ -197,7 +202,18 @@ const ParticipantsScreen = ({
                     passedStyle={styles.rightIconStyle}
                   />
                 </TouchableOpacity>
-
+                <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
+                    <RNPickerSelect
+                      value={sort}
+                      style={{viewContainer:{marginVertical:0}}}
+                      onValueChange={(value) => setSort(value)}
+                      items={[
+                        { label: 'Asc', value: 'asc' },
+                        { label: 'Des', value: 'des' },
+                      ]}
+                    />
+                  </View>
+                </View>
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
@@ -267,7 +283,13 @@ const ParticipantsScreen = ({
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            data={participants}
+            data={participants.sort((a, b) => {
+              if (sort == "asc") {
+                return a.Firstname - b.Firstname
+              } else {
+                return b.Firstname - a.Firstname
+              }
+            })}
             keyExtractor={({ item, index }) => item?.id?.toString()}
             renderItem={({ item, index }) => {
               return (

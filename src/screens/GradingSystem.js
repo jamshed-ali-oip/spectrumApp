@@ -436,7 +436,7 @@ const GradingSystem = ({
                 <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                   <FlatList
                     style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
-                    data={ranges}
+                    data={ranges.reverse()}
                     renderItem={RenderimageDAta}
                     keyExtractor={item => item.color_sort}
                     numColumns={4}

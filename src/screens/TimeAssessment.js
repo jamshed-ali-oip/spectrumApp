@@ -1233,7 +1233,7 @@ const TimeAssessment = ({
   const RenderimageDAta = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        setResultvalue(item)
+        // setResultvalue(item)
       }} style={{ width:"25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
