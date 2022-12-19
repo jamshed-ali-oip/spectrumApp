@@ -3,8 +3,9 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '13.0'
-$FirebaseSDKVersion = '8.15.0'
-$RNFirebaseAsStaticFramework = true
+pod 'Firebase', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
 
 target 'spectrumApp' do
   config = use_native_modules!
