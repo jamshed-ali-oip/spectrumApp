@@ -290,6 +290,7 @@ const ParticipantsScreen = ({
                 return b.Firstname - a.Firstname
               }
             })}
+            // data={participants}
             keyExtractor={({ item, index }) => item?.id?.toString()}
             renderItem={({ item, index }) => {
               return (

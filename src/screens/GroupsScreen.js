@@ -170,6 +170,7 @@ console.log(ITEM?.Name?.length)
               return (
                 <TouchableOpacity
                   onPress={() => {
+                    // alert(JSON.stringify(item))
                     navigation?.navigate('grades', {
                       item: ITEM,
                       groupData: item,

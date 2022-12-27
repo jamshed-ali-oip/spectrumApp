@@ -881,7 +881,7 @@ const TimeAssessment = ({
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
               <Heading
-                title={GROUP_DATA.group?"All":`${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                title={(GROUP_DATA?.Name)?GROUP_DATA.Name:"All"}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />

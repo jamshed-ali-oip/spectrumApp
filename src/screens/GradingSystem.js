@@ -155,7 +155,7 @@ const r = [
     "minTime": "0.01",
     "maxTime": "0.05"
   }
-]
+].reverse()
 const { width, height } = Dimensions.get('window');
 
 const GradingSystem = ({
@@ -335,7 +335,7 @@ const GradingSystem = ({
         </View>
       )}
       <Image
-        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
+        style={[{ height: height * .095, width: width / 6, resizeMode: "contain" }]}
         source={{
           uri:
             item.image === null
@@ -428,7 +428,8 @@ const GradingSystem = ({
               <ScrollView>
                 <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
                   <Heading
-                    title={GROUP_DATA.group ? "All" : `${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
+                  title={(GROUP_DATA?.Name)?GROUP_DATA.Name:"All"}
+                    // title={GROUP_DATA.group ? "All" : `${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
                     passedStyle={styles.headingStyles2}
                     fontType="regular"
                   />
@@ -436,7 +437,7 @@ const GradingSystem = ({
                 <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
                   <FlatList
                     style={{ marginTop: Platform.OS == "ios" ? 30 : 0 }}
-                    data={ranges.reverse()}
+                    data={ranges}
                     renderItem={RenderimageDAta}
                     keyExtractor={item => item.color_sort}
                     numColumns={4}
