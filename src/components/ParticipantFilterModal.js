@@ -231,7 +231,9 @@ const ParticipantFilterModal = ({
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
-      <Modal isVisible={isModalVisible}>
+      <Modal
+      onBackButtonPress={()=>setIsModalVisible(false)}
+      isVisible={isModalVisible}>
        <View style={styles.container}>
           <ScrollView>
           <View

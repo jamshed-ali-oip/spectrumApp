@@ -26,10 +26,10 @@ import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dim
 const {width, height} = Dimensions.get('window');
 
 const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
-  // const [email, setEmail] = useState('talhakhan105@yahoo.com');
-  // const [password, setPassword] = useState('pVweFkzxTO');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('talhakhan105@yahoo.com');
+  const [password, setPassword] = useState('pVweFkzxTO');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
 
