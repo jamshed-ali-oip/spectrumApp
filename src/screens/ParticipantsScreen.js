@@ -187,25 +187,26 @@ const ParticipantsScreen = ({
                     fontType="semi-bold"
                   />
                 </View>
-                <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
-                <TouchableOpacity
-                  style={styles.selectFilterStyle}
-                  onPress={() => setShowFilterModal(true)}>
-                  <Heading
-                    title="Select Filter"
-                    passedStyle={styles.selectFilterTextStyle}
-                    fontType="semi-bold"
-                  />
-                  <IconComp
-                    iconName={'chevron-right'}
-                    type="Feather"
-                    passedStyle={styles.rightIconStyle}
-                  />
-                </TouchableOpacity>
-                <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: responsiveFontSize(2.5) }}>
+                  <TouchableOpacity
+                    style={styles.selectFilterStyle}
+                    onPress={() => setShowFilterModal(true)}>
+                    <Heading
+                      title="Select Filter"
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+                  </TouchableOpacity>
+                  <View style={{ backgroundColor: 'white', width: 120, borderRadius: responsiveFontSize(1) }}>
                     <RNPickerSelect
                       value={sort}
-                      style={{viewContainer:{marginVertical:0}}}
+                      style={{ viewContainer: { marginVertical: 0 }}}
+                      pickerProps={{style:{color:'black'}}}
                       onValueChange={(value) => setSort(value)}
                       items={[
                         { label: 'Asc', value: 'asc' },
@@ -225,7 +226,7 @@ const ParticipantsScreen = ({
                       fontType="semi-bold"
                     />
                     <Heading
-                      title={fields.group?fields.group:"All"}
+                      title={fields.group ? fields.group : "All"}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -242,7 +243,7 @@ const ParticipantsScreen = ({
                       fontType="semi-bold"
                     />
                     <Heading
-                      title={fields.grade?fields.grade:"All"}
+                      title={fields.grade ? fields.grade : "All"}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -258,7 +259,7 @@ const ParticipantsScreen = ({
                       fontType="semi-bold"
                     />
                     <Heading
-                      title={fields.gender?fields.gender:"All"}
+                      title={fields.gender ? fields.gender : "All"}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -284,11 +285,17 @@ const ParticipantsScreen = ({
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             data={participants.sort((a, b) => {
-              if (sort == "asc") {
-                return a.Firstname - b.Firstname
-              } else {
-                return b.Firstname - a.Firstname
+              const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
+              const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
+              if (nameA < nameB) {
+                return sort=="asc"?-1:1;
               }
+              if (nameA > nameB) {
+                return sort=="asc"?1:-1;
+              }
+
+              // names must be equal
+              return 0;
             })}
             // data={participants}
             keyExtractor={({ item, index }) => item?.id?.toString()}

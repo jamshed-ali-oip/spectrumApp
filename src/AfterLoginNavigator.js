@@ -631,7 +631,7 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('setup');
+                navigation.navigate('home');
               }}
               style={{padding: 10}}
               activeOpacity={0.9}>

@@ -244,6 +244,8 @@ const GradesScreen = ({
                     <RNPickerSelect
                       value={sort}
                       style={{viewContainer:{marginVertical:0}}}
+                      pickerProps={{style:{color:'black'}}}
+                      useNativeAndroidPickerStyle={true}
                       onValueChange={(value) => setSort(value)}
                       items={[
                         { label: 'Asc', value: 'asc' },
@@ -356,11 +358,17 @@ const GradesScreen = ({
               </>
             }
             data={participants.sort((a, b) => {
-              if (sort == "asc") {
-                return a.Firstname - b.Firstname
-              } else {
-                return b.Firstname - a.Firstname
+              const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
+              const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
+              if (nameA < nameB) {
+                return sort=="asc"?-1:1;
               }
+              if (nameA > nameB) {
+                return sort=="asc"?1:-1;
+              }
+
+              // names must be equal
+              return 0;
             })}
             keyExtractor={({ item, index }) => item?.id?.toString()}
             renderItem={({ item, index }) => {

@@ -25,7 +25,7 @@ import deviceInfo from "react-native-device-info"
 const {width, height} = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
 import { ScrollView } from 'react-native-gesture-handler';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions';
 
 const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) => {
   const accessToken = userReducer?.accessToken;
@@ -98,6 +98,9 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
           <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
             App Version: 2.0
             {/* {deviceInfo.getVersion()} */}
+            </Text>
+            <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>
+            Build Number: 1
             </Text>
         </View>
         {/* <Button

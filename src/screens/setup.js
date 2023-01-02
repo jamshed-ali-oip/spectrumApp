@@ -41,7 +41,7 @@ import {
     getFaciliatorInstructions,
   }) => {
     // const accessToken = userReducer.accessToken;
-    const DATA = route.params.data;
+    const DATA = route.params?.data;
     const [isLoading, setIsLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
  
@@ -89,7 +89,7 @@ import {
   
               <Image
                 resizeMode="contain"
-                source={{uri: `${imageUrl}/assessment_image/${DATA.Image}`}}
+                source={{uri: `${imageUrl}/assessment_image/${DATA?.Image}`}}
                 style={{
                   width: width * 0.4,
                   height: height * 0.13,
