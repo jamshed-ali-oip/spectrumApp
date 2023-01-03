@@ -74,7 +74,7 @@ export const loginRequest = (data, onLoginFailed) => async dispatch => {
     }
   } catch (err) {
     showMessage({
-      message:'unauthorized',
+      message:err?.response?.data?.message,
       type: 'danger',
     });
     onLoginFailed();
@@ -661,8 +661,14 @@ export const getFaciliatorInstructions = accessToken => async dispatch => {
   }
 };
 
-export const changeStatus = id => async dispatch => {
-  const res=await axios.post(`${apiUrl}/participant_status`,{id})
+export const changeStatus = (id,accessToken) => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  const res=await axios.post(`${apiUrl}/participant_status`,{id},headers)
   return res
 }
 

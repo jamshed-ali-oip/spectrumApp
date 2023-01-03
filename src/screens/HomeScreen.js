@@ -100,7 +100,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
             {/* {deviceInfo.getVersion()} */}
             </Text>
             <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>
-            Build Number: 1
+            Build Number: 2
             </Text>
         </View>
         {/* <Button

@@ -380,7 +380,7 @@ const ViewParticipants = ({
                       marginLeft: responsiveWidth(4)
                     }}
                     onPress={() => {
-                      changeStatus(DATA.id)
+                      changeStatus(DATA.id,accessToken)
                         .then(res => {
                           getParticipants(accessToken)
                         })

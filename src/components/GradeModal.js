@@ -142,7 +142,7 @@ const ParticipantFilterModal = ({
                 </View>
               )}
             </View>
-            {!allGroud && (
+            {/* {!allGroud && (
               <>
                 <View
                   style={{
@@ -307,7 +307,7 @@ const ParticipantFilterModal = ({
                   )}
                 </View>
               </>
-            )}
+            )} */}
             <View style={styles.flexRow}>
               {showLoader ? (
                 <View style={styles.requestingView}>
