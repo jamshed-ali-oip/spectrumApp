@@ -562,7 +562,8 @@ export const verifyOtp = (data, onFailed, onSuccess) => async dispatch => {
 
     if (response.data.success) {
       showMessage({
-        message: response?.data?.message || response?.data?.msg,
+        // message: response?.data?.message || response?.data?.msg,
+        message:"Otp match successfully",
         type: 'success',
       });
       onSuccess();
@@ -580,7 +581,7 @@ export const verifyOtp = (data, onFailed, onSuccess) => async dispatch => {
   } catch (err) {
     onFailed();
     showMessage({
-      message: 'Network Error',
+      message: 'Enter the Correct OTP, OPT is not Correct',
       type: 'danger',
     });
     console.log(err?.response?.data?.msg || err?.response?.data?.message, err);

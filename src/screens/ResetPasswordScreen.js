@@ -49,7 +49,7 @@ const ResetPasswordScreen = ({
       });
     }  else if (password !== cnfrmPassword) {
       showMessage({
-        message: 'Both New Password and Confirm Password are should be same.',
+        message: 'Both New Password and Confirm Password should be the same',
         type: 'danger',
       });
     }
