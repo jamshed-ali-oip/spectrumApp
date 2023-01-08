@@ -107,23 +107,24 @@ const GradesScreen = ({
     // alert(JSON.stringify({
     //   gender:data.gender.GenderID
     // }))
-    if (data.group == "All" || (data.gender == "All" && data.grade == "All")) {
+    if (data.group == "All" && (data.event == "All")) {
       setParticipants(userReducer.participants)
     } else {
-      if (data.grade == "All" && data.gender != "All") {
+      if (data.event == "All" && data.group != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GenderID == data.grade.GradeID
+          console.log("aa", participant.group_organization.GroupID)
+          return participant.group_organization.GroupID == data.group
         });
         setParticipants(filtered)
       }
-      else if (data.grade != "All" && data.gender == "All") {
+      else if (data.event != "All" && data.group == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GradeID == data.gender.GenderID
+          return participant.event.find(its => its.id == data.event)
         });
         setParticipants(filtered)
       } else {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GradeID == data.gender.GenderID && participant.GenderID == data.grade.GradeID
+          return (participant.group == data.group_organization.GroupID) && (participant.event.find(its => its.id == data.event))
         });
         setParticipants(filtered)
       }
@@ -315,7 +316,7 @@ const GradesScreen = ({
                     />
 
                     <Heading
-                      title="Grade - "
+                      title="Event - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -323,28 +324,6 @@ const GradesScreen = ({
                       title={fields.grade}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
-                    />
-
-                    <IconComp
-                      iconName={'chevron-right'}
-                      type="Feather"
-                      passedStyle={styles.rightIconStyle}
-                    />
-                    <Heading
-                      title="Gender - "
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
-                    <Heading
-                      title={fields.gender}
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
-
-                    <IconComp
-                      iconName={'chevron-right'}
-                      type="Feather"
-                      passedStyle={styles.rightIconStyle}
                     />
                     {/* <Heading
                       title={`${GROUP_DATA?.Name} - ${selectedGender}`}
@@ -357,7 +336,7 @@ const GradesScreen = ({
                 <ColoredFlatlist />
               </>
             }
-            data={participants.sort((a, b) => {
+            data={participants.filter(it=>it.Status==0).sort((a, b) => {
               const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
               const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
               if (nameA < nameB) {

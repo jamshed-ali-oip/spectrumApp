@@ -108,23 +108,25 @@ const ParticipantsScreen = ({
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    if (data.group == "All" || (data.gender == "All" && data.grade == "All")) {
+
+    if (data.group == "All" && (data.event == "All")) {
       setParticipants(userReducer.participants)
     } else {
-      if (data.grade == "All" && data.gender != "All") {
+      if (data.event == "All" && data.group != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GenderID == data.grade.GradeID
+          console.log("aa", participant.group_organization.GroupID)
+          return participant.group_organization.GroupID == data.group
         });
         setParticipants(filtered)
       }
-      else if (data.grade != "All" && data.gender == "All") {
+      else if (data.event != "All" && data.group == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GradeID == data.gender.GenderID
+          return participant.event.find(its => its.id == data.event)
         });
         setParticipants(filtered)
       } else {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.GradeID == data.gender.GenderID && participant.GenderID == data.grade.GradeID
+          return (participant.group == data.group_organization.GroupID) && (participant.event.find(its => its.id == data.event))
         });
         setParticipants(filtered)
       }
@@ -205,8 +207,8 @@ const ParticipantsScreen = ({
                   <View style={{ backgroundColor: 'white', width: 120, borderRadius: responsiveFontSize(1) }}>
                     <RNPickerSelect
                       value={sort}
-                      style={{ viewContainer: { marginVertical: 0 }}}
-                      pickerProps={{style:{color:'black'}}}
+                      style={{ viewContainer: { marginVertical: 0 } }}
+                      pickerProps={{ style: { color: 'black' } }}
                       onValueChange={(value) => setSort(value)}
                       items={[
                         { label: 'Asc', value: 'asc' },
@@ -221,24 +223,7 @@ const ParticipantsScreen = ({
 
                   <View style={styles.filterLabelViewStyle}>
                     <Heading
-                      title="Groups - "
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
-                    <Heading
-                      title={fields.group ? fields.group : "All"}
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
-
-                    <IconComp
-                      iconName={'chevron-right'}
-                      type="Feather"
-                      passedStyle={styles.rightIconStyle}
-                    />
-
-                    <Heading
-                      title="Grade - "
+                      title="Event - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -247,27 +232,21 @@ const ParticipantsScreen = ({
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
-
                     <IconComp
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
                     />
-                    <Heading
-                      title="Gender - "
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
-                    <Heading
-                      title={fields.gender ? fields.gender : "All"}
-                      passedStyle={styles.selectFilterTextStyle}
-                      fontType="semi-bold"
-                    />
 
-                    <IconComp
-                      iconName={'chevron-right'}
-                      type="Feather"
-                      passedStyle={styles.rightIconStyle}
+                    <Heading
+                      title="Groups - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.group ? fields.group : "All"}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
                     />
                     {/* <Heading
                       title={`${GROUP_DATA?.Name} - ${selectedGender}`}
@@ -288,10 +267,10 @@ const ParticipantsScreen = ({
               const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
               const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
               if (nameA < nameB) {
-                return sort=="asc"?-1:1;
+                return sort == "asc" ? -1 : 1;
               }
               if (nameA > nameB) {
-                return sort=="asc"?1:-1;
+                return sort == "asc" ? 1 : -1;
               }
 
               // names must be equal

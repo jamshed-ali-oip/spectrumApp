@@ -14,4 +14,6 @@ export const GET_FILTERED_PARTICIPANTS = 'GET_FILTERED_PARTICIPANTS';
 export const CHECK_GAME = 'CHECK_GAME';
 export const SAVE_SOCKET_REF = 'SAVE_SOCKET_REF';
 export const GET_LOGIN_IMG = 'GET_LOGIN_IMG';
+export const GET_EVENTS = 'GET_EVENTS';
+
 

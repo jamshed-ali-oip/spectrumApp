@@ -24,6 +24,7 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { baseUrl } from '../config';
+import * as actions from "../store/actions"
 import { ScrollView } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 
@@ -34,33 +35,120 @@ const ParticipantFilterModal = ({
   onPress,
   showLoader,
   userReducer,
-  setFields
+  setFields,
+  getEvents,
+  events
 }) => {
   const [counter, setCounter] = useState(0);
   const [counterGe, setCounterGe] = useState(0);
   const [counterGa, setCounterGa] = useState(0);
+  const [counterEvent, setCounterEvent] = useState(0);
+
 
   const [selectedGroupsData, setGroupsData] = useState([]);
   const [allGroud, setAllGroup] = useState(false);
+  const [allEvent, setAllEvent] = useState(false);
+
   const [allGender, allGenderSet] = useState(false);
   const [allGrade, setAllGrade] = useState(false);
-
+  const [loading,setLoading]=useState(false)
 
   useEffect(() => {
+    setLoading(true)
+    getEvents(userReducer?.accessToken).then(()=>setLoading(false))
     if (userReducer?.groups) {
       setGroupsData(
         userReducer?.groups
       )
     }
   }, []);
-
-
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
       <Modal onBackButtonPress={()=>setIsModalVisible(false)} isVisible={isModalVisible}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={styles.container}>
+          <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <View style={{
+                paddingVertical: height * 0.001,
+                marginBottom: height * 0.02,
+                borderWidth: 1,
+                borderColor: themeLightBlue,
+                borderRadius: 10,
+                width: width * 0.8,
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => {
+                    setAllEvent(!allEvent)
+                  }}
+                  style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
+                  <IconComp
+                    type={'MaterialIcons'}
+                    iconName={
+                      allEvent
+                        ? 'check-circle'
+                        : 'radio-button-unchecked'
+                    }
+                    passedStyle={styles.textLAbel}
+                  />
+                  <Heading
+                    passedStyle={styles.label}
+                    title={'All Events'}
+                    fontType="medium"
+                  />
+                </TouchableOpacity>
+              </View>
+              {!allEvent && (
+                <View style={styles.filterContainer}>
+                  <Heading
+                    passedStyle={styles.label}
+                    title={'Events'}
+                    fontType="medium"
+                  />
+
+                  <View style={styles.rowView}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (counterEvent > 0) {
+                          setCounterEvent(counterEvent - 1);
+                        }
+                      }}>
+                      <IconComp
+                        type={'Feather'}
+                        iconName={'minus-circle'}
+                        passedStyle={styles.textLAbel}
+                      />
+                    </TouchableOpacity>
+                    <Heading
+                      passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
+                      title={loading?"...Loading":(events[counterEvent]?.Name || "Unavailable")}
+                      fontType="medium"
+                    />
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (counterEvent < events.length - 1) {
+                          setCounterEvent(counterEvent + 1);
+                        }
+                      }}>
+                      <IconComp
+                        type={'Feather'}
+                        iconName={'plus-circle'}
+                        passedStyle={styles.textLAbel}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </View>
             <View
               style={{
                 flexDirection: 'column',
@@ -333,11 +421,12 @@ const ParticipantFilterModal = ({
                         setFields({
                           gender: allGender ||allGroud ? "All" : selectedGroupsData[counter]?.group_gender[0].gender.Gender,
                           group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
-                          grade: allGrade || allGroud ? "All" : selectedGroupsData[counter]?.group_grade[0].grade.Name,
+                          grade: allEvent ? "All" : events[counterEvent]?.Name,
                         })
                         onPress({
                           gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0],
-                          group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
+                          group: allGroud ? "All" : selectedGroupsData[counter]?.group_class[0]?.GroupID,
+                          event: allEvent ? "All" : events[counterEvent]?.id,
                           grade: allGender ? "All" : selectedGroupsData[counter]?.group_grade[0],
                         });
                         setIsModalVisible(false);
@@ -359,10 +448,10 @@ const ParticipantFilterModal = ({
     </View>
   );
 };
-const mapStateToProps = ({ userReducer }) => {
-  return { userReducer };
+const mapStateToProps = ({ userReducer,events }) => {
+  return { userReducer,events };
 };
-export default connect(mapStateToProps, null)(ParticipantFilterModal);
+export default connect(mapStateToProps, actions)(ParticipantFilterModal);
 
 const styles = StyleSheet.create({
   textLAbel: { color: themeLightBlue, fontSize: width * 0.08 },

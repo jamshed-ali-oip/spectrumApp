@@ -15,6 +15,7 @@ import {
   CHECK_GAME,
   SAVE_SOCKET_REF,
   GET_LOGIN_IMG,
+  GET_EVENTS,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl,imageUrl} from '../../config';
@@ -678,5 +679,18 @@ export const getLoginImg = id => async dispatch => {
   dispatch({
     type:GET_LOGIN_IMG,
     payload:imageUrl+"/logo/"+res.data?.data[0]?.light_mode_logo
+  })
+}
+export const getEvents = accessToken => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  const res=await axios.get(`${apiUrl}/event`,headers)
+  dispatch({
+    type:GET_EVENTS,
+    payload:res.data?.data
   })
 }
