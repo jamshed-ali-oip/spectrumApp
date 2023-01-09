@@ -94,7 +94,7 @@ const ResetPasswordScreen = ({
                   placeholderTextColor="#565B66"
                   style={[
                     styles.inputfieldPassword,
-                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
+                    {fontSize: showPassword ? width * 0.04 : width * 0.04,color:'black'},
                   ]}
                   value={password}
                   onChangeText={e => {
@@ -128,7 +128,7 @@ const ResetPasswordScreen = ({
                   placeholderTextColor="#565B66"
                   style={[
                     styles.inputfieldPassword,
-                    {fontSize: showPassword ? width * 0.04 : width * 0.04},
+                    {fontSize: showPassword ? width * 0.04 : width * 0.04,color:'black'},
                   ]}
                   value={setCnfrmPassword}
                   onChangeText={e => {

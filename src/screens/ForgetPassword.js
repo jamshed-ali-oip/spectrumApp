@@ -89,7 +89,7 @@ const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
                 placeholderTextColor="#565B66"
                 style={[
                   styles.inputfield,
-                  {marginBottom: width * 0.04, marginTop: height * 0.1},
+                  {marginBottom: width * 0.04, marginTop: height * 0.1,color:'black'},
                 ]}
                 onChangeText={e => {
                   // console.log(e[e.length-1],"---")
