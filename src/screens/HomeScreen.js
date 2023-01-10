@@ -96,12 +96,12 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
         </TouchableOpacity>
         <View style={{flex:1}}>
           <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
-            App Version: 2.0
+            App Version: 2.1
             {/* {deviceInfo.getVersion()} */}
             </Text>
-            <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>
+            {/* <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>
             Build Number: 2
-            </Text>
+            </Text> */}
         </View>
         {/* <Button
           title={'RUN AN ASSESSMENT'}
