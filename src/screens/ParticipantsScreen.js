@@ -114,19 +114,19 @@ const ParticipantsScreen = ({
     } else {
       if (data.event == "All" && data.group != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          console.log("aa", participant.group_organization.GroupID)
-          return participant.group_organization.GroupID == data.group
+          console.log("aa", participant?.group_organization?.GroupID,data?.group)
+          return participant?.group_organization?.GroupID == data?.group
         });
         setParticipants(filtered)
       }
       else if (data.event != "All" && data.group == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.event.find(its => its.id == data.event)
+          return participant?.event?.find(its => its?.id == data?.event)
         });
         setParticipants(filtered)
       } else {
         const filtered = userReducer.participants.filter((participant) => {
-          return (participant.group == data.group_organization.GroupID) && (participant.event.find(its => its.id == data.event))
+          return (participant?.group == data?.group_organization?.GroupID) && (participant?.event.find(its => its?.id == data?.event))
         });
         setParticipants(filtered)
       }

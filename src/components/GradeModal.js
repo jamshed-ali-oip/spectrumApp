@@ -62,6 +62,7 @@ const ParticipantFilterModal = ({
       )
     }
   }, []);
+  console.log("groupd",userReducer?.groups)
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
@@ -419,10 +420,11 @@ const ParticipantFilterModal = ({
                     onBtnPress={() => {
                       if (onPress) {
                         setFields({
-                          gender: allGender ||allGroud ? "All" : selectedGroupsData[counter]?.group_gender[0].gender.Gender,
+                          gender: allGender ||allGroud ? "All" : selectedGroupsData[counter]?.group_gender[0]?.gender?.Gender,
                           group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
                           grade: allEvent ? "All" : events[counterEvent]?.Name,
                         })
+                        // console.log("tah",counter,selectedGroupsData[counter])
                         onPress({
                           gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0],
                           group: allGroud ? "All" : selectedGroupsData[counter]?.group_class[0]?.GroupID,

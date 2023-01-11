@@ -112,19 +112,19 @@ const GradesScreen = ({
     } else {
       if (data.event == "All" && data.group != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          console.log("aa", participant.group_organization.GroupID)
-          return participant.group_organization.GroupID == data.group
+          console.log("aa", participant?.group_organization?.GroupID)
+          return participant?.group_organization?.GroupID == data.group
         });
         setParticipants(filtered)
       }
       else if (data.event != "All" && data.group == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant.event.find(its => its.id == data.event)
+          return participant?.event.find(its => its?.id == data?.event)
         });
         setParticipants(filtered)
       } else {
         const filtered = userReducer.participants.filter((participant) => {
-          return (participant.group == data.group_organization.GroupID) && (participant.event.find(its => its.id == data.event))
+          return (participant?.group == data?.group_organization?.GroupID) && (participant?.event.find(its => its?.id == data?.event))
         });
         setParticipants(filtered)
       }
@@ -359,7 +359,19 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants,
+                        memberData: participants.filter(it=>it.Status==0).sort((a, b) => {
+                          const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
+                          const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
+                          if (nameA < nameB) {
+                            return sort=="asc"?-1:1;
+                          }
+                          if (nameA > nameB) {
+                            return sort=="asc"?1:-1;
+                          }
+            
+                          // names must be equal
+                          return 0;
+                        }),
                         event: Eventdetails
                       });
                     }
