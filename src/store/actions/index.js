@@ -582,7 +582,7 @@ export const verifyOtp = (data, onFailed, onSuccess) => async dispatch => {
   } catch (err) {
     onFailed();
     showMessage({
-      message: 'Enter the Correct OTP, OPT is not Correct',
+      message: 'OTP is not Correct',
       type: 'danger',
     });
     console.log(err?.response?.data?.msg || err?.response?.data?.message, err);

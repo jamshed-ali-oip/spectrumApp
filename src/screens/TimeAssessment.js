@@ -76,6 +76,7 @@ const TimeAssessment = ({
   // const [NA, setNA] = useState(true)
   const [flag, setFlag] = useState(true)
   const [showTextField, setShowTextField] = useState(false);
+  const partScrollRef=useRef(null)
   const [ranges, setRanges] = useState([
     {
       "id": 24,
@@ -558,6 +559,7 @@ const TimeAssessment = ({
     setIsLoading(true);
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
+    partScrollRef?.current?.scrollTo({x:0,y:(Uservalue.index+1)*35,animated:true})
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -793,6 +795,7 @@ const TimeAssessment = ({
         <ScrollView
           nestedScrollEnabled={true}
           style={{height:height*0.2}}
+          ref={partScrollRef}
           contentContainerStyle={{
             width: '95%',
             backgroundColor: themeDarkBlue,
@@ -810,6 +813,7 @@ const TimeAssessment = ({
                   style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10  }}
                   disabled={item.disable}
                   onPress={() => {
+                    partScrollRef?.current?.scrollTo({x:0,y:index*35,animated:true})
                     setResultvalue({})
                     setFlag(true)
                     resetStopwatch();

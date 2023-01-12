@@ -50,7 +50,7 @@ const ForgetPassword = ({navigation, userReducer, forgetPassword}) => {
 
   const onSuccess = async () => {
     await setIsLoading(false);
-    navigation.navigate('otp', {data: email});
+    navigation.navigate('otp', {data: email,resendOTP:(off)=>forgetPassword({email}, off, off)});
   };
 
   useEffect(() => {

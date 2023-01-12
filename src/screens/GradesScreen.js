@@ -380,7 +380,19 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants,
+                        memberData: participants.filter(it=>it.Status==0).sort((a, b) => {
+                          const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
+                          const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
+                          if (nameA < nameB) {
+                            return sort=="asc"?-1:1;
+                          }
+                          if (nameA > nameB) {
+                            return sort=="asc"?1:-1;
+                          }
+            
+                          // names must be equal
+                          return 0;
+                        }),
                         event: Eventdetails
                       });
                     }

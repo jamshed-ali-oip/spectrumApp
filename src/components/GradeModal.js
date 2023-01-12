@@ -424,10 +424,10 @@ const ParticipantFilterModal = ({
                           group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
                           grade: allEvent ? "All" : events[counterEvent]?.Name,
                         })
-                        // console.log("tah",counter,selectedGroupsData[counter])
+                        console.log("tah",events[counterEvent].id)
                         onPress({
                           gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0],
-                          group: allGroud ? "All" : selectedGroupsData[counter]?.group_class[0]?.GroupID,
+                          group: allGroud ? "All" : selectedGroupsData[counter]?.id,
                           event: allEvent ? "All" : events[counterEvent]?.id,
                           grade: allGender ? "All" : selectedGroupsData[counter]?.group_grade[0],
                         });

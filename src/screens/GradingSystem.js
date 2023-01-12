@@ -14,7 +14,7 @@ import {
   Modal
 } from 'react-native';
 
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect,useRef } from 'react';
 import Heading from '../components/Heading';
 import {
   themeDarkBlue,
@@ -183,6 +183,7 @@ const GradingSystem = ({
   const [reverse, setReverse] = useState("red")
   const [Uservalue, setUservalue] = useState({});
   const [errorModal, setErrorModal] = useState(false)
+  const partScrollRef=useRef(null)
   console.log('=======>', Uservalue);
 
   useLayoutEffect(() => {
@@ -253,6 +254,7 @@ const GradingSystem = ({
       percent:5
     };
     // alert(JSON.stringify(apiData))
+    partScrollRef?.current?.scrollToIndex({index:Uservalue.index+1,animated:true})
     setIsLoading(true);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
@@ -287,6 +289,7 @@ const GradingSystem = ({
         style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
         disabled={item.disable}
         onPress={() => {
+          partScrollRef?.current?.scrollToIndex({index,animated:true})
           setResultvalue({})
           setUservalue({ ...item, index });
         }}>
@@ -409,6 +412,7 @@ const GradingSystem = ({
             <FlatList
               nestedScrollEnabled={true}
               data={Memebers}
+              ref={partScrollRef}
               renderItem={RenderMembersData}
               keyExtractor={item => item.id}
             />

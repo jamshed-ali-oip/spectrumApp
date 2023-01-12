@@ -45,8 +45,15 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
         type: 'danger',
       });
     } else {
-      setIsLoading(true);
-      await loginRequest({email, password}, onLoginFailed);
+      if(password.length<8){
+        showMessage({
+          message: 'password must be a minimum of 8 characters',
+          type: 'danger',
+        });
+      }else{
+        setIsLoading(true);
+        await loginRequest({email, password}, onLoginFailed);
+      }
     }
   };
 

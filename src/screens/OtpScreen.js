@@ -142,6 +142,24 @@ const Otp = ({
                   passedStyle={{color: 'white', fontSize: width * 0.04}}
                 />
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVerifying(true)
+                  route.params.resendOTP(()=>setIsVerifying(false))
+                }}
+                style={{
+                  marginTop:height * 0.07,
+                  width: width * 0.5,
+                  height: height * 0.07,
+                  borderRadius: width * 0.1,
+                  backgroundColor: themeBlue, justifyContent:'center',alignItems:'center'
+                }}>
+                <Heading
+                  title="Resend OTP"
+                  fontType={'semi-bold'}
+                  passedStyle={{color: 'white', fontSize: width * 0.04}}
+                />
+              </TouchableOpacity>
             </View>
           )}
 

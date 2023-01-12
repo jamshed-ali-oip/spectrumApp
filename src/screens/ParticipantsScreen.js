@@ -120,6 +120,7 @@ const ParticipantsScreen = ({
         setParticipants(filtered)
       }
       else if (data.event != "All" && data.group == "All") {
+        console.log("sdfsdf",participants)
         const filtered = userReducer.participants.filter((participant) => {
           return participant?.event?.find(its => its?.id == data?.event)
         });
