@@ -13,7 +13,8 @@ import {
   Button,
   FlatList,
   Modal,
-  AppState
+  AppState,
+  Animated
 } from 'react-native';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import RNSpeedometer from 'react-native-speedometer';
@@ -76,7 +77,8 @@ const TimeAssessment = ({
   // const [NA, setNA] = useState(true)
   const [flag, setFlag] = useState(true)
   const [showTextField, setShowTextField] = useState(false);
-  const partScrollRef=useRef(null)
+  const partScrollRef = useRef(null)
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   const [ranges, setRanges] = useState([
     {
       "id": 24,
@@ -252,9 +254,25 @@ const TimeAssessment = ({
   //     setRanges([...ranges].reverse())
   //   }
   // }, [reverse])
+  useEffect(() => {
+    if (Resultvalue) {
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 10,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      ]).start()
+    }
+  }, [Resultvalue])
 
-  useEffect(()=>{
-    const stateListen=AppState.addEventListener('blur',(status)=>{
+  useEffect(() => {
+    const stateListen = AppState.addEventListener('blur', (status) => {
       setFlag(true)
       resetStopwatch();
       checkGame(false);
@@ -269,7 +287,7 @@ const TimeAssessment = ({
     });
 
     return unsubscribe;
-  },[navigation])
+  }, [navigation])
 
 
   useEffect(() => {
@@ -305,9 +323,9 @@ const TimeAssessment = ({
     //   playSound()
     // }
     console.log(secs)
-    if(secs){
-      ranges.forEach(it=>{
-        if(secs>=(it.MinValue/100) && secs<=(it.MaxValue/100)){
+    if (secs) {
+      ranges.forEach(it => {
+        if (secs >= (it.MinValue / 100) && secs <= (it.MaxValue / 100)) {
           setResultvalue(it)
         }
       })
@@ -320,12 +338,12 @@ const TimeAssessment = ({
     participant_id: Uservalue?.id,
     assessment_id: ITEM?.id,
     grade_id: CHILD_DATA?.GradeID,
-    gender_id:ITEM.times?.GenderID,
-    color_id:Resultvalue.color_id,
-    results:25,
-    dt_recorded:'12-10-22',
-    attempt:1,
-    percent:Math.round(Number(ITEM.times?.Percent))
+    gender_id: ITEM.times?.GenderID,
+    color_id: Resultvalue.color_id,
+    results: 25,
+    dt_recorded: '12-10-22',
+    attempt: 1,
+    percent: Math.round(Number(ITEM.times?.Percent))
   };
   // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
   const [timer, setTimer] = useState({
@@ -559,7 +577,7 @@ const TimeAssessment = ({
     setIsLoading(true);
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
-    partScrollRef?.current?.scrollTo({x:0,y:(Uservalue.index+1)*35,animated:true})
+    partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -690,11 +708,11 @@ const TimeAssessment = ({
   const handleTimerComplete = () => alert('custom completion function');
 
   const getFormattedTime = time => {
-    if(time){
+    if (time) {
       let currentTime = time;
-    setSecs(
-      Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
-    );
+      setSecs(
+        Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
+      );
     }
   };
 
@@ -709,14 +727,14 @@ const TimeAssessment = ({
 
     // Play the sound with an onEnd callback
     // whoosh.setNumberOfLoops(1)
-    
+
   });
 
   const playSound = () => {
     // const sound = new Sound('beep.mp3');
     // alert("call")
 
-    if(Platform.OS=="ios"){
+    if (Platform.OS == "ios") {
       // var whoosh = new Sound('my_beep.mp3', Sound.MAIN_BUNDLE, error => {
       //   if (error) {
       //     // console.log('failed to load the sound', error);
@@ -731,10 +749,10 @@ const TimeAssessment = ({
       //   });
       //   // loaded successfully
       //   // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-    
+
       //   // Play the sound with an onEnd callback
       //   // whoosh.setNumberOfLoops(1)
-        
+
       // });
 
       var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
@@ -744,7 +762,7 @@ const TimeAssessment = ({
         }
         // loaded successfully
         // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-      
+
         // Play the sound with an onEnd callback
         whoosh.play((success) => {
           if (success) {
@@ -754,10 +772,10 @@ const TimeAssessment = ({
           }
         });
       });
-    }else{
+    } else {
       RNBeep.PlaySysSound(RNBeep.AndroidSoundIDs.TONE_CDMA_ANSWER)
     }
-    
+
 
   };
   const RenderMembersData = ({ item, index }) => (
@@ -794,7 +812,7 @@ const TimeAssessment = ({
         </View>
         <ScrollView
           nestedScrollEnabled={true}
-          style={{height:height*0.2}}
+          style={{ height: height * 0.2 }}
           ref={partScrollRef}
           contentContainerStyle={{
             width: '95%',
@@ -810,10 +828,10 @@ const TimeAssessment = ({
                 style={{ flexDirection: 'row', paddingVertical: 3 }}>
                 {/* {console.log(Memebers)} */}
                 <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10  }}
+                  style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
                   disabled={item.disable}
                   onPress={() => {
-                    partScrollRef?.current?.scrollTo({x:0,y:index*35,animated:true})
+                    partScrollRef?.current?.scrollTo({ x: 0, y: index * 35, animated: true })
                     setResultvalue({})
                     setFlag(true)
                     resetStopwatch();
@@ -862,14 +880,14 @@ const TimeAssessment = ({
     return (
       <>
         {isLoading || colors?.length === 0 ? (
-          <View style={{justifyContent:'center',alignItems:'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <LottieView
-            speed={1}
-            style={styles.lottieStyle}
-            autoPlay
-            loop
-            source={require('../assets/lottie/color-loader.json')}
-          />
+              speed={1}
+              style={styles.lottieStyle}
+              autoPlay
+              loop
+              source={require('../assets/lottie/color-loader.json')}
+            />
           </View>
         ) : (
           <>
@@ -885,7 +903,7 @@ const TimeAssessment = ({
             {/* Grade  */}
             <View style={styles.headingStyle2View}>
               <Heading
-                title={(GROUP_DATA?.Name)?(GROUP_DATA.Name=="All"?"All Groups":GROUP_DATA?.Name):"All Groups"}
+                title={(GROUP_DATA?.Name) ? (GROUP_DATA.Name == "All" ? "All Groups" : GROUP_DATA?.Name) : "All Groups"}
                 passedStyle={styles.headingStyles2}
                 fontType="regular"
               />
@@ -907,7 +925,7 @@ const TimeAssessment = ({
               </TouchableOpacity> */}
             <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
               <FlatList
-                contentContainerStyle={{ marginTop: Platform.OS == "ios" ? 30 : 0,width:"100%" }}
+                contentContainerStyle={{ marginTop: Platform.OS == "ios" ? 30 : 0, width: "100%" }}
                 data={ranges}
                 renderItem={RenderimageDAta}
                 keyExtractor={item => item.color_sort}
@@ -1238,20 +1256,28 @@ const TimeAssessment = ({
     <TouchableOpacity
       onPress={() => {
         // setResultvalue(item)
-      }} style={{ width:"25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+      }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
           <CheckIcon name='check' color={"black"} size={30} />
         </View>
       )}
-      <Image
-        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
-
-        source={{
-          uri:
-            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+      <Animated.View
+        style={{
+          height: height * .095, width: width / 6,
+          transform: [{ scale: Resultvalue.image == item.image ? fadeAnim : 1 }],
+          opacity: Resultvalue.image == item.image ? fadeAnim : 1
         }}
-      />
+      >
+        <Image
+          style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
+
+          source={{
+            uri:
+              item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+          }}
+        />
+      </Animated.View>
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
       {item.image == null?"":item.MaxValue}
     </Text> */}
@@ -1269,16 +1295,16 @@ const TimeAssessment = ({
           style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
         >
           <View style={{ backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40, flex: 1 }}>
-            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10,padding:10 }}>
-              
-            <Text style={{ textAlign: 'center',fontSize:20,color:'black',marginBottom:10 }}>
-                  {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
-                </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times`}
-                </Text>
+            <View style={{ backgroundColor: 'white', height: height / 3, width: '90%', justifyContent: 'center', alignItems: 'center', borderRadius: 10, padding: 10 }}>
+
+              <Text style={{ textAlign: 'center', fontSize: 20, color: 'black', marginBottom: 10 }}>
+                {`${Uservalue.Firstname} ${Uservalue.Lastname}`}
+              </Text>
+              <Text style={{ textAlign: 'center' }}>
+                {`${Uservalue.Firstname} ${Uservalue.Lastname} can not participate more than three times`}
+              </Text>
               <TouchableOpacity
-              style={{backgroundColor:'black',padding:5,borderRadius:20,paddingHorizontal:40,marginTop:20}}
+                style={{ backgroundColor: 'black', padding: 5, borderRadius: 20, paddingHorizontal: 40, marginTop: 20 }}
                 onPress={() => {
                   setErrorModal(false)
 
@@ -1292,7 +1318,7 @@ const TimeAssessment = ({
                   }
                 }}
               >
-                <Text style={{color:'white'}}>Next</Text>
+                <Text style={{ color: 'white' }}>Next</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1337,7 +1363,7 @@ const TimeAssessment = ({
             }
           }}
         />
-        <KeepAwake/>
+        {/* <KeepAwake/> */}
       </ImageBackground>
     </>
   );

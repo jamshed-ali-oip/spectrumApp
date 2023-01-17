@@ -6,7 +6,7 @@ import MainNavigator from './src/MainNavigator';
 import {store, persistor} from './src/store';
 import messaging from '@react-native-firebase/messaging';
 import FlashMessage from 'react-native-flash-message';
-
+import KeepAwake from 'react-native-keep-awake';
 const App = () => {
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
@@ -35,6 +35,7 @@ const App = () => {
             style={styles.flashMessage}
           />
         </PersistGate>
+        <KeepAwake/>
       </Provider>
   );
 };

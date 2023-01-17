@@ -11,10 +11,11 @@ import {
   FlatList,
   ScrollView,
   Platform,
-  Modal
+  Modal,
+  Animated
 } from 'react-native';
 
-import React, { useState, useEffect, useLayoutEffect,useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import Heading from '../components/Heading';
 import {
   themeDarkBlue,
@@ -183,7 +184,9 @@ const GradingSystem = ({
   const [reverse, setReverse] = useState("red")
   const [Uservalue, setUservalue] = useState({});
   const [errorModal, setErrorModal] = useState(false)
-  const partScrollRef=useRef(null)
+  const partScrollRef = useRef(null)
+
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   console.log('=======>', Uservalue);
 
   useLayoutEffect(() => {
@@ -246,15 +249,15 @@ const GradingSystem = ({
       participant_id: Uservalue?.id,
       assessment_id: ITEM?.id,
       grade_id: CHILD_DATA?.GradeID,
-      gender_id:CHILD_DATA.GenderID,
-      color_id:Resultvalue.color_id,
-      results:25,
-      dt_recorded:'12-10-22',
-      attempt:1,
-      percent:5
+      gender_id: CHILD_DATA.GenderID,
+      color_id: Resultvalue.color_id,
+      results: 25,
+      dt_recorded: '12-10-22',
+      attempt: 1,
+      percent: 5
     };
     // alert(JSON.stringify(apiData))
-    partScrollRef?.current?.scrollToIndex({index:Uservalue.index+1,animated:true})
+    partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
     setIsLoading(true);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
@@ -281,6 +284,22 @@ const GradingSystem = ({
     }
   };
 
+  useEffect(() => {
+    if (Resultvalue) {
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 10,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      ]).start()
+    }
+  }, [Resultvalue])
 
   const RenderMembersData = ({ item, index }) => (
     <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
@@ -289,7 +308,7 @@ const GradingSystem = ({
         style={{ flexDirection: "row", alignItems: "center", flex: 1, marginRight: 10 }}
         disabled={item.disable}
         onPress={() => {
-          partScrollRef?.current?.scrollToIndex({index,animated:true})
+          partScrollRef?.current?.scrollToIndex({ index, animated: true })
           setResultvalue({})
           setUservalue({ ...item, index });
         }}>
@@ -337,21 +356,28 @@ const GradingSystem = ({
           <CheckIcon name='check' color={"black"} size={30} />
         </View>
       )}
-      <Image
-        style={[{ height: height * .095, width: width / 6, resizeMode: "contain" }]}
-        source={{
-          uri:
-            item.image === null
-              ? 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png'
-              : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`,
+      <Animated.View
+        style={{
+          height: height * .095, width: width / 6,
+          transform: [{ scale: Resultvalue.image == item.image ? fadeAnim : 1 }],
+          opacity: Resultvalue.image == item.image ? fadeAnim : 1
         }}
-      />
+      >
+        <Image
+          style={[{ width: '100%', height: '100%', resizeMode: "contain" }]}
+          source={{
+            uri:
+              item.image === null
+                ? 'https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png'
+                : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`,
+          }}
+        />
+      </Animated.View>
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:22,marginTop:25}}>
        {item.image == null?"":item.MaxValue}
      </Text> */}
     </TouchableOpacity>
   );
-
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -432,7 +458,7 @@ const GradingSystem = ({
               <ScrollView>
                 <View style={[styles.headingStyle2View, { marginBottom: 20 }]}>
                   <Heading
-                  title={(GROUP_DATA?.Name)?(GROUP_DATA.Name=="All"?"All Groups":GROUP_DATA?.Name):"All Groups"}
+                    title={(GROUP_DATA?.Name) ? (GROUP_DATA.Name == "All" ? "All Groups" : GROUP_DATA?.Name) : "All Groups"}
                     // title={GROUP_DATA.group ? "All" : `${GROUP_DATA?.Name} - ${GROUP_DATA?.Abbr}`}
                     passedStyle={styles.headingStyles2}
                     fontType="regular"
