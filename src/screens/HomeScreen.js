@@ -96,7 +96,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
         </TouchableOpacity>
         <View style={{flex:1}}>
           <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
-            App Version: 2.3
+            App Version: 2.13
             {/* {deviceInfo.getVersion()} */}
             </Text>
             {/* <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>
