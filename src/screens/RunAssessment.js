@@ -148,7 +148,7 @@ const RunAssessment = ({ navigation, route }) => {
                 { backgroundColor: themePink },
               ]}>
               <Heading
-                title={'FACILIATOR INSTRUCTIONS'}
+                title={'FACILITATOR INSTRUCTIONS'}
                 passedStyle={[styles.buttonStyles, { backgroundColor: themePink }]}
                 fontType="bold"
               />

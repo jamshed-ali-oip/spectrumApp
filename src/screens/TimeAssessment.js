@@ -45,7 +45,7 @@ import moment from 'moment';
 import { baseUrl } from '../config';
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -79,6 +79,8 @@ const TimeAssessment = ({
   const [showTextField, setShowTextField] = useState(false);
   const partScrollRef = useRef(null)
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim2 = useRef(new Animated.Value(0)).current;
+  const animationRef = useRef()
   const [ranges, setRanges] = useState([
     {
       "id": 24,
@@ -231,6 +233,7 @@ const TimeAssessment = ({
   const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
   const [secs, setSecs] = useState(0);
+  const [zindex, setZindex] = useState(0)
   // console.log("seconds", secs)
   // console.log("first",meterValue)
   // const apiData = {
@@ -268,6 +271,27 @@ const TimeAssessment = ({
           useNativeDriver: true,
         })
       ]).start()
+
+
+      // setZindex(1)
+      if (animationRef?.current) {
+        animationRef?.current.reset()
+      }
+      animationRef.current = Animated.sequence([
+        Animated.timing(fadeAnim2, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim2, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        })
+      ]).start()
+      // setTimeout(()=>{
+      //   setZindex(0)
+      // },1000)
     }
   }, [Resultvalue])
 
@@ -333,6 +357,10 @@ const TimeAssessment = ({
   }, [secs])
   // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
 
+  const cDate=new Date().toLocaleDateString().split('/')
+  // console.log(cDate[0]+"-"+cDate[1]+"-"+cDate[2]+" "+secs)
+  // console.log("Sdfsdf",ITEM?.id)
+
   const apiData = {
     event_id: 1,
     participant_id: Uservalue?.id,
@@ -341,7 +369,7 @@ const TimeAssessment = ({
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
     results: 25,
-    dt_recorded: '12-10-22',
+    dt_recorded: cDate[1]+"-"+cDate[0]+"-"+cDate[2]+" "+`00:0${secs.toString()?.replace(".",":")}`,
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
   };
@@ -577,7 +605,10 @@ const TimeAssessment = ({
     setIsLoading(true);
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
-    partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
+    if(Memebers?.length>2){
+      partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
+    }
+    // alert(JSON.stringify(apiData))
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
   };
@@ -1289,6 +1320,30 @@ const TimeAssessment = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+        {
+          ranges.map(it => {
+            return <Animated.View
+              style={{
+                height: responsiveHeight(100),
+                width: responsiveWidth(100),
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [{ scale: it.image==Resultvalue.image?fadeAnim2 : 0 }],
+                opacity: it.image==Resultvalue.image?fadeAnim2:0
+              }}>
+              <Image
+                style={{ height: responsiveHeight(50), width: responsiveWidth(100), resizeMode: "contain", opacity: 0.75 }}
+
+                source={{
+                  uri:
+                    Resultvalue.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${Resultvalue.image}`
+                }}
+              />
+            </Animated.View>
+          })
+        }
+
         <Modal
           visible={errorModal}
           transparent={true}

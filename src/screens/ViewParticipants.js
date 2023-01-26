@@ -360,7 +360,7 @@ const ViewParticipants = ({
                     fontType="semi-bold"
                   />
                   <Heading
-                    title={status == 0 ?"Activate": "Deactivate" }
+                    title={status == 1 ?"Activated": "Deactivated" }
                     passedStyle={{
                       color: 'white',
                       marginLeft: width * 0.1,
@@ -370,7 +370,7 @@ const ViewParticipants = ({
                   />
                   <TouchableOpacity
                     style={{
-                      backgroundColor: status == 0 ?"red":"green",
+                      backgroundColor: status == 1 ?"red":"green",
                       borderRadius: 25,
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -388,7 +388,7 @@ const ViewParticipants = ({
                       setStatus(status ? 0 : 1)
                     }}
                   >
-                    <Text style={{ color: 'white' }}>{status == 0 ?"Deactivate":"Activate"}</Text>
+                    <Text style={{ color: 'white' }}>{status == 1 ?"Deactivate":"Activate"}</Text>
                   </TouchableOpacity>
                 </View>
 

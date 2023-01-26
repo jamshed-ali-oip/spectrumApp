@@ -336,7 +336,7 @@ const GradesScreen = ({
                 <ColoredFlatlist />
               </>
             }
-            data={participants.filter(it=>it.Status==0).sort((a, b) => {
+            data={participants.filter(it=>it.Status==1).sort((a, b) => {
               const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
               const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
               if (nameA < nameB) {
@@ -359,7 +359,7 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants.filter(it=>it.Status==0).sort((a, b) => {
+                        memberData: participants.filter(it=>it.Status==1).sort((a, b) => {
                           const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
                           const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
                           if (nameA < nameB) {
@@ -380,7 +380,7 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants.filter(it=>it.Status==0).sort((a, b) => {
+                        memberData: participants.filter(it=>it.Status==1).sort((a, b) => {
                           const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
                           const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
                           if (nameA < nameB) {

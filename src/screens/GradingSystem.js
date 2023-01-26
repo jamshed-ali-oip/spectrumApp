@@ -26,6 +26,7 @@ import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
+import { responsiveHeight,responsiveWidth } from 'react-native-responsive-dimensions';
 
 const r = [
   {
@@ -187,6 +188,9 @@ const GradingSystem = ({
   const partScrollRef = useRef(null)
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim2 = useRef(new Animated.Value(0)).current;
+  const animationRef = useRef()
+
   console.log('=======>', Uservalue);
 
   useLayoutEffect(() => {
@@ -257,7 +261,9 @@ const GradingSystem = ({
       percent: 5
     };
     // alert(JSON.stringify(apiData))
-    partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
+    if(Memebers?.length>2){
+      partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
+    }
     setIsLoading(true);
     await submitResult(apiData, accessToken, onSuccess);
     setIsLoading(false);
@@ -295,6 +301,21 @@ const GradingSystem = ({
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 1000,
+          useNativeDriver: true,
+        })
+      ]).start()
+      if (animationRef?.current) {
+        animationRef?.current.reset()
+      }
+      animationRef.current = Animated.sequence([
+        Animated.timing(fadeAnim2, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim2, {
+          toValue: 0,
+          duration: 250,
           useNativeDriver: true,
         })
       ]).start()
@@ -384,6 +405,29 @@ const GradingSystem = ({
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+        {
+          ranges.map(it => {
+            return <Animated.View
+              style={{
+                height: responsiveHeight(100),
+                width: responsiveWidth(100),
+                position: 'absolute',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [{ scale: it.image == Resultvalue.image ? fadeAnim2 : 0 }],
+                opacity: it.image == Resultvalue.image ? fadeAnim2 : 0
+              }}>
+              <Image
+                style={{ height: responsiveHeight(50), width: responsiveWidth(100), resizeMode: "contain", opacity: 0.75 }}
+
+                source={{
+                  uri:
+                    Resultvalue.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${Resultvalue.image}`
+                }}
+              />
+            </Animated.View>
+          })
+        }
         <Modal
           visible={errorModal}
           transparent={true}
