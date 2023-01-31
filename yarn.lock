@@ -6582,6 +6582,11 @@ react-native-device-info@^10.1.2:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.3.0.tgz#6bab64d84d3415dd00cc446c73ec5e2e61fddbe7"
   integrity sha512-/ziZN1sA1REbJTv5mQZ4tXggcTvSbct+u5kCaze8BmN//lbxcTvWsU6NQd4IihLt89VkbX+14IGc9sVApSxd/w==
 
+react-native-element-dropdown@^2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-element-dropdown/-/react-native-element-dropdown-2.5.3.tgz#a8d22912d1c201fc3c08c22fbf3e31ecb166a299"
+  integrity sha512-Os4UtvGlqccV3lsiP5Qy4RPzqqyx7E6lYcn2/IRQZHwBA4NAQA2dul/BrQSwy3bhicCqmWtir7T1GeFmOZPPrQ==
+
 react-native-element-timer@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/react-native-element-timer/-/react-native-element-timer-1.5.2.tgz#6ec508399026ee5b6d124b72c283088f8fab853b"

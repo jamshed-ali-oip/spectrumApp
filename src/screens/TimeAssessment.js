@@ -361,6 +361,7 @@ const TimeAssessment = ({
   // console.log(cDate[0]+"-"+cDate[1]+"-"+cDate[2]+" "+secs)
   // console.log("Sdfsdf",ITEM?.id)
 
+  
   const apiData = {
     event_id: 1,
     participant_id: Uservalue?.id,
@@ -369,7 +370,7 @@ const TimeAssessment = ({
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
     results: 25,
-    dt_recorded: cDate[1]+"-"+cDate[0]+"-"+cDate[2]+" "+`00:0${secs.toString()?.replace(".",":")}`,
+    dt_recorded: "20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1]+" "+`00:0${secs.toString()?.replace(".",":")}`,
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
   };

@@ -27,6 +27,8 @@ import { baseUrl } from '../config';
 import * as actions from "../store/actions"
 import { ScrollView } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
+import { Dropdown } from 'react-native-element-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ParticipantFilterModal = ({
   isModalVisible,
@@ -51,352 +53,154 @@ const ParticipantFilterModal = ({
 
   const [allGender, allGenderSet] = useState(false);
   const [allGrade, setAllGrade] = useState(false);
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
+
+
+  const [event, setEvent] = useState({value:'All'});
+  const [group, setGroup] = useState({value:'All'});
+
+  const [isFocus, setIsFocus] = useState(false);
 
   useEffect(() => {
     setLoading(true)
-    getEvents(userReducer?.accessToken).then(()=>setLoading(false))
+    getEvents(userReducer?.accessToken).then(() => setLoading(false))
     if (userReducer?.groups) {
       setGroupsData(
         userReducer?.groups
       )
     }
   }, []);
-  console.log("groupd",userReducer?.groups)
+
+  const renderLabel = () => {
+    if (group || isFocus) {
+      return (
+        <Text style={[styles.label1]}>
+          Group
+        </Text>
+      );
+    }
+    return null;
+  };
+
+  const renderLabel2 = () => {
+    if (event || isFocus) {
+      return (
+        <Text style={[styles.label1]}>
+          Event
+        </Text>
+      );
+    }
+    return null;
+  };
+
   return (
     <View>
       <StatusBar translucent={false} backgroundColor="black" />
-      <Modal onBackButtonPress={()=>setIsModalVisible(false)} isVisible={isModalVisible}>
+      <Modal onBackButtonPress={() => setIsModalVisible(false)} isVisible={isModalVisible}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={styles.container}>
-          <View
-              style={{
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <View style={{
-                paddingVertical: height * 0.001,
-                marginBottom: height * 0.02,
-                borderWidth: 1,
-                borderColor: themeLightBlue,
-                borderRadius: 10,
-                width: width * 0.8,
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => {
-                    setAllEvent(!allEvent)
-                  }}
-                  style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
-                  <IconComp
-                    type={'MaterialIcons'}
-                    iconName={
-                      allEvent
-                        ? 'check-circle'
-                        : 'radio-button-unchecked'
-                    }
-                    passedStyle={styles.textLAbel}
-                  />
-                  <Heading
-                    passedStyle={styles.label}
-                    title={'All Events'}
-                    fontType="medium"
-                  />
-                </TouchableOpacity>
-              </View>
-              {!allEvent && (
-                <View style={styles.filterContainer}>
-                  <Heading
-                    passedStyle={styles.label}
-                    title={'Events'}
-                    fontType="medium"
-                  />
-
-                  <View style={styles.rowView}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (counterEvent > 0) {
-                          setCounterEvent(counterEvent - 1);
-                        }
-                      }}>
-                      <IconComp
-                        type={'Feather'}
-                        iconName={'minus-circle'}
-                        passedStyle={styles.textLAbel}
-                      />
-                    </TouchableOpacity>
-                    <Heading
-                      passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                      title={loading?"...Loading":(events[counterEvent]?.Name || "Unavailable")}
-                      fontType="medium"
-                    />
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (counterEvent < events.length - 1) {
-                          setCounterEvent(counterEvent + 1);
-                        }
-                      }}>
-                      <IconComp
-                        type={'Feather'}
-                        iconName={'plus-circle'}
-                        passedStyle={styles.textLAbel}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-            </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <View style={{
-                paddingVertical: height * 0.001,
-                marginBottom: height * 0.02,
-                borderWidth: 1,
-                borderColor: themeLightBlue,
-                borderRadius: 10,
-                width: width * 0.8,
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => {
-                    setAllGroup(!allGroud)
-                  }}
-                  style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
-                  <IconComp
-                    type={'MaterialIcons'}
-                    iconName={
-                      allGroud
-                        ? 'check-circle'
-                        : 'radio-button-unchecked'
-                    }
-                    passedStyle={styles.textLAbel}
-                  />
-                  <Heading
-                    passedStyle={styles.label}
-                    title={'All Groups'}
-                    fontType="medium"
-                  />
-                </TouchableOpacity>
-              </View>
-              {!allGroud && (
-                <View style={styles.filterContainer}>
-                  <Heading
-                    passedStyle={styles.label}
-                    title={'Group'}
-                    fontType="medium"
-                  />
-
-                  <View style={styles.rowView}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (counter > 0) {
-                          setCounter(counter - 1);
-                        }
-                      }}>
-                      <IconComp
-                        type={'Feather'}
-                        iconName={'minus-circle'}
-                        passedStyle={styles.textLAbel}
-                      />
-                    </TouchableOpacity>
-                    <Heading
-                      passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                      title={selectedGroupsData[counter]?.Name || "Unavailable"}
-                      fontType="medium"
-                    />
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (counter < selectedGroupsData.length - 1) {
-                          setCounter(counter + 1);
-                        }
-                      }}>
-                      <IconComp
-                        type={'Feather'}
-                        iconName={'plus-circle'}
-                        passedStyle={styles.textLAbel}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-            </View>
-            {/* {!allGroud && (
+            {(events?.length > 0) ? (
               <>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <View style={{
-                    paddingVertical: height * 0.001,
-                    marginBottom: height * 0.02,
-                    borderWidth: 1,
-                    borderColor: themeLightBlue,
-                    borderRadius: 10,
-                    width: width * 0.8,
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <TouchableOpacity
-                      activeOpacity={0.9}
-                      onPress={() => {
-                        setAllGrade(!allGrade)
-                      }}
-                      style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
-                      <IconComp
-                        type={'MaterialIcons'}
-                        iconName={
-                          allGrade
-                            ? 'check-circle'
-                            : 'radio-button-unchecked'
-                        }
-                        passedStyle={styles.textLAbel}
-                      />
-                      <Heading
-                        passedStyle={styles.label}
-                        title={'All Grades'}
-                        fontType="medium"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {!allGrade && (
-                    <View style={styles.filterContainer}>
-                      <Heading
-                        passedStyle={styles.label}
-                        title={'Grade'}
-                        fontType="medium"
-                      />
-
-                      <View style={styles.rowView}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (counterGa > 0) {
-                              setCounterGa(counterGa - 1);
-                            }
-                          }}>
-                          <IconComp
-                            type={'Feather'}
-                            iconName={'minus-circle'}
-                            passedStyle={styles.textLAbel}
-                          />
-                        </TouchableOpacity>
-                        <Heading
-                          passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                          title={selectedGroupsData[counter]?.group_grade[counterGa].grade.Name || "Unavailable"}
-                          fontType="medium"
-                        />
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (counterGa < selectedGroupsData[counter]?.group_grade.length - 1) {
-                              setCounterGa(counterGa + 1);
-                            }
-                          }}>
-                          <IconComp
-                            type={'Feather'}
-                            iconName={'plus-circle'}
-                            passedStyle={styles.textLAbel}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <View style={{
-                    paddingVertical: height * 0.001,
-                    marginBottom: height * 0.02,
-                    borderWidth: 1,
-                    borderColor: themeLightBlue,
-                    borderRadius: 10,
-                    width: width * 0.8,
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <TouchableOpacity
-                      activeOpacity={0.9}
-                      onPress={() => {
-                        allGenderSet(!allGender)
-                      }}
-                      style={[styles.checkBoxContainer, { marginBottom: -height * .003 }]}>
-                      <IconComp
-                        type={'MaterialIcons'}
-                        iconName={
-                          allGender
-                            ? 'check-circle'
-                            : 'radio-button-unchecked'
-                        }
-                        passedStyle={styles.textLAbel}
-                      />
-                      <Heading
-                        passedStyle={styles.label}
-                        title={'All Genders'}
-                        fontType="medium"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  {!allGender && (
-                    <View style={styles.filterContainer}>
-                      <Heading
-                        passedStyle={styles.label}
-                        title={'Gender'}
-                        fontType="medium"
-                      />
-
-                      <View style={styles.rowView}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (counterGe > 0) {
-                              setCounterGe(counterGe - 1);
-                            }
-                          }}>
-                          <IconComp
-                            type={'Feather'}
-                            iconName={'minus-circle'}
-                            passedStyle={styles.textLAbel}
-                          />
-                        </TouchableOpacity>
-                        <Heading
-                          passedStyle={[styles.label, { marginHorizontal: width * 0.03 }]}
-                          title={selectedGroupsData[counter]?.group_gender[counterGe]?.gender.Gender || "Unavailable"}
-                          fontType="medium"
-                        />
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (counterGa < selectedGroupsData[counter]?.group_gender.length - 1) {
-                              setCounterGe(counterGe + 1);
-                            }
-                          }}>
-                          <IconComp
-                            type={'Feather'}
-                            iconName={'plus-circle'}
-                            passedStyle={styles.textLAbel}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-                </View>
+                {renderLabel2()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={[{ Name: 'All', id: 'All' }, ...events]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? 'Select item' : '...'}
+                  searchPlaceholder="Search..."
+                  value={event.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setEvent(item);
+                    setIsFocus(false);
+                  }}
+                />
               </>
-            )} */}
+            ) : (
+              <>
+                {renderLabel2()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? 'Select item' : '...'}
+                  searchPlaceholder="Search..."
+                  value={event.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setEvent(item);
+                    setIsFocus(false);
+                  }}
+                />
+              </>
+            )}
+
+            {
+              (selectedGroupsData?.length > 0) ? (
+                <>
+                  {renderLabel()}
+                  <Dropdown
+                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={[{ Name: 'All', id: 'All' }, ...selectedGroupsData]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocus ? 'Select item' : '...'}
+                    searchPlaceholder="Search..."
+                    value={group.value}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                      setGroup(item);
+                      setIsFocus(false);
+                    }}
+                  />
+                </>
+              ) : (
+                <>
+                  {renderLabel()}
+                  <Dropdown
+                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocus ? 'Select item' : '...'}
+                    searchPlaceholder="Search..."
+                    value={group.value}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                      setGroup(item);
+                      setIsFocus(false);
+                    }}
+                  />
+                </>
+              )
+            }
+
             <View style={styles.flexRow}>
               {showLoader ? (
                 <View style={styles.requestingView}>
@@ -420,16 +224,24 @@ const ParticipantFilterModal = ({
                     onBtnPress={() => {
                       if (onPress) {
                         setFields({
-                          gender: allGender ||allGroud ? "All" : selectedGroupsData[counter]?.group_gender[0]?.gender?.Gender,
-                          group: allGroud ? "All" : selectedGroupsData[counter]?.Name,
-                          grade: allEvent ? "All" : events[counterEvent]?.Name,
+                          gender: allGender || group ? "All" : group.group_gender?(group?.group_gender[0]?.gender?.Gender):'All',
+                          group: group.value=="All" ? "All" : group?.Name,
+                          grade: event.value=="All" ? "All" : event?.Name,
                         })
-                        // console.log("tah",events[counterEvent].id)
+                        // console.log("tah",event.id)
+                        // alert(JSON.stringify(
+                        //   {
+                        //     gender: allGender ? "All" : group?.group_gender[0],
+                        //   group: group.value=="All" ? "All" : group?.id,
+                        //   event: event.value=="All" ? "All" : event?.id,
+                        //   grade: allGender ? "All" : group?.group_grade[0],
+                        //   }
+                        // ))
                         onPress({
-                          gender: allGender ? "All" : selectedGroupsData[counter]?.group_gender[0],
-                          group: allGroud ? "All" : selectedGroupsData[counter]?.id,
-                          event: allEvent ? "All" : events[counterEvent]?.id,
-                          grade: allGender ? "All" : selectedGroupsData[counter]?.group_grade[0],
+                          gender: allGender ? "All" : group.group_gender?(group?.group_gender[0]):'All',
+                          group: group.value=="All" ? "All" : group?.id,
+                          event: event.value=="All" ? "All" : event?.id,
+                          grade: allGender ? "All" : (group.group_gender)?(group?.group_grade[0]):'All',
                         });
                         setIsModalVisible(false);
                       } else {
@@ -450,8 +262,8 @@ const ParticipantFilterModal = ({
     </View>
   );
 };
-const mapStateToProps = ({ userReducer,events }) => {
-  return { userReducer,events };
+const mapStateToProps = ({ userReducer, events }) => {
+  return { userReducer, events };
 };
 export default connect(mapStateToProps, actions)(ParticipantFilterModal);
 
@@ -492,7 +304,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: themeLightBlue,
     borderRadius: width * 0.025,
-    width: width * 0.7,
+    width: '100%',
     margin: 0,
   },
   filterContainer: {
@@ -528,7 +340,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignSelf: 'center',
     // width: width * 0.75,
-    minWidth: width * 0.75,
+    width: '100%'
+    // minWidth: width * 0.75,
   },
   inputField: {
     marginVertical: height * 0.03,
@@ -547,7 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeLightBlue,
     borderRadius: width * 0.025,
     // paddingVertical: height * 0.015,
-    width: width * 0.75,
+    width: '100%',
     flexDirection: 'row',
     borderWidth: 1,
     justifyContent: 'center',
@@ -566,5 +379,37 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     // marginLeft: width * 0.08,
     // fontFamily: 'Poppins-SemiBold',
+  },
+
+
+
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    marginVertical: 10,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label1: {
+    fontSize: 22,
+    color: themeBlue,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
