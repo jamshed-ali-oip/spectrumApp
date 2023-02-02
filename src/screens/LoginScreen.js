@@ -13,25 +13,27 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Heading from '../components/Heading';
-import {themeBlue, themeDarkBlue} from '../assets/colors/colors';
+import { themeBlue, themeDarkBlue } from '../assets/colors/colors';
 import * as actions from '../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dimensions';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
+const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [email, setEmail] = useState('talhakhan105@yahoo.com');
   // const [password, setPassword] = useState('pVweFkzxTO');
+  const [email, setEmail] = useState('veneyi4348@moneyzon.com');
+  const [password, setPassword] = useState('123456789');
   // const [email, setEmail] = useState('rocakaf842@usharer.com');
   // const [password, setPassword] = useState('123456789');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
 
@@ -45,14 +47,14 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
         type: 'danger',
       });
     } else {
-      if(password.length<8){
+      if (password.length < 8) {
         showMessage({
           message: 'password must be a minimum of 8 characters',
           type: 'danger',
         });
-      }else{
+      } else {
         setIsLoading(true);
-        await loginRequest({email, password}, onLoginFailed);
+        await loginRequest({ email, password }, onLoginFailed);
       }
     }
   };
@@ -72,22 +74,22 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
             <View>
               {logo && (
                 <Image
-                source={{uri:logo}}
-                style={{
-                  marginTop: responsiveFontSize(10),
-                  width: width * 0.4,
-                  height: height * 0.2,
-                  alignSelf: 'center',
-                }}
-                resizeMode="contain"
-              />
+                  source={{ uri: logo }}
+                  style={{
+                    marginTop: responsiveFontSize(10),
+                    width: width * 0.4,
+                    height: height * 0.2,
+                    alignSelf: 'center',
+                  }}
+                  resizeMode="contain"
+                />
               )}
               <TextInput
                 placeholder="Email Address"
                 placeholderTextColor="#565B66"
                 style={[
                   styles.inputfield,
-                  {marginBottom: width * 0.04, marginTop:responsiveFontSize(10),color:'black'},
+                  { marginBottom: width * 0.04, marginTop: responsiveFontSize(10), color: 'black' },
                 ]}
                 onChangeText={e => {
                   if (e == ' ' || isLoading) {
@@ -104,7 +106,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
                   placeholderTextColor="#565B66"
                   style={[
                     styles.inputfieldPassword,
-                    {fontSize: showPassword ? width * 0.04 : width * 0.04,color:'black'},
+                    { fontSize: showPassword ? width * 0.04 : width * 0.04, color: 'black' },
                   ]}
                   value={password}
                   onChangeText={e => {
@@ -158,7 +160,7 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
                 onPress={() => {
                   navigation.navigate('forgetPassword');
                 }}
-                style={{marginVertical: height * 0.03}}>
+                style={{ marginVertical: height * 0.03 }}>
                 <Heading
                   title="Forgot Password"
                   passedStyle={{
@@ -176,8 +178,8 @@ const LoginScreen = ({navigation, userReducer, loginRequest,logo}) => {
   );
 };
 
-const mapStateToProps = ({userReducer,logo}) => {
-  return {userReducer,logo};
+const mapStateToProps = ({ userReducer, logo }) => {
+  return { userReducer, logo };
 };
 export default connect(mapStateToProps, actions)(LoginScreen);
 

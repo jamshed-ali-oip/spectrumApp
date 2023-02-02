@@ -363,13 +363,13 @@ const TimeAssessment = ({
 
   
   const apiData = {
-    event_id: 1,
+    event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
     participant_id: Uservalue?.id,
     assessment_id: ITEM?.id,
     grade_id: CHILD_DATA?.GradeID,
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
-    results: 25,
+    results: Resultvalue.MaxValue,
     dt_recorded: "20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1]+" "+`00:0${secs.toString()?.replace(".",":")}`,
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
@@ -604,6 +604,8 @@ const TimeAssessment = ({
 
   const _onPressSave = async () => {
     setIsLoading(true);
+    // console.log("too",apiData)
+    // console.log("child",CHILD_DATA)
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
     if(Memebers?.length>2){

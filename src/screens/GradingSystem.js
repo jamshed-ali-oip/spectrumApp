@@ -248,15 +248,18 @@ const GradingSystem = ({
     //     color_id = userReducer?.gameInfo[i]?.color_id;
     //   }
     // }
+  const cDate=new Date().toLocaleDateString().split('/')
+
     const apiData = {
-      event_id: 1,
+      event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
       participant_id: Uservalue?.id,
       assessment_id: ITEM?.id,
       grade_id: CHILD_DATA?.GradeID,
       gender_id: CHILD_DATA.GenderID,
       color_id: Resultvalue.color_id,
-      results: 25,
-      dt_recorded: '12-10-22',
+      results: Resultvalue.MaxValue,
+
+      dt_recorded:"20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1] ,
       attempt: 1,
       percent: 5
     };
