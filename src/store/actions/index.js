@@ -16,6 +16,7 @@ import {
   SAVE_SOCKET_REF,
   GET_LOGIN_IMG,
   GET_EVENTS,
+  GET_VIDEO,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl,imageUrl} from '../../config';
@@ -679,6 +680,10 @@ export const getLoginImg = id => async dispatch => {
   dispatch({
     type:GET_LOGIN_IMG,
     payload:imageUrl+"/logo/"+res.data?.data[0]?.light_mode_logo
+  })
+  dispatch({
+    type:GET_VIDEO,
+    payload:imageUrl+"/logo/"+res.data?.data[0]?.video
   })
 }
 export const getEvents = accessToken => async dispatch => {

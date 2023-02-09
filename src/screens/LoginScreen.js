@@ -28,10 +28,10 @@ const { width, height } = Dimensions.get('window');
 const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [email, setEmail] = useState('talhakhan105@yahoo.com');
   // const [password, setPassword] = useState('pVweFkzxTO');
-  const [email, setEmail] = useState('veneyi4348@moneyzon.com');
-  const [password, setPassword] = useState('123456789');
-  // const [email, setEmail] = useState('rocakaf842@usharer.com');
+  // const [email, setEmail] = useState('veneyi4348@moneyzon.com');
   // const [password, setPassword] = useState('123456789');
+  const [email, setEmail] = useState('xipan93410@brandoza.com');
+  const [password, setPassword] = useState('123456789');
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);

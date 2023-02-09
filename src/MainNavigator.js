@@ -6,19 +6,24 @@ import AfterLoginNavigator from './AfterLoginNavigator';
 import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import * as actions from "./store/actions/index"
+import TourVideo from './screens/TourVideo';
 const { width, height } = Dimensions.get('window');
 
 
-const MainNavigator = ({ userReducer, getLoginImg }) => {
+const MainNavigator = ({ userReducer, getLoginImg,videoRed }) => {
   const IS_LOGIN = userReducer?.isLogin;
   const ACCESS_TOKEN = userReducer?.accessToken;
   const [loading, setLoading] = useState(true)
-
+  const [watch,setWatch]=useState(false)
   useEffect(() => {
     setLoading(true)
     getLoginImg().then(() => setLoading(false)).catch(() => setLoading(false))
   }, [])
 
+
+  function done(){
+    setWatch(true)
+  }
   if (loading) {
     return (
       <ImageBackground
@@ -35,16 +40,22 @@ const MainNavigator = ({ userReducer, getLoginImg }) => {
       </ImageBackground>
     )
   }
-  return (
-    <NavigationContainer theme={{ colors: "black" }}>
-      {ACCESS_TOKEN ? <AfterLoginNavigator /> : <BeforeLoginNavigator />}
-    </NavigationContainer>
-  );
+  
+  if(watch){
+    return (
+      <NavigationContainer theme={{ colors: "black" }}>
+        {ACCESS_TOKEN ? <AfterLoginNavigator /> : <BeforeLoginNavigator />}
+      </NavigationContainer>
+    )
+  }else{
+    return <TourVideo done={done} uri={videoRed}/>
+  }
 };
 
-const mapStateToProps = ({ userReducer }) => {
+const mapStateToProps = ({ userReducer,videoRed }) => {
   return {
     userReducer,
+    videoRed
   };
 };
 const styles = StyleSheet.create({
