@@ -340,6 +340,7 @@ export const submitResult =
         //   payload: response.data.data,
         // });
       } else {
+        // alert(JSON.stringify(response.data))
         showMessage({
           message:
             response.data.message ||
@@ -676,15 +677,18 @@ export const changeStatus = (id,accessToken) => async dispatch => {
 }
 
 export const getLoginImg = id => async dispatch => {
-  const res=await axios.get(`${apiUrl}/logo`)
+  const res=await axios.post(`${apiUrl}/logo`,{device_id:id})
   dispatch({
     type:GET_LOGIN_IMG,
     payload:imageUrl+"/logo/"+res.data?.data[0]?.light_mode_logo
   })
   dispatch({
     type:GET_VIDEO,
-    payload:imageUrl+"/logo/"+res.data?.data[0]?.video
+    payload:{...res.data?.data[1],videoUrl:imageUrl+"/logo/"+res.data?.data[0]?.video}
   })
+}
+export const videoWatched = id => async dispatch => {
+  return axios.post(`${apiUrl}/tutorial_watch`,{is_watch:true,device_id:id})
 }
 export const getEvents = accessToken => async dispatch => {
   const headers = {

@@ -2,7 +2,7 @@ import {
     GET_VIDEO
   } from '../actions/actionType';
   
-  const INITIAL_STATE = null
+  const INITIAL_STATE = {}
   
 const videoRed = (state = INITIAL_STATE, action) => {
     switch (action.type) {

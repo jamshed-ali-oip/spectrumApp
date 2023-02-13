@@ -9,6 +9,7 @@ export default function TourVideo({uri,done}) {
     <View style={{flex:1,backgroundColor:'green'}}>
       <Video
       resizeMode="cover"
+      controls={false}
       onEnd={done}
       style={{width:responsiveWidth(100),height:responsiveHeight(100)}}
     //   controls={true}

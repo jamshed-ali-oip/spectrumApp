@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from 'react-native';
 import React from 'react';
 import Button from '../components/Button';
@@ -25,12 +26,18 @@ import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
 import { imageUrl } from '../config';
+import Entypo from "react-native-vector-icons/Feather"
+import { useState } from 'react';
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import Video from 'react-native-video';
 const { width, height } = Dimensions.get('window');
 
 const RunAssessment = ({ navigation, route }) => {
+  const [videoModal, setVideoModal] = useState(false)
   const _onPressRunAssessment = () => { };
   const ITEM = route.params.item;
 
+  console.log("ddd",`${imageUrl}/assessment_image/${route.params?.item?.video}`)
   let SHOW_IMAGE =
     ITEM?.Name === 'Long Jump'
       ? LONG_JUMP
@@ -40,13 +47,34 @@ const RunAssessment = ({ navigation, route }) => {
           ? SHOT_PUT
           : HURDLES;
 
+
+  function renderModal() {
+    return (
+      <Modal>
+        <Video
+        controls={true}
+        resizeMode="cover"
+        repeat={true}
+        style={{width:responsiveWidth(100),height:responsiveHeight(100)}}
+        source={{uri:`${imageUrl}/assessment_image/${route.params?.item?.video}`}}
+        />
+          <TouchableOpacity
+          onPress={()=>setVideoModal(false)}
+          style={{position:'absolute',right:0,top:0,paddingRight:responsiveWidth(2),paddingTop:responsiveHeight(1)}}
+          >
+            <Entypo color={"white"} name="x" size={responsiveFontSize(3.5)} />
+          </TouchableOpacity>
+      </Modal>
+    )
+  }
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-        <ScrollView contentContainerStyle={{flexGrow:1}}>
+        {videoModal && renderModal()}
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.headingView}>
             <Heading
               title={'ASSESSMENTS'}
@@ -166,6 +194,25 @@ const RunAssessment = ({ navigation, route }) => {
                 fontType="bold"
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                if(route?.params?.item?.video){
+                  setVideoModal(true)
+                }else{
+                  alert("No Video Found")
+                }
+              }}
+              style={[
+                styles.buttonContainerStyles,
+                { backgroundColor: "#6800b8" },
+              ]}>
+              <Heading
+                title={'VIDEO'}
+                passedStyle={[styles.buttonStyles, { backgroundColor: "#6800b8" }]}
+                fontType="bold"
+              />
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </ImageBackground>
@@ -223,8 +270,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    flex:1,
-    alignItems:'center'
+    flex: 1,
+    alignItems: 'center'
     // marginTop:height*0.05
     // left: width * 0.05,
   },

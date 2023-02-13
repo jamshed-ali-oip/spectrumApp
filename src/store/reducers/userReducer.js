@@ -34,7 +34,7 @@ const INITIAL_STATE = {
 
 export const userReducer = (state = INITIAL_STATE, action) => {
 
-  console.log("actionType",action)
+  // console.log("actionType",action)
   switch (action.type) {
     case SAVE_SOCKET_REF:
       return {

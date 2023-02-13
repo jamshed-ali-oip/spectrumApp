@@ -604,6 +604,7 @@ const TimeAssessment = ({
 
   const _onPressSave = async () => {
     setIsLoading(true);
+    // alert(JSON.stringify(apiData))
     // console.log("too",apiData)
     // console.log("child",CHILD_DATA)
     // alert(JSON.stringify(apiData))
@@ -1031,6 +1032,36 @@ const TimeAssessment = ({
                       setHasTimerStarted(false);
                       // findScoreNow();
                       setShowTextField(true);
+                      Animated.sequence([
+                        Animated.timing(fadeAnim, {
+                          toValue: 0,
+                          duration: 10,
+                          useNativeDriver: true,
+                        }),
+                        Animated.timing(fadeAnim, {
+                          toValue: 1,
+                          duration: 1000,
+                          useNativeDriver: true,
+                        })
+                      ]).start()
+                
+                
+                      // setZindex(1)
+                      if (animationRef?.current) {
+                        animationRef?.current.reset()
+                      }
+                      animationRef.current = Animated.sequence([
+                        Animated.timing(fadeAnim2, {
+                          toValue: 1,
+                          duration: 250,
+                          useNativeDriver: true,
+                        }),
+                        Animated.timing(fadeAnim2, {
+                          toValue: 0,
+                          duration: 250,
+                          useNativeDriver: true,
+                        })
+                      ]).start()
                     }}
                     style={{ ...styles.startBtnContainer, backgroundColor: themeRed, }}>
                     <Heading
@@ -1289,6 +1320,7 @@ const TimeAssessment = ({
   const RenderimageDAta = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
+        !hasTimerStarted && setResultvalue(item)
         // setResultvalue(item)
       }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
       {Resultvalue.image == item.image && (

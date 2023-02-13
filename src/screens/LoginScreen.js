@@ -30,10 +30,10 @@ const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [password, setPassword] = useState('pVweFkzxTO');
   // const [email, setEmail] = useState('veneyi4348@moneyzon.com');
   // const [password, setPassword] = useState('123456789');
-  const [email, setEmail] = useState('xipan93410@brandoza.com');
-  const [password, setPassword] = useState('123456789');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('xipan93410@brandoza.com');
+  // const [password, setPassword] = useState('123456789');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
 

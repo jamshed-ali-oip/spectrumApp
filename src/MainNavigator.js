@@ -7,22 +7,35 @@ import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import * as actions from "./store/actions/index"
 import TourVideo from './screens/TourVideo';
+import DeviceInfo from 'react-native-device-info';
 const { width, height } = Dimensions.get('window');
 
 
-const MainNavigator = ({ userReducer, getLoginImg,videoRed }) => {
+const MainNavigator = ({ userReducer, getLoginImg,videoRed,videoWatched }) => {
   const IS_LOGIN = userReducer?.isLogin;
   const ACCESS_TOKEN = userReducer?.accessToken;
   const [loading, setLoading] = useState(true)
   const [watch,setWatch]=useState(false)
   useEffect(() => {
     setLoading(true)
-    getLoginImg().then(() => setLoading(false)).catch(() => setLoading(false))
+    getLoginImg(DeviceInfo.getDeviceId()).then(() => setLoading(false)).catch(() => setLoading(false))
   }, [])
 
-
+  useEffect(()=>{
+    // console.log("vid",videoRed)
+    if(videoRed.is_watch==0){
+      setWatch(false)
+    }else{
+      setWatch(true)
+    }
+  },[videoRed])
   function done(){
-    setWatch(true)
+    videoWatched(DeviceInfo.getDeviceId())
+    .then((res)=>{
+      // console.log("Ress",res.data)
+      setWatch(true)
+    })
+    .catch(err=>console.log(err))
   }
   if (loading) {
     return (
@@ -48,7 +61,7 @@ const MainNavigator = ({ userReducer, getLoginImg,videoRed }) => {
       </NavigationContainer>
     )
   }else{
-    return <TourVideo done={done} uri={videoRed}/>
+    return <TourVideo done={done} uri={videoRed.videoUrl}/>
   }
 };
 
