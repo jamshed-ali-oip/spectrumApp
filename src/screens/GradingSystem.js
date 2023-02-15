@@ -259,7 +259,7 @@ const GradingSystem = ({
       color_id: Resultvalue.color_id,
       results: Resultvalue.MaxValue,
 
-      dt_recorded:"20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1] ,
+      dt_recorded:Platform.OS=="ios"?(cDate[2]+"-"+cDate[0]+"-"+cDate[1]):("20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1]) ,
       attempt: 1,
       percent: 5
     };
