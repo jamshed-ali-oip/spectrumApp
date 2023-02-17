@@ -370,7 +370,7 @@ const TimeAssessment = ({
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
     results: Resultvalue.MaxValue,
-    dt_recorded: Platform.OS=="ios"?(cDate[2]+"-"+cDate[0]+"-"+cDate[1]+" "+`00:0${secs.toString()?.replace(".",":")}`):("20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1]+" "+`00:0${secs.toString()?.replace(".",":")}`),
+    dt_recorded:moment().format('YYYY-MM-DD')+" "+`00:0${secs.toString()?.replace(".",":")}`,
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
   };

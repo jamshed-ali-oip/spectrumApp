@@ -27,6 +27,7 @@ import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
 import { responsiveHeight,responsiveWidth } from 'react-native-responsive-dimensions';
+import moment from 'moment';
 
 const r = [
   {
@@ -259,7 +260,7 @@ const GradingSystem = ({
       color_id: Resultvalue.color_id,
       results: Resultvalue.MaxValue,
 
-      dt_recorded:Platform.OS=="ios"?(cDate[2]+"-"+cDate[0]+"-"+cDate[1]):("20"+cDate[2]+"-"+cDate[0]+"-"+cDate[1]) ,
+      dt_recorded:moment().format('YYYY-MM-DD') ,
       attempt: 1,
       percent: 5
     };
