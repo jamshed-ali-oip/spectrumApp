@@ -56,8 +56,8 @@ const ParticipantFilterModal = ({
   const [loading, setLoading] = useState(false)
 
 
-  const [event, setEvent] = useState({value:'All'});
-  const [group, setGroup] = useState({value:'All'});
+  const [event, setEvent] = useState({ value: 'All' });
+  const [group, setGroup] = useState({ value: 'All' });
 
   const [isFocus, setIsFocus] = useState(false);
 
@@ -107,8 +107,9 @@ const ParticipantFilterModal = ({
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
                   iconStyle={styles.iconStyle}
-                  data={[{ Name: 'All', id: 'All' }, ...events]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                  data={[{ Name: 'All', id: 'All' }, ...events]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
@@ -131,8 +132,9 @@ const ParticipantFilterModal = ({
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
                   iconStyle={styles.iconStyle}
-                  data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                  data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
@@ -159,7 +161,9 @@ const ParticipantFilterModal = ({
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[{ Name: 'All', id: 'All' }, ...selectedGroupsData]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                    itemTextStyle={{ color: 'black' }}
+
+                    data={[{ Name: 'All', id: 'All' }, ...selectedGroupsData]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
@@ -183,7 +187,7 @@ const ParticipantFilterModal = ({
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it,label: it.Name, value: it.id }))}
+                    data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
@@ -224,9 +228,9 @@ const ParticipantFilterModal = ({
                     onBtnPress={() => {
                       if (onPress) {
                         setFields({
-                          gender: allGender || group ? "All" : group.group_gender?(group?.group_gender[0]?.gender?.Gender):'All',
-                          group: group.value=="All" ? "All" : group?.Name,
-                          grade: event.value=="All" ? "All" : event?.Name,
+                          gender: allGender || group ? "All" : group.group_gender ? (group?.group_gender[0]?.gender?.Gender) : 'All',
+                          group: group.value == "All" ? "All" : group?.Name,
+                          grade: event.value == "All" ? "All" : event?.Name,
                         })
                         // console.log("tah",event.id)
                         // alert(JSON.stringify(
@@ -238,10 +242,10 @@ const ParticipantFilterModal = ({
                         //   }
                         // ))
                         onPress({
-                          gender: allGender ? "All" : group.group_gender?(group?.group_gender[0]):'All',
-                          group: group.value=="All" ? "All" : group?.id,
-                          event: event.value=="All" ? "All" : event?.id,
-                          grade: allGender ? "All" : (group.group_gender)?(group?.group_grade[0]):'All',
+                          gender: allGender ? "All" : group.group_gender ? (group?.group_gender[0]) : 'All',
+                          group: group.value == "All" ? "All" : group?.id,
+                          event: event.value == "All" ? "All" : event?.id,
+                          grade: allGender ? "All" : (group.group_gender) ? (group?.group_grade[0]) : 'All',
                         });
                         setIsModalVisible(false);
                       } else {
@@ -389,7 +393,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     marginVertical: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   icon: {
     marginRight: 5,
@@ -403,6 +407,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+    color: 'black'
   },
   iconStyle: {
     width: 20,
@@ -410,6 +415,6 @@ const styles = StyleSheet.create({
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 16,
+    fontSize: 16
   },
 });

@@ -609,7 +609,7 @@ const TimeAssessment = ({
     // console.log("child",CHILD_DATA)
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
-    if(Memebers?.length>2){
+    if(Memebers?.length>2 && Memebers.length!=Uservalue.index+1){
       partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
     }
     // alert(JSON.stringify(apiData))

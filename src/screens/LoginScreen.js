@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import { showMessage } from 'react-native-flash-message';
 import { responsiveFontSize, responsiveWidth } from 'react-native-responsive-dimensions';
+import DeviceInfo from 'react-native-device-info';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,6 +32,8 @@ const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [email, setEmail] = useState('veneyi4348@moneyzon.com');
   // const [password, setPassword] = useState('123456789');
   // const [email, setEmail] = useState('xipan93410@brandoza.com');
+  // const [password, setPassword] = useState('123456789');
+  //   const [email, setEmail] = useState('garem83903@ekcsoft.com');
   // const [password, setPassword] = useState('123456789');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,7 +57,7 @@ const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
         });
       } else {
         setIsLoading(true);
-        await loginRequest({ email, password }, onLoginFailed);
+        await loginRequest({ email, password }, onLoginFailed,DeviceInfo.getDeviceId());
       }
     }
   };

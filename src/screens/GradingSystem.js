@@ -249,28 +249,29 @@ const GradingSystem = ({
     //     color_id = userReducer?.gameInfo[i]?.color_id;
     //   }
     // }
-  const cDate=new Date().toLocaleDateString().split('/')
+    if(Resultvalue.color_id){
+      const cDate=new Date().toLocaleDateString().split('/')
 
-    const apiData = {
-      event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
-      participant_id: Uservalue?.id,
-      assessment_id: ITEM?.id,
-      grade_id: CHILD_DATA?.GradeID,
-      gender_id: CHILD_DATA.GenderID,
-      color_id: Resultvalue.color_id,
-      results: Resultvalue.MaxValue,
-
-      dt_recorded:moment().format('YYYY-MM-DD') ,
-      attempt: 1,
-      percent: 5
-    };
-    // alert(JSON.stringify(apiData))
-    if(Memebers?.length>2){
-      partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
+      const apiData = {
+        event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
+        participant_id: Uservalue?.id,
+        assessment_id: ITEM?.id,
+        grade_id: CHILD_DATA?.GradeID,
+        gender_id: CHILD_DATA.GenderID,
+        color_id: Resultvalue.color_id,
+        results: Resultvalue.MaxValue,
+  
+        dt_recorded:moment().format('YYYY-MM-DD') ,
+        attempt: 1,
+        percent: 5
+      };
+      if(Memebers?.length>2 && Memebers.length!=Uservalue.index+1){
+        partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
+      }
+      setIsLoading(true);
+      await submitResult(apiData, accessToken, onSuccess);
+      setIsLoading(false);
     }
-    setIsLoading(true);
-    await submitResult(apiData, accessToken, onSuccess);
-    setIsLoading(false);
   };
 
   const onSuccess = () => {

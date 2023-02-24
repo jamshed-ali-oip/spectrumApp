@@ -34,6 +34,7 @@ import * as actions from './store/actions/index';
 import FAQ from './screens/FAQ';
 import setup from './screens/setup';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import Setting from './screens/Setting';
 
 const {width, height} = Dimensions.get('window');
 
@@ -213,7 +214,49 @@ const AfterLoginNavigator = ({navigation, userReducer, saveSocketRef,logo}) => {
         >
           {(props)=><ViewParticipants {...props} socket={socket.current}/>}
         </AfterLoginStack.Screen>
-
+        <AfterLoginStack.Screen
+        name="setting"
+        options={({route, navigation}) => ({
+          headerShown: true,
+          cardStyleInterpolator:forFade,
+          headerStyle: {
+            height: Platform.OS === 'ios' ? height * 0.14 : height * 0.09,
+            borderColor: themeDarkBlue,
+            backgroundColor: themeDarkBlue,
+          },
+          title: '',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('home');
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <Image
+                resizeMode="contain"
+                style={{height: height * 0.06, width: width * 0.12}}
+                source={{uri:logo}}
+              />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{padding: 10}}
+              activeOpacity={0.9}>
+              <IconComp
+                iconName={'chevron-left'}
+                type="Feather"
+                passedStyle={{color: 'white', fontSize: width * 0.06}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+        >
+          {(props)=><Setting {...props} socket={socket.current}/>}
+        </AfterLoginStack.Screen>
       <AfterLoginStack.Screen
         name="assessments"
         options={({route, navigation}) => ({

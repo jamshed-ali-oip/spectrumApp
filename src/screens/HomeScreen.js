@@ -25,10 +25,13 @@ import deviceInfo from "react-native-device-info"
 const {width, height} = Dimensions.get('window');
 import messaging from '@react-native-firebase/messaging';
 import { ScrollView } from 'react-native-gesture-handler';
-import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions';
+import IonicIcons from "react-native-vector-icons/Ionicons"
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import DeviceInfo from 'react-native-device-info';
 
 const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) => {
   const accessToken = userReducer?.accessToken;
+  const [loading,setLoading]=useState(false)
   // console.log("parti",userReducer?.accessToken)
   useEffect(() => {
     // sendFCM();
@@ -56,6 +59,13 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
+          <View style={{position:'absolute',top:responsiveHeight(2),right:responsiveWidth(5),zIndex:1}}>
+            <TouchableOpacity
+            onPress={()=>navigation.navigate('setting')}
+            >
+              <IonicIcons name='ios-settings-outline' color={"white"} size={responsiveFontSize(3)}/>
+            </TouchableOpacity>
+          </View>
         <ScrollView>
         {
           logo && (
@@ -83,9 +93,21 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
           isBgColor={false}
         />
         <Button
-          title={'LOG OUT'}
+          title={loading?'...Loading':'LOG OUT'}
           btnStyle={{...styles.logout,backgroundColor:'black'}}
-          onBtnPress={logoutRequest}
+          onBtnPress={()=>{
+            setLoading(true)
+            logoutRequest(accessToken,DeviceInfo.getDeviceId())
+            .then((res)=>{
+              setLoading(false)
+              console.log(res.data)
+            })
+            .catch((err)=>{
+              console.log(err)
+              console.log(err?.response?.data)
+              setLoading(false)
+            })
+          }}
           btnTextStyle={styles.textBtnStyle}
           isBgColor={false}
         />
@@ -96,7 +118,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
         </TouchableOpacity>
         <View style={{flex:1}}>
           <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
-            App Version: 2.16
+            App Version: 2.17
             {/* {deviceInfo.getVersion()} */}
             </Text>
             {/* <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>

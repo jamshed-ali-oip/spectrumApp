@@ -56,17 +56,36 @@ export const sendFCMToken = (data, accessToken) => async dispatch => {
     // console.log(err?.response?.data?.message);
   }
 };
-export const loginRequest = (data, onLoginFailed) => async dispatch => {
+export const loginRequest = (data, onLoginFailed,device_id) => async dispatch => {
   try {
     const URL = `${apiUrl}/login`;
     const response = await axios.post(URL, data);
     if (response.data.success) {
       // console.log(response.data.data,"======================")
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${response.data.data?.token}`,
+        },
+      };
+
+      //// device registration
+      axios.post(`${apiUrl}/device_info`, {device_id},headers)
+      .then((res)=>{
+        console.log("register device",res.data)
+      })
+      .catch(err=>{
+        console.log('device register Error',err?.response?.data)
+      })
+
+      //////
       dispatch({
         type: LOGIN_REQUEST,
         payload: response.data.data,
       });
     } else {
+    console.log(response.data)
+
       onLoginFailed();
       showMessage({
         message:
@@ -307,14 +326,19 @@ export const getColors = accessToken => async dispatch => {
   }
 };
 
-export const logoutRequest = data => async dispatch => {
-  try {
+export const logoutRequest = (accessToken,device_id) => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  return axios.post(`${apiUrl}/remove_device`,{device_id},headers)
+  .then(()=>{
     dispatch({
       type: LOGOUT_REQUEST,
-    });
-  } catch (err) {
-    // console.log(err);
-  }
+    })
+  })
 };
 
 export const submitResult =
@@ -521,7 +545,7 @@ export const getAssessmentDetails = (id, accessToken) => async dispatch => {
     };
 
     const response = await axios.get(URL, headers);
-    console.log("WWwwwwwwwwwwwwwwwwwwww", response.data);
+    // console.log("WWwwwwwwwwwwwwwwwwwwww", response.data);
     if (response.data.success) {
       dispatch({
         type: GET_ASSESSMENT_DETAILS,
@@ -702,4 +726,14 @@ export const getEvents = accessToken => async dispatch => {
     type:GET_EVENTS,
     payload:res.data?.data
   })
+}
+
+export const SaveDeviceCount = (login_count,accessToken) => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  return axios.post(`${apiUrl}/login_count`,{login_count},headers)
 }
