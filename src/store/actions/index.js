@@ -737,3 +737,13 @@ export const SaveDeviceCount = (login_count,accessToken) => async dispatch => {
   };
   return axios.post(`${apiUrl}/login_count`,{login_count},headers)
 }
+
+export const getDevicesInfo = (accessToken) => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  return axios.get(`${apiUrl}/login_devices`,headers)
+}

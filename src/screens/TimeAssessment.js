@@ -357,20 +357,20 @@ const TimeAssessment = ({
   }, [secs])
   // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
 
-  const cDate=new Date().toLocaleDateString().split('/')
+  const cDate = new Date().toLocaleDateString().split('/')
   // console.log(cDate[0]+"-"+cDate[1]+"-"+cDate[2]+" "+secs)
   // console.log("Sdfsdf",ITEM?.id)
 
-  
+
   const apiData = {
-    event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
+    event_id: CHILD_DATA.event ? (CHILD_DATA?.event[0]?.id) : 1,
     participant_id: Uservalue?.id,
     assessment_id: ITEM?.id,
     grade_id: CHILD_DATA?.GradeID,
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
     results: Resultvalue.MaxValue,
-    dt_recorded:moment().format('YYYY-MM-DD')+" "+`00:0${secs.toString()?.replace(".",":")}`,
+    dt_recorded: moment().format('YYYY-MM-DD') + " " + `00:0${secs.toString()?.replace(".", ":")}`,
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
   };
@@ -609,7 +609,7 @@ const TimeAssessment = ({
     // console.log("child",CHILD_DATA)
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
-    if(Memebers?.length>2 && Memebers.length!=Uservalue.index+1){
+    if (Memebers?.length > 2 && Memebers.length != Uservalue.index + 1) {
       partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
     }
     // alert(JSON.stringify(apiData))
@@ -643,7 +643,25 @@ const TimeAssessment = ({
         index: newIndex,
       });
     } else {
-      navigation.navigate('home');
+      // const updatedMembers = [...Memebers].map((it) => {
+      //   if (it.id == Uservalue.id) {
+      //     return {
+      //       ...it,
+      //       disable: true
+      //     }
+      //   } else {
+      //     return it
+      //   }
+      // })
+      // setMembers(updatedMembers)
+      // const disableExist = Memebers.filter((it,i) => (!it.disable))
+      // if (disableExist.length > 0) {
+      //   const index=Memebers.findIndex(x=>x.id==disableExist[0].id)
+      //   setUservalue({...disableExist[0],index});
+
+      // } else {
+        navigation.navigate('home');
+      // }
     }
   };
 
@@ -1044,8 +1062,8 @@ const TimeAssessment = ({
                           useNativeDriver: true,
                         })
                       ]).start()
-                
-                
+
+
                       // setZindex(1)
                       if (animationRef?.current) {
                         animationRef?.current.reset()
@@ -1364,8 +1382,8 @@ const TimeAssessment = ({
                 position: 'absolute',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transform: [{ scale: it.image==Resultvalue.image?fadeAnim2 : 0 }],
-                opacity: it.image==Resultvalue.image?fadeAnim2:0
+                transform: [{ scale: it.image == Resultvalue.image ? fadeAnim2 : 0 }],
+                opacity: it.image == Resultvalue.image ? fadeAnim2 : 0
               }}>
               <Image
                 style={{ height: responsiveHeight(50), width: responsiveWidth(100), resizeMode: "contain", opacity: 0.75 }}
