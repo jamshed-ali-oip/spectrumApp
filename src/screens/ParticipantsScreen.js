@@ -193,8 +193,9 @@ const ParticipantsScreen = ({
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: responsiveFontSize(2.5) }}>
                   <TouchableOpacity
                     style={styles.selectFilterStyle}
-                    onPress={() => setShowFilterModal(true)}>
-                    <Heading
+                    // onPress={() => setShowFilterModal(true)}
+                    >
+                    {/* <Heading
                       title="Select Filter"
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
@@ -203,7 +204,7 @@ const ParticipantsScreen = ({
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
-                    />
+                    /> */}
                   </TouchableOpacity>
                   <View style={{ backgroundColor: 'white', width: 120, borderRadius: responsiveFontSize(1) }}>
                     <RNPickerSelect

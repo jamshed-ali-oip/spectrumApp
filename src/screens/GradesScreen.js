@@ -50,7 +50,7 @@ const GradesScreen = ({
   const [GROUP_DATA, SET_GROUP_DATA] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [showFilterModal, setShowFilterModal] = useState(true);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [gender, setGender] = useState("all")
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
@@ -77,7 +77,7 @@ const GradesScreen = ({
   }, [userReducer.participants])
 
   const getAllParticipants = async () => {
-    setShowFilterModal(true);
+    // setShowFilterModal(true);
     setIsLoading(true);
     await getParticipants(accessToken);
     await getGroups(accessToken);
@@ -229,8 +229,9 @@ const GradesScreen = ({
                 <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
                   <TouchableOpacity
                     style={styles.selectFilterStyle}
-                    onPress={() => setShowFilterModal(true)}>
-                    <Heading
+                    // onPress={() => setShowFilterModal(true)}
+                    >
+                    {/* <Heading
                       title="Select Filter"
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
@@ -239,7 +240,7 @@ const GradesScreen = ({
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
-                    />
+                    /> */}
                   </TouchableOpacity>
                   <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
                     <RNPickerSelect
