@@ -26,6 +26,7 @@ import * as actions from '../store/actions';
 import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
+import { showMessage } from 'react-native-flash-message';
 import { responsiveHeight,responsiveWidth } from 'react-native-responsive-dimensions';
 import moment from 'moment';
 
@@ -271,6 +272,11 @@ const GradingSystem = ({
       setIsLoading(true);
       await submitResult(apiData, accessToken, onSuccess);
       setIsLoading(false);
+    }else{
+      showMessage({
+        message: 'please select octagone color',
+        type: 'danger'
+      })
     }
   };
 

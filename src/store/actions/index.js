@@ -525,6 +525,7 @@ export const forgetPassword = (data, onFailed, onSuccess) => async dispatch => {
       });
     }
   } catch (err) {
+    console.log("err",err.response?.data)
     onFailed();
     showMessage({
       message: 'Network Error',

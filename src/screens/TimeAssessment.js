@@ -603,18 +603,26 @@ const TimeAssessment = ({
   };
 
   const _onPressSave = async () => {
-    setIsLoading(true);
     // alert(JSON.stringify(apiData))
     // console.log("too",apiData)
     // console.log("child",CHILD_DATA)
     // alert(JSON.stringify(apiData))
     // console.log(JSON.stringify(apiData?.grade_id, null, 2), '-----');
-    if (Memebers?.length > 2 && Memebers.length != Uservalue.index + 1) {
-      partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
+    if (Resultvalue.color_id) {
+      setIsLoading(true);
+
+      if (Memebers?.length > 2 && Memebers.length != Uservalue.index + 1) {
+        partScrollRef?.current?.scrollTo({ x: 0, y: (Uservalue.index + 1) * 35, animated: true })
+      }
+      // alert(JSON.stringify(apiData))
+      await submitResult(apiData, accessToken, onSuccess);
+      setIsLoading(false);
+    } else {
+      showMessage({
+        message: 'please select octagone color',
+        type: 'danger'
+      })
     }
-    // alert(JSON.stringify(apiData))
-    await submitResult(apiData, accessToken, onSuccess);
-    setIsLoading(false);
   };
 
   const onSuccess = () => {
@@ -660,7 +668,7 @@ const TimeAssessment = ({
       //   setUservalue({...disableExist[0],index});
 
       // } else {
-        navigation.navigate('home');
+      navigation.navigate('home');
       // }
     }
   };
