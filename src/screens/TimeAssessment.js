@@ -370,7 +370,8 @@ const TimeAssessment = ({
     gender_id: ITEM.times?.GenderID,
     color_id: Resultvalue.color_id,
     results: Resultvalue.MaxValue,
-    dt_recorded: moment().format('YYYY-MM-DD') + " " + `00:0${secs.toString()?.replace(".", ":")}`,
+    // dt_recorded: moment().format('YYYY-MM-DD') + " " + `00:0${secs.toString()?.replace(".", ":")}`,
+    dt_recorded: moment().format('YYYY-MM-DD hh:mm:ss'),
     attempt: 1,
     percent: Math.round(Number(ITEM.times?.Percent))
   };

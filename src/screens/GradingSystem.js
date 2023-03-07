@@ -262,7 +262,8 @@ const GradingSystem = ({
         color_id: Resultvalue.color_id,
         results: Resultvalue.MaxValue,
   
-        dt_recorded:moment().format('YYYY-MM-DD') ,
+        // dt_recorded:moment().format('YYYY-MM-DD') ,
+        dt_recorded: moment().format('YYYY-MM-DD hh:mm:ss'),
         attempt: 1,
         percent: 5
       };

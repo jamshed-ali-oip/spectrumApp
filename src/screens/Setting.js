@@ -43,7 +43,7 @@ const Setting = ({ navigation, userReducer, SaveDeviceCount, logo, getDevicesInf
   }, [])
 
   const onSave = async () => {
-    if (counts > 0) {
+    if (counts > 0 && ((counts%1)==0)) {
       setIsLoading(true)
       SaveDeviceCount(counts, userReducer.accessToken).then((res) => {
         showMessage({
