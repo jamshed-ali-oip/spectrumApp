@@ -27,7 +27,7 @@ import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
 import CheckIcon from "react-native-vector-icons/FontAwesome"
 import { showMessage } from 'react-native-flash-message';
-import { responsiveHeight,responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import moment from 'moment';
 
 const r = [
@@ -250,30 +250,30 @@ const GradingSystem = ({
     //     color_id = userReducer?.gameInfo[i]?.color_id;
     //   }
     // }
-    if(Resultvalue.color_id){
-      const cDate=new Date().toLocaleDateString().split('/')
+    if (Resultvalue.color_id) {
+      const cDate = new Date().toLocaleDateString().split('/')
 
       const apiData = {
-        event_id: CHILD_DATA.event?(CHILD_DATA?.event[0]?.id):1,
+        event_id: CHILD_DATA.event ? (CHILD_DATA?.event[0]?.id) : 1,
         participant_id: Uservalue?.id,
         assessment_id: ITEM?.id,
         grade_id: CHILD_DATA?.GradeID,
         gender_id: CHILD_DATA.GenderID,
         color_id: Resultvalue.color_id,
         results: Resultvalue.MaxValue,
-  
+
         // dt_recorded:moment().format('YYYY-MM-DD') ,
         dt_recorded: moment().format('YYYY-MM-DD hh:mm:ss'),
         attempt: 1,
         percent: 5
       };
-      if(Memebers?.length>2 && Memebers.length!=Uservalue.index+1){
+      if (Memebers?.length > 2 && Memebers.length != Uservalue.index + 1) {
         partScrollRef?.current?.scrollToIndex({ index: Uservalue.index + 1, animated: true })
       }
       setIsLoading(true);
       await submitResult(apiData, accessToken, onSuccess);
       setIsLoading(false);
-    }else{
+    } else {
       showMessage({
         message: 'please select octagone color',
         type: 'danger'
@@ -559,6 +559,18 @@ const GradingSystem = ({
                     />
                   </TouchableOpacity>
                 </View>
+                {
+                  ITEM?.times?.UseSegment == 1 && (
+                    <View style={{ width: '95%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: responsiveHeight(1) }}>
+                      <View>
+                        <Text style={{ color: 'white' }}>Color Segment: {ITEM?.times?.ColorSegment}</Text>
+                      </View>
+                      <View>
+                        <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+                      </View>
+                    </View>
+                  )
+                }
               </ScrollView>
             </View>
           )}

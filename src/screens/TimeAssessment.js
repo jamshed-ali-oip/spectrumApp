@@ -313,7 +313,7 @@ const TimeAssessment = ({
     return unsubscribe;
   }, [navigation])
 
-
+  // console.log("ittt",ITEM)
   useEffect(() => {
     // axios.post(`https://webprojectmockup.com/custom/spectrum-8-v2/api/percentile`, {
     //   assessment_id: ITEM?.id
@@ -1337,6 +1337,18 @@ const TimeAssessment = ({
                 />
               </TouchableOpacity>
             )}
+            {
+              ITEM?.times?.UseSegment == 1 && (
+                <View style={{ width: '95%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: responsiveHeight(1) }}>
+                  <View>
+                    <Text style={{ color: 'white' }}>Color Segment: {ITEM?.times?.ColorSegment}</Text>
+                  </View>
+                  <View>
+                    <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+                  </View>
+                </View>
+              )
+            }
             <View style={{ paddingBottom: 150 }} />
           </>
         )}

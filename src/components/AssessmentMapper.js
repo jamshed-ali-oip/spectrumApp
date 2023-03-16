@@ -4,29 +4,31 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Text
 } from 'react-native';
 import React from 'react';
 import Heading from './Heading';
-import {themeLightPurple} from '../assets/colors/colors';
-const {width, height} = Dimensions.get('window');
+import { themeLightPurple } from '../assets/colors/colors';
+const { width, height } = Dimensions.get('window');
 
 import LONG_JUMP from '../assets/images/long-jump.png';
 import SPRINTING from '../assets/images/sprinting.png';
 import SHOT_PUT from '../assets/images/shot-put.png';
 import HURDLES from '../assets/images/hurdles.png';
-import {imageUrl} from '../config';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import { imageUrl } from '../config';
+import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions';
 
-const AssessmentMapper = ({item, index, onPress, assessments}) => {
+const AssessmentMapper = ({ item, index, onPress, assessments }) => {
   let SHOW_IMAGE =
     item?.Name === 'Long Jump'
       ? LONG_JUMP
       : item?.Name === 'Sprinting'
-      ? SPRINTING
-      : item?.Name === 'Shot Put'
-      ? SHOT_PUT
-      : HURDLES;
-// console.log("image data",`${imageUrl}/assessment_image/${item?.Image}`)
+        ? SPRINTING
+        : item?.Name === 'Shot Put'
+          ? SHOT_PUT
+          : HURDLES;
+  // console.log("image data",`${imageUrl}/assessment_image/${item?.Image}`)
+  console.log("dddddd", item)
   return (
     <View
       style={[
@@ -37,9 +39,9 @@ const AssessmentMapper = ({item, index, onPress, assessments}) => {
           borderBottomWidth: 1,
         },
       ]}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <Image
-          source={{uri: `${imageUrl}/assessment_image/${item?.Image}`}}
+          source={{ uri: `${imageUrl}/assessment_image/${item?.Image}` }}
           resizeMode="contain"
           style={styles.imageStyles}
         />
@@ -49,17 +51,22 @@ const AssessmentMapper = ({item, index, onPress, assessments}) => {
           fontType="regular"
         />
       </View>
-      <TouchableOpacity
-        style={styles.btnStyle}
-        onPress={() => {
-          onPress(item);
-        }}>
-        <Heading
-          title="Run Assessment"
-          passedStyle={styles.textBtnStyle}
-          fontType="semi-bold"
-        />
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          style={styles.btnStyle}
+          onPress={() => {
+            onPress(item);
+          }}>
+          <Heading
+            title="Run Assessment"
+            passedStyle={styles.textBtnStyle}
+            fontType="semi-bold"
+          />
+        </TouchableOpacity>
+        <View style={{marginTop:responsiveHeight(0.5)}}>
+          <Text style={{color:'white',fontSize:responsiveFontSize(1.25)}}>DT recorded: {item.dt_recorded?.DTRecorded}</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -69,7 +76,7 @@ export default AssessmentMapper;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal:responsiveFontSize(1.5),
+    paddingHorizontal: responsiveFontSize(1.5),
     alignSelf: 'center',
     zIndex: 999,
     //   marginTop:-100,
