@@ -54,7 +54,9 @@ const RunAssessment = ({ navigation, route }) => {
         <Video
         controls={true}
         resizeMode="cover"
-        repeat={true}
+        onEnd={()=>{
+          setVideoModal(false)
+        }}
         style={{width:responsiveWidth(100),height:responsiveHeight(100)}}
         source={{uri:`${imageUrl}/assessment_image/${route.params?.item?.video}`}}
         />

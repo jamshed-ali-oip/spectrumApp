@@ -563,10 +563,7 @@ const GradingSystem = ({
                   ITEM?.times?.UseSegment == 1 && (
                     <View style={{ width: '95%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: responsiveHeight(1) }}>
                       <View>
-                        <Text style={{ color: 'white' }}>Color Segment: {ITEM?.times?.ColorSegment}</Text>
-                      </View>
-                      <View>
-                        <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+                        <Text style={{ color: 'white' }}>Distance to Red: {ITEM?.times?.DistanceToRed}</Text>
                       </View>
                     </View>
                   )
@@ -575,6 +572,12 @@ const GradingSystem = ({
             </View>
           )}
         </ScrollView>
+        {
+            ITEM?.times?.UseSegment == 1 && (
+              <View style={{ position: 'absolute', bottom: 20,right:20 }}>
+                <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+              </View>)
+          }
       </ImageBackground>
     </>
   );
