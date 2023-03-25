@@ -56,7 +56,7 @@ export const sendFCMToken = (data, accessToken) => async dispatch => {
     // console.log(err?.response?.data?.message);
   }
 };
-export const loginRequest = (data, onLoginFailed,device_id) => async dispatch => {
+export const loginRequest = (data, onLoginFailed,device_id,device_name) => async dispatch => {
   try {
     const URL = `${apiUrl}/login`;
     const response = await axios.post(URL, data);
@@ -68,9 +68,9 @@ export const loginRequest = (data, onLoginFailed,device_id) => async dispatch =>
           Authorization: `Bearer ${response.data.data?.token}`,
         },
       };
-
+      console.log(device_id,device_name)
       //// device registration
-      axios.post(`${apiUrl}/device_info`, {device_id},headers)
+      axios.post(`${apiUrl}/device_info`, {device_id,device_name},headers)
       .then((res)=>{
         console.log("register device",res.data)
       })
@@ -335,6 +335,10 @@ export const logoutRequest = (accessToken,device_id) => async dispatch => {
   };
   return axios.post(`${apiUrl}/remove_device`,{device_id},headers)
   .then(()=>{
+    dispatch({
+      type: LOGOUT_REQUEST,
+    })
+  }).catch(()=>{
     dispatch({
       type: LOGOUT_REQUEST,
     })

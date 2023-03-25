@@ -28,7 +28,7 @@ const { width, height } = Dimensions.get('window');
 
 const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [email, setEmail] = useState('talhakhan105@yahoo.com');
-  // const [password, setPassword] = useState('pVweFkzxTO');
+  // const [password, setPassword] = useState('123456789');
   // const [email, setEmail] = useState('veneyi4348@moneyzon.com');
   // const [password, setPassword] = useState('123456789');
   // const [email, setEmail] = useState('bavok99845@ukbob.com');
@@ -59,7 +59,10 @@ const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
         });
       } else {
         setIsLoading(true);
-        await loginRequest({ email, password }, onLoginFailed,DeviceInfo.getDeviceId());
+        DeviceInfo.getDeviceName()
+        .then(async(res)=>{
+        await loginRequest({ email, password }, onLoginFailed,DeviceInfo.getDeviceId(),res);    
+        })
       }
     }
   };
