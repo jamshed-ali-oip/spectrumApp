@@ -8,6 +8,7 @@ import {
   Image,
   ImageBackground,
   StatusBar,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Heading from '../components/Heading';
@@ -59,7 +60,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-          <View style={{position:'absolute',top:responsiveHeight(2),right:responsiveWidth(5),zIndex:1}}>
+          <View style={{position:'absolute',top:responsiveHeight(Platform.OS=="ios"?5:2),right:responsiveWidth(5),zIndex:1}}>
             <TouchableOpacity
             onPress={()=>navigation.navigate('setting')}
             >
@@ -118,7 +119,7 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
         </TouchableOpacity>
         <View style={{flex:1}}>
           <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2.5)}}>
-            App Version: 2.20
+            App Version: 2.21
             {/* {deviceInfo.getVersion()} */}
             </Text>
             {/* <Text style={{textAlign:'center',color:'white',fontSize:responsiveFontSize(2),marginTop:responsiveHeight(1)}}>

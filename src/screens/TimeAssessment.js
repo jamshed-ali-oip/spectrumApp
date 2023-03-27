@@ -669,7 +669,25 @@ const TimeAssessment = ({
       //   setUservalue({...disableExist[0],index});
 
       // } else {
+
+      const check= Memebers.slice(0,Memebers.length-1).find(it=>!it.disable)
+      // alert(JSON.stringify(check))
+      if(check){
+        const updatedMembers = [...Memebers].map((it) => {
+          if (it.id == Uservalue.id) {
+            return {
+              ...it,
+              disable: true
+            }
+          } else {
+            return it
+          }
+        })
+        setMembers(updatedMembers)
+        setUservalue(check)
+      }else{
       navigation.navigate('home');
+      }
       // }
     }
   };

@@ -7,6 +7,8 @@ import {store, persistor} from './src/store';
 import messaging from '@react-native-firebase/messaging';
 import FlashMessage from 'react-native-flash-message';
 import KeepAwake from 'react-native-keep-awake';
+{/* <Text style={styles.text}>{this.formatTime().slice(3,this.formatTime().length-1)}</Text> */}
+
 const App = () => {
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
