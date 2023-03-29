@@ -28,7 +28,7 @@ const AssessmentMapper = ({ item, index, onPress, assessments }) => {
           ? SHOT_PUT
           : HURDLES;
   // console.log("image data",`${imageUrl}/assessment_image/${item?.Image}`)
-  console.log("dddddd", item)
+  // console.log("dddddd", item)
   return (
     <View
       style={[

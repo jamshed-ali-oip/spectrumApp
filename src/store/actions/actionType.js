@@ -16,5 +16,6 @@ export const SAVE_SOCKET_REF = 'SAVE_SOCKET_REF';
 export const GET_LOGIN_IMG = 'GET_LOGIN_IMG';
 export const GET_VIDEO = 'GET_VIDEO';
 export const GET_EVENTS = 'GET_EVENTS';
+export const GET_NINTY_FIVE="GET_NINTY_FIVE"
 
 

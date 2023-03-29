@@ -17,6 +17,7 @@ import {
   GET_LOGIN_IMG,
   GET_EVENTS,
   GET_VIDEO,
+  GET_NINTY_FIVE,
 } from './actionType';
 import axios from 'axios';
 import {apiUrl,imageUrl} from '../../config';
@@ -119,15 +120,15 @@ export const getAssessments = accessToken => async dispatch => {
     const response2 = await axios.get(URL2, headers);
 
     if (response.data.success) {
-      console.log("daaatop333",response2.data.data)
-      console.log("daa",response.data.data.map((it,i)=>{
-        const d=response2.data.data.find(({AssessmentID})=>AssessmentID==it.id)
-        if(d){
-          return {...it,times:d}
-        }else{
-          return it
-        }
-      }))
+      // console.log("daaatop333",response2.data.data)
+      // console.log("daa",response.data.data.map((it,i)=>{
+      //   const d=response2.data.data.find(({AssessmentID})=>AssessmentID==it.id)
+      //   if(d){
+      //     return {...it,times:d}
+      //   }else{
+      //     return it
+      //   }
+      // }))
       dispatch({
         type: GET_ASSESSMENTS_REQUEST,
         payload: response.data.data.map((it,i)=>{
@@ -139,6 +140,10 @@ export const getAssessments = accessToken => async dispatch => {
           }
         }),
       });
+      dispatch({
+        type:GET_NINTY_FIVE,
+        payload:response2.data.data
+      })
     } else {
       dispatch({
         type: GET_ASSESSMENTS_REQUEST,

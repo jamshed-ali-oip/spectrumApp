@@ -170,6 +170,7 @@ const GradingSystem = ({
   getAssessmentDetails,
   getGameInfo,
   submitResult,
+  nintyFive
 }) => {
   const accessToken = userReducer?.accessToken;
   const ITEM = route?.params?.item;
@@ -192,8 +193,14 @@ const GradingSystem = ({
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim2 = useRef(new Animated.Value(0)).current;
   const animationRef = useRef()
+  const [currentNintyFive, setCurrentNintyFive] = useState({})
 
-  console.log('=======>', Uservalue);
+  useEffect(() => {
+    if (Object.keys(Uservalue).length > 0) {
+      const seletedNintyFive = nintyFive.find(it => it.AssessmentID == ITEM.id && it.GradeID == Uservalue.GradeID && it.GenderID == Uservalue.GenderID)
+      setCurrentNintyFive(seletedNintyFive)
+    }
+  }, [Uservalue])
 
   useLayoutEffect(() => {
     setMembers(route.params?.memberData)
@@ -559,33 +566,32 @@ const GradingSystem = ({
                     />
                   </TouchableOpacity>
                 </View>
-                {
-                  ITEM?.times?.UseSegment == 1 && (
-                    <View style={{ width: '95%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: responsiveHeight(1) }}>
-                      <View>
-                        <Text style={{ color: 'white' }}>Distance to Red: {ITEM?.times?.DistanceToRed}</Text>
-                      </View>
-                    </View>
-                  )
-                }
               </ScrollView>
             </View>
           )}
         </ScrollView>
         {
-            ITEM?.times?.UseSegment == 1 && (
-              <View style={{ position: 'absolute', bottom: 20,right:20 }}>
-                <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
-              </View>)
-          }
+          currentNintyFive?.UseSegment == 1 && (
+              <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
+                <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}</Text>
+              </View>
+          )
+        }
+        {
+          currentNintyFive?.UseSegment == 1 && (
+            <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
+              <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+            </View>)
+        }
       </ImageBackground>
     </>
   );
 };
 
-const mapStateToProps = ({ userReducer }) => {
+const mapStateToProps = ({ userReducer, nintyFive }) => {
   return {
     userReducer,
+    nintyFive
   };
 };
 

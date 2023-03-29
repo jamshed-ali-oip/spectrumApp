@@ -46,6 +46,7 @@ import { baseUrl } from '../config';
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import numeral from 'numeral';
 
 const { width, height } = Dimensions.get('window');
 
@@ -58,6 +59,7 @@ const TimeAssessment = ({
   getGameInfo,
   getAssessmentDetails,
   checkGame,
+  nintyFive
 }) => {
   const ITEM = route.params.item;
   const [Memebers, setMembers] = useState([]);
@@ -81,141 +83,13 @@ const TimeAssessment = ({
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim2 = useRef(new Animated.Value(0)).current;
   const animationRef = useRef()
-  const [ranges, setRanges] = useState([
-    {
-      "id": 24,
-      "assessment_id": 3,
-      "color_id": 1,
-      "MinValue": ITEM.times?.RL,
-      "MaxValue": ITEM.times?.RU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:25:03.000000Z",
-      "image": "red_1660267503.png",
-      "minTime": "0.36",
-      "maxTime": "0.40"
-    },
-    {
-      "id": 23,
-      "assessment_id": 3,
-      "color_id": 2,
-      "MinValue": ITEM.times?.BL,
-      "MaxValue": ITEM.times?.BU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-09T18:53:30.000000Z",
-      "image": "blue_1660071210.png",
-      "minTime": "0.31",
-      "maxTime": "0.35"
-    },
-    {
-      "id": 22,
-      "assessment_id": 3,
-      "color_id": 3,
-      "MinValue": ITEM.times?.GL,
-      "MaxValue": ITEM.times?.GU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:24:43.000000Z",
-      "image": "green_1660267483.png",
-      "minTime": "0.26",
-      "maxTime": "0.30"
-    },
-    {
-      "id": 21,
-      "assessment_id": 3,
-      "color_id": 4,
-      "MinValue": ITEM.times?.OL,
-      "MaxValue": ITEM.times?.OU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:24:21.000000Z",
-      "image": "orange_1660267461.png",
-      "minTime": "0.21",
-      "maxTime": "0.25"
-    },
-    {
-      "id": 20,
-      "assessment_id": 3,
-      "color_id": 5,
-      "MinValue": ITEM.times?.VL,
-      "MaxValue": ITEM.times?.VU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:24:04.000000Z",
-      "image": "purple_1660267444.png",
-      "minTime": "0.16",
-      "maxTime": "0.20"
-    },
-    {
-      "id": 19,
-      "assessment_id": 3,
-      "color_id": 6,
-      "MinValue": ITEM.times?.YL,
-      "MaxValue": ITEM.times?.YU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-09T18:54:29.000000Z",
-      "image": "yellow_1660071269.png",
-      "minTime": "0.11",
-      "maxTime": "0.15"
-    },
-    {
-      "id": 18,
-      "assessment_id": 3,
-      "color_id": 7,
-      "MinValue": ITEM.times?.PL,
-      "MaxValue": ITEM.times?.PU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:23:39.000000Z",
-      "image": "pink_1660267419.png",
-      "minTime": "0.06",
-      "maxTime": "0.10"
-    },
-    {
-      "id": 17,
-      "assessment_id": 3,
-      "color_id": 8,
-      "MinValue": ITEM.times?.WL,
-      "MaxValue": ITEM.times?.WU,
-      "Duration": "00:00:00",
-      "Beep": null,
-      "Distance": null,
-      "Score_target": "Duration",
-      "created_at": "2022-06-21T02:12:57.000000Z",
-      "updated_at": "2022-08-12T01:23:18.000000Z",
-      "image": "white_1660267398.png",
-      "minTime": "0.01",
-      "maxTime": "0.05"
-    }
-  ]);
+  const [ranges, setRanges] = useState([]);
   const [highscore, sethighscore] = useState();
   const [player, setPlayer] = useState({})
   const [players, setPlayers] = useState([])
   const [errorModal, setErrorModal] = useState(false)
   const [reverse, setReverse] = useState("red")
+  const [currentNintyFive, setCurrentNintyFive] = useState({})
   // console.log("ranges",ranges)
 
   // console.log("my kasjm,ir",route.params.item.id,highscore)
@@ -257,6 +131,142 @@ const TimeAssessment = ({
   //     setRanges([...ranges].reverse())
   //   }
   // }, [reverse])
+  useEffect(() => {
+    if (Object.keys(Uservalue).length > 0) {
+      const seletedNintyFive = nintyFive.find(it => it.AssessmentID == ITEM.id && it.GradeID == Uservalue.GradeID && it.GenderID == Uservalue.GenderID)
+      setCurrentNintyFive(seletedNintyFive)
+      setRanges([
+        {
+          "id": 24,
+          "assessment_id": 3,
+          "color_id": 1,
+          "MinValue": seletedNintyFive?.RL,
+          "MaxValue": seletedNintyFive?.RU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:25:03.000000Z",
+          "image": "red_1660267503.png",
+          "minTime": "0.36",
+          "maxTime": "0.40"
+        },
+        {
+          "id": 23,
+          "assessment_id": 3,
+          "color_id": 2,
+          "MinValue": seletedNintyFive?.BL,
+          "MaxValue": seletedNintyFive?.BU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-09T18:53:30.000000Z",
+          "image": "blue_1660071210.png",
+          "minTime": "0.31",
+          "maxTime": "0.35"
+        },
+        {
+          "id": 22,
+          "assessment_id": 3,
+          "color_id": 3,
+          "MinValue": seletedNintyFive?.GL,
+          "MaxValue": seletedNintyFive?.GU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:24:43.000000Z",
+          "image": "green_1660267483.png",
+          "minTime": "0.26",
+          "maxTime": "0.30"
+        },
+        {
+          "id": 21,
+          "assessment_id": 3,
+          "color_id": 4,
+          "MinValue": seletedNintyFive?.OL,
+          "MaxValue": seletedNintyFive?.OU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:24:21.000000Z",
+          "image": "orange_1660267461.png",
+          "minTime": "0.21",
+          "maxTime": "0.25"
+        },
+        {
+          "id": 20,
+          "assessment_id": 3,
+          "color_id": 5,
+          "MinValue": seletedNintyFive?.VL,
+          "MaxValue": seletedNintyFive?.VU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:24:04.000000Z",
+          "image": "purple_1660267444.png",
+          "minTime": "0.16",
+          "maxTime": "0.20"
+        },
+        {
+          "id": 19,
+          "assessment_id": 3,
+          "color_id": 6,
+          "MinValue": seletedNintyFive?.YL,
+          "MaxValue": seletedNintyFive?.YU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-09T18:54:29.000000Z",
+          "image": "yellow_1660071269.png",
+          "minTime": "0.11",
+          "maxTime": "0.15"
+        },
+        {
+          "id": 18,
+          "assessment_id": 3,
+          "color_id": 7,
+          "MinValue": seletedNintyFive?.PL,
+          "MaxValue": seletedNintyFive?.PU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:23:39.000000Z",
+          "image": "pink_1660267419.png",
+          "minTime": "0.06",
+          "maxTime": "0.10"
+        },
+        {
+          "id": 17,
+          "assessment_id": 3,
+          "color_id": 8,
+          "MinValue": seletedNintyFive?.WL,
+          "MaxValue": seletedNintyFive?.WU,
+          "Duration": "00:00:00",
+          "Beep": null,
+          "Distance": null,
+          "Score_target": "Duration",
+          "created_at": "2022-06-21T02:12:57.000000Z",
+          "updated_at": "2022-08-12T01:23:18.000000Z",
+          "image": "white_1660267398.png",
+          "minTime": "0.01",
+          "maxTime": "0.05"
+        }
+      ])
+    }
+  }, [Uservalue])
   useEffect(() => {
     if (Resultvalue) {
       Animated.sequence([
@@ -367,13 +377,13 @@ const TimeAssessment = ({
     participant_id: Uservalue?.id,
     assessment_id: ITEM?.id,
     grade_id: CHILD_DATA?.GradeID,
-    gender_id: ITEM.times?.GenderID,
+    gender_id: currentNintyFive?.GenderID,
     color_id: Resultvalue.color_id,
     results: Resultvalue.MaxValue,
     // dt_recorded: moment().format('YYYY-MM-DD') + " " + `00:0${secs.toString()?.replace(".", ":")}`,
     dt_recorded: moment().format('YYYY-MM-DD hh:mm:ss'),
     attempt: 1,
-    percent: Math.round(Number(ITEM.times?.Percent))
+    percent: Math.round(Number(currentNintyFive?.Percent))
   };
   // console.log("QQQQQQQQQQQQQQQQQQQQ", Value, ITEM, userReducer);
   const [timer, setTimer] = useState({
@@ -670,9 +680,9 @@ const TimeAssessment = ({
 
       // } else {
 
-      const check= Memebers.slice(0,Memebers.length-1).find(it=>!it.disable)
+      const check = Memebers.slice(0, Memebers.length - 1).find(it => !it.disable)
       // alert(JSON.stringify(check))
-      if(check){
+      if (check) {
         const updatedMembers = [...Memebers].map((it) => {
           if (it.id == Uservalue.id) {
             return {
@@ -685,8 +695,8 @@ const TimeAssessment = ({
         })
         setMembers(updatedMembers)
         setUservalue(check)
-      }else{
-      navigation.navigate('home');
+      } else {
+        navigation.navigate('home');
       }
       // }
     }
@@ -1355,15 +1365,6 @@ const TimeAssessment = ({
                 />
               </TouchableOpacity>
             )}
-            {
-              ITEM?.times?.UseSegment == 1 && (
-                <View style={{ width: '95%', alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: responsiveHeight(1) }}>
-                  <View>
-                    <Text style={{ color: 'white' }}>Distance To Red: {ITEM?.times?.DistanceToRed}</Text>
-                  </View>
-                </View>
-              )
-            }
             <View style={{ paddingBottom: 150 }} />
           </>
         )}
@@ -1376,7 +1377,7 @@ const TimeAssessment = ({
       onPress={() => {
         !hasTimerStarted && setResultvalue(item)
         // setResultvalue(item)
-      }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+      }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center',height:responsiveHeight(12),marginBottom:responsiveHeight(1) }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
           <CheckIcon name='check' color={"black"} size={30} />
@@ -1398,6 +1399,9 @@ const TimeAssessment = ({
           }}
         />
       </Animated.View>
+      <Text style={{position:'absolute',alignSelf:'flex-end',bottom:-7,color:'white',fontSize:responsiveFontSize(1.25)}}>
+        {numeral(item?.MinValue).format('0.00')}-{numeral(item?.MaxValue).format('0.00')}
+      </Text>
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
       {item.image == null?"":item.MaxValue}
     </Text> */}
@@ -1508,9 +1512,17 @@ const TimeAssessment = ({
           }}
         />
         {/* <KeepAwake/> */}
+
         {
-          ITEM?.times?.UseSegment == 1 && (
-            <View style={{ position: 'absolute', bottom: 20,right:20 }}>
+          currentNintyFive?.UseSegment == 1 && (
+            <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
+              <Text style={{ color: 'white' }}>Distance To Red: {currentNintyFive?.DistanceToRed}</Text>
+            </View>
+          )
+        }
+        {
+          currentNintyFive?.UseSegment == 1 && (
+            <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
               <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
             </View>
           )
@@ -1520,8 +1532,8 @@ const TimeAssessment = ({
   );
 };
 
-const mapStateToProps = ({ userReducer }) => {
-  return { userReducer };
+const mapStateToProps = ({ userReducer, nintyFive }) => {
+  return { userReducer, nintyFive };
 };
 export default connect(mapStateToProps, actions)(TimeAssessment);
 
