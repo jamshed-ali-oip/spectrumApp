@@ -1523,7 +1523,7 @@ const TimeAssessment = ({
         {
           currentNintyFive?.UseSegment == 1 && (
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
-              <Text style={{ color: "white" }}>Percentage: {ITEM?.dt_recorded.Percent}%</Text>
+              <Text style={{ color: "white" }}>Percentage: {currentNintyFive?.Percent}%</Text>
             </View>
           )
         }
