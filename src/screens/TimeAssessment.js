@@ -267,43 +267,42 @@ const TimeAssessment = ({
       ])
     }
   }, [Uservalue])
-  useEffect(() => {
-    if (Resultvalue) {
-      Animated.sequence([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 10,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        })
-      ]).start()
+  // useEffect(() => {
+  //   if (Resultvalue) {
+  //     Animated.sequence([
+  //       Animated.timing(fadeAnim, {
+  //         toValue: 0,
+  //         duration: 10,
+  //         useNativeDriver: true,
+  //       }),
+  //       Animated.timing(fadeAnim, {
+  //         toValue: 1,
+  //         duration: 1000,
+  //         useNativeDriver: true,
+  //       })
+  //     ]).start()
 
-
-      // setZindex(1)
-      if (animationRef?.current) {
-        animationRef?.current.reset()
-      }
-      animationRef.current = Animated.sequence([
-        Animated.timing(fadeAnim2, {
-          toValue: 1,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(fadeAnim2, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: true,
-        })
-      ]).start()
-      // setTimeout(()=>{
-      //   setZindex(0)
-      // },1000)
-    }
-  }, [Resultvalue])
+  //     // setZindex(1)
+  //     if (animationRef?.current) {
+  //       animationRef?.current.reset()
+  //     }
+  //     animationRef.current = Animated.sequence([
+  //       Animated.timing(fadeAnim2, {
+  //         toValue: 1,
+  //         duration: 250,
+  //         useNativeDriver: true,
+  //       }),
+  //       Animated.timing(fadeAnim2, {
+  //         toValue: 0,
+  //         duration: 250,
+  //         useNativeDriver: true,
+  //       })
+  //     ]).start()
+  //     // setTimeout(()=>{
+  //     //   setZindex(0)
+  //     // },1000)
+  //   }
+  // }, [Resultvalue])
 
   useEffect(() => {
     const stateListen = AppState.addEventListener('blur', (status) => {
@@ -356,10 +355,12 @@ const TimeAssessment = ({
     // if (Number(secs) == value) {
     //   playSound()
     // }
-    console.log(secs)
     if (secs) {
+
       ranges.forEach(it => {
-        if (secs >= (it.MinValue / 100) && secs <= (it.MaxValue / 100)) {
+    // console.log(secs,it.MinValue,it.MaxValue)
+
+        if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
           setResultvalue(it)
         }
       })
@@ -801,8 +802,11 @@ const TimeAssessment = ({
     if (time) {
       let currentTime = time;
       setSecs(
-        Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
+        Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 10)}`),
       );
+      // setSecs(
+      //   Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
+      // );
     }
   };
 
@@ -1084,7 +1088,7 @@ const TimeAssessment = ({
                       playSound();
                       checkGame(false);
                       toggleStopwatch();
-                      setHasTimerStarted(false);
+                      // setHasTimerStarted(false);
                       // findScoreNow();
                       setShowTextField(true);
                       Animated.sequence([
