@@ -54,7 +54,7 @@ const MainNavigator = ({ userReducer, getLoginImg,videoRed,videoWatched }) => {
     )
   }
   
-  if(watch){
+  if(true){
     return (
       <NavigationContainer theme={{ colors: "black" }}>
         {ACCESS_TOKEN ? <AfterLoginNavigator /> : <BeforeLoginNavigator />}

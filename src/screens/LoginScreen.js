@@ -37,6 +37,8 @@ const LoginScreen = ({ navigation, userReducer, loginRequest, logo }) => {
   // const [password, setPassword] = useState('123456789');
   //   const [email, setEmail] = useState('garem83903@ekcsoft.com');
   // const [password, setPassword] = useState('123456789');
+  //     const [email, setEmail] = useState('tefik14708@vingood.com');
+  // const [password, setPassword] = useState('123456789');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);

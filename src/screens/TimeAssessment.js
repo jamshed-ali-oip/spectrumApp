@@ -89,6 +89,7 @@ const TimeAssessment = ({
   const [players, setPlayers] = useState([])
   const [errorModal, setErrorModal] = useState(false)
   const [reverse, setReverse] = useState("red")
+  const [stopDisable, setStopDisable] = useState(false)
   const [currentNintyFive, setCurrentNintyFive] = useState({})
   // console.log("ranges",ranges)
 
@@ -358,7 +359,7 @@ const TimeAssessment = ({
     if (secs) {
 
       ranges.forEach(it => {
-    // console.log(secs,it.MinValue,it.MaxValue)
+        // console.log(secs,it.MinValue,it.MaxValue)
 
         if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
           setResultvalue(it)
@@ -635,6 +636,8 @@ const TimeAssessment = ({
         type: 'danger'
       })
     }
+    setHasTimerStarted(false)
+    setStopDisable(false)
   };
 
   const onSuccess = () => {
@@ -802,7 +805,7 @@ const TimeAssessment = ({
     if (time) {
       let currentTime = time;
       setSecs(
-        Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 10)}`),
+        Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 12)}`),
       );
       // setSecs(
       //   Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
@@ -1050,7 +1053,6 @@ const TimeAssessment = ({
                         setFlag(true)
                         if (!hasTimerStarted) {
                           // timerRef.current.start();
-
                           checkGame(true);
                           toggleStopwatch();
                           setHasTimerStarted(true);
@@ -1082,53 +1084,69 @@ const TimeAssessment = ({
                   </>
                 ) : (
                   // Stop Button
-                  <TouchableOpacity
-                    onPress={() => {
-                      // timerRef.current.pause();
-                      playSound();
-                      checkGame(false);
-                      toggleStopwatch();
-                      // setHasTimerStarted(false);
-                      // findScoreNow();
-                      setShowTextField(true);
-                      Animated.sequence([
-                        Animated.timing(fadeAnim, {
-                          toValue: 0,
-                          duration: 10,
-                          useNativeDriver: true,
-                        }),
-                        Animated.timing(fadeAnim, {
-                          toValue: 1,
-                          duration: 1000,
-                          useNativeDriver: true,
-                        })
-                      ]).start()
+                  <>
+                    <TouchableOpacity
+                      disabled={stopDisable}
+                      onPress={() => {
+                        // timerRef.current.pause();
+                        playSound();
+                        checkGame(false);
+                        toggleStopwatch();
+                        // setHasTimerStarted(false);
+                        // findScoreNow();
+                        setShowTextField(true);
+                        Animated.sequence([
+                          Animated.timing(fadeAnim, {
+                            toValue: 0,
+                            duration: 10,
+                            useNativeDriver: true,
+                          }),
+                          Animated.timing(fadeAnim, {
+                            toValue: 1,
+                            duration: 1000,
+                            useNativeDriver: true,
+                          })
+                        ]).start()
 
 
-                      // setZindex(1)
-                      if (animationRef?.current) {
-                        animationRef?.current.reset()
-                      }
-                      animationRef.current = Animated.sequence([
-                        Animated.timing(fadeAnim2, {
-                          toValue: 1,
-                          duration: 250,
-                          useNativeDriver: true,
-                        }),
-                        Animated.timing(fadeAnim2, {
-                          toValue: 0,
-                          duration: 250,
-                          useNativeDriver: true,
-                        })
-                      ]).start()
-                    }}
-                    style={{ ...styles.startBtnContainer, backgroundColor: themeRed, }}>
-                    <Heading
-                      title={'STOP'}
-                      passedStyle={styles.startBtnStyle}
-                      fontType="semi-bold"
-                    />
-                  </TouchableOpacity>
+                        // setZindex(1)
+                        if (animationRef?.current) {
+                          animationRef?.current.reset()
+                        }
+                        animationRef.current = Animated.sequence([
+                          Animated.timing(fadeAnim2, {
+                            toValue: 1,
+                            duration: 250,
+                            useNativeDriver: true,
+                          }),
+                          Animated.timing(fadeAnim2, {
+                            toValue: 0,
+                            duration: 250,
+                            useNativeDriver: true,
+                          })
+                        ]).start()
+
+                        setStopDisable(true)
+                      }}
+                      style={{ ...styles.startBtnContainer, backgroundColor: themeRed, }}>
+                      <Heading
+                        title={'STOP'}
+                        passedStyle={styles.startBtnStyle}
+                        fontType="semi-bold"
+                      />
+                    </TouchableOpacity>
+                    {showTextField && (
+                      <TouchableOpacity
+                        onPress={_onPressSave}
+                        style={{ ...styles.startBtnContainer, backgroundColor: themeFerozi }}>
+                        <Heading
+                          title={'SAVE'}
+                          passedStyle={styles.startBtnStyle}
+                          fontType="semi-bold"
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </>
                 )}
                 <TouchableOpacity
                   onPress={() => {
@@ -1360,6 +1378,8 @@ const TimeAssessment = ({
                   setScore('0');
                   setShowTextField(false);
                   setResultvalue({})
+                  setStopDisable(false)
+                  setHasTimerStarted(false)
                 }}
                 style={{ ...styles.startBtnContainer, backgroundColor: themePurple, alignSelf: 'center', marginVertical: 10 }}>
                 <Heading
@@ -1381,7 +1401,7 @@ const TimeAssessment = ({
       onPress={() => {
         !hasTimerStarted && setResultvalue(item)
         // setResultvalue(item)
-      }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center',height:responsiveHeight(12),marginBottom:responsiveHeight(1) }}>
+      }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center', height: responsiveHeight(12), marginBottom: responsiveHeight(1) }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
           <CheckIcon name='check' color={"black"} size={30} />
@@ -1403,7 +1423,7 @@ const TimeAssessment = ({
           }}
         />
       </Animated.View>
-      <Text style={{position:'absolute',alignSelf:'flex-end',bottom:-7,color:'white',fontSize:responsiveFontSize(1.25)}}>
+      <Text style={{ position: 'absolute', alignSelf: 'flex-end', bottom: -7, color: 'white', fontSize: responsiveFontSize(1.25) }}>
         {numeral(item?.MinValue).format('0.00')}-{numeral(item?.MaxValue).format('0.00')}
       </Text>
       {/* <Text style={{position:"absolute",color:"white",fontWeight:"500",marginLeft:width*.059,marginTop:height*.057,fontSize:width*.03}}>
