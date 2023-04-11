@@ -305,7 +305,24 @@ const GradingSystem = ({
       const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
       setUservalue({ ...Memebers[newIndex], index: newIndex })
     } else {
-      navigation.navigate('home');
+      const check = Memebers.slice(0, Memebers.length - 1).find(it => !it.disable)
+      // alert(JSON.stringify(check))
+      if (check) {
+        const updatedMembers = [...Memebers].map((it) => {
+          if (it.id == Uservalue.id) {
+            return {
+              ...it,
+              disable: true
+            }
+          } else {
+            return it
+          }
+        })
+        setMembers(updatedMembers)
+        setUservalue(check)
+      } else {
+        navigation.navigate('home');
+      }
     }
   };
 

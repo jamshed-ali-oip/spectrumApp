@@ -91,47 +91,12 @@ const TimeAssessment = ({
   const [reverse, setReverse] = useState("red")
   const [stopDisable, setStopDisable] = useState(false)
   const [currentNintyFive, setCurrentNintyFive] = useState({})
-  // console.log("ranges",ranges)
-
-  // console.log("my kasjm,ir",route.params.item.id,highscore)
-  // console.log("time assement screen", Event)
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
     winnerIndex: null,
     started: false,
   });
-  const [scoring, setscoring] = useState(0);
-  const Value = userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id);
-  // const assessment_id = userReducer?.assessmentDetails?.assessment_scoring[0]?.assessment_id;
-  // console.log("gameindo",userReducer?.gameInfo)
-  const timerRef = useRef(null);
-  const countdownRef = useRef(null);
   const participants = ['', '', '', '', '', '', '', '', ''];
-  const [secs, setSecs] = useState(0);
-  const [zindex, setZindex] = useState(0)
-  // console.log("seconds", secs)
-  // console.log("first",meterValue)
-  // const apiData = {
-  //   assessment_score_id: Resultvalue ? Resultvalue.id : 0,
-  //   Score: Resultvalue ? Resultvalue.MaxValue : 0,
-  //   participant_id: Uservalue?.id,
-  //   // Score: Resultvalue.MaxValue,
-  //   grade_id: CHILD_DATA?.grade_id,
-  //   group_id: GROUP_DATA?.id,
-  //   assessment_id: route.params.item.id,
-  //   Duration: secs,
-  //   event_id: Event.id
-  // };
-
-  // Value.find((scoor) => {
-  //   highscore > scoor.MaxValue && highscore < scoor.MinValue
-  // })
-
-  // useEffect(() => {
-  //   if (ranges.length > 0) {
-  //     setRanges([...ranges].reverse())
-  //   }
-  // }, [reverse])
   useEffect(() => {
     if (Object.keys(Uservalue).length > 0) {
       const seletedNintyFive = nintyFive.find(it => it.AssessmentID == ITEM.id && it.GradeID == Uservalue.GradeID && it.GenderID == Uservalue.GenderID)
@@ -268,49 +233,14 @@ const TimeAssessment = ({
       ])
     }
   }, [Uservalue])
-  // useEffect(() => {
-  //   if (Resultvalue) {
-  //     Animated.sequence([
-  //       Animated.timing(fadeAnim, {
-  //         toValue: 0,
-  //         duration: 10,
-  //         useNativeDriver: true,
-  //       }),
-  //       Animated.timing(fadeAnim, {
-  //         toValue: 1,
-  //         duration: 1000,
-  //         useNativeDriver: true,
-  //       })
-  //     ]).start()
-
-  //     // setZindex(1)
-  //     if (animationRef?.current) {
-  //       animationRef?.current.reset()
-  //     }
-  //     animationRef.current = Animated.sequence([
-  //       Animated.timing(fadeAnim2, {
-  //         toValue: 1,
-  //         duration: 250,
-  //         useNativeDriver: true,
-  //       }),
-  //       Animated.timing(fadeAnim2, {
-  //         toValue: 0,
-  //         duration: 250,
-  //         useNativeDriver: true,
-  //       })
-  //     ]).start()
-  //     // setTimeout(()=>{
-  //     //   setZindex(0)
-  //     // },1000)
-  //   }
-  // }, [Resultvalue])
+  
 
   useEffect(() => {
     const stateListen = AppState.addEventListener('blur', (status) => {
       setFlag(true)
       resetStopwatch();
       checkGame(false);
-      setSecs(0);
+      // setSecs(0);
       setScore('0');
       setShowTextField(false);
       setResultvalue({})
@@ -323,20 +253,6 @@ const TimeAssessment = ({
     return unsubscribe;
   }, [navigation])
 
-  // console.log("ittt",ITEM)
-  useEffect(() => {
-    // axios.post(`https://webprojectmockup.com/custom/spectrum-8-v2/api/percentile`, {
-    //   assessment_id: ITEM?.id
-    // },{
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${userReducer.accessToken}`,
-    //   }
-    // }).then(res => {
-    //   // alert(JSON.stringify(res.data.data))
-    //   setPlayers(res.data.data)
-    // })
-  }, [])
 
   useEffect(() => {
     if (Uservalue && players.length > 0) {
@@ -346,32 +262,6 @@ const TimeAssessment = ({
     }
   }, [Uservalue, players])
 
-  useEffect(() => {
-    // const per = Math.round(Number(player?.percent))
-    // const value = per.toString().length > 1 ? `0.${per}` : `0.0${per}`
-    // const seletedCheck=ranges.filter((it)=>it.minTime==secs)
-    // if(seletedCheck.length>0){
-    //   setResultvalue(seletedCheck[0])
-    // }
-    // if (Number(secs) == value) {
-    //   playSound()
-    // }
-    if (secs) {
-
-      ranges.forEach(it => {
-        // console.log(secs,it.MinValue,it.MaxValue)
-
-        if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
-          setResultvalue(it)
-        }
-      })
-    }
-  }, [secs])
-  // alert(JSON.stringify(ranges.map(it=>({min:it.minTime,max:it.maxTime}))))
-
-  const cDate = new Date().toLocaleDateString().split('/')
-  // console.log(cDate[0]+"-"+cDate[1]+"-"+cDate[2]+" "+secs)
-  // console.log("Sdfsdf",ITEM?.id)
 
 
   const apiData = {
@@ -404,18 +294,6 @@ const TimeAssessment = ({
     innerRadius: 10,
     width: 50,
     colors: userReducer?.colors?.map(ele => ele?.WebColor),
-    // colors: [
-    //   ,
-    //   themeDarkBlue,
-    //   themeLightBlue,
-    //   themeBlue,
-    //   themeFerozi,
-    //   themeLightPurple,
-    //   themePurple,
-    //   themeGreen,
-    //   themeRed,
-    //   themeYellow,
-    // ],
     height: 50,
     duration: 1000,
     backgroundColor: 'transparent',
@@ -429,8 +307,6 @@ const TimeAssessment = ({
     onRef: ref => setChild(ref),
   };
 
-  // console.log(JSON.stringify(CHILD_DATA,null,2), '----');
-  // console.log("userReducer?.assessmentDetails?.id",highscore,userReducer?.assessmentDetails?.id)
   const assesmentBeep = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -466,107 +342,6 @@ const TimeAssessment = ({
     }
 
   }, [meterValue])
-
-  const _onButtonPress = () => {
-    // if (!wheelState?.started) {
-    //   setWheelState(() => {
-    //     return {winnerIndex: null};
-    //   });
-    //   child._tryAgain();
-    // } else {
-    //   setWheelState(prev => {
-    //     return {...prev, started: true};
-    //   });
-    //   child._onPress();
-    // }
-  };
-  // console.log(
-  //   'colors',
-  //   Value[7]?.MaxValue
-  //   // colors[0],
-  //   // userReducer?.gameInfo?.filter(game => game.assessment_id == 8)
-  // );
-  useEffect(() => {
-    // console.log('Miliseconds: ', secs * 1000, '----', 'Seconds: ', secs);
-  }, [secs]);
-
-  // const findScoreNow = () => {
-  //   // console.log("color id",color_id)
-  //   const thisGameScorePeers = userReducer?.gameInfo?.filter(
-  //     game => game.assessment_id == 8,
-  //   );
-  //   let color_id = thisGameScorePeers[0]?.color_id;
-  //   for (const thisGame of thisGameScorePeers) {
-  //     // console.log('YYYYYYY', thisGame, color_id);
-  //     if (thisGame?.MinValue <= secs && thisGame?.MaxValue >= secs) {
-  //       color_id = thisGame?.color_id;
-  //       setAssessmentScoreId(thisGame?.id);
-  //     }
-  //   }
-  //   for (let i = 8; i <= userReducer?.gameInfo?.length; i++) {
-  //     if (
-  //       userReducer?.gameInfo[i]?.MinValue <= secs &&
-  //       userReducer?.gameInfo[i]?.MaxValue >= secs
-  //     ) {
-  //       color_id = userReducer?.gameInfo[i]?.color_id;
-  //       setAssessmentScoreId(userReducer?.gameInfo[i]?.id);
-  //     }
-  //   }
-  //   // if (color_id === 1) {
-  //   //   setMeterValue(5);
-  //   // } else if (color_id === 2) {
-  //   //   setMeterValue(15);
-  //   // } else if (color_id === 3) {
-  //   //   setMeterValue(25);
-  //   // } else if (color_id === 4) {
-  //   //   setMeterValue(35);
-  //   // } else if (color_id === 5) {
-  //   //   setMeterValue(45);
-  //   // } else if (color_id === 6) {
-  //   //   setMeterValue(55);
-  //   // } else if (color_id === 7) {
-  //   //   setMeterValue(65);
-  //   // } else if (color_id === 8) {
-  //   //   setMeterValue(75);
-  //   // } else if (color_id === 9) {
-  //   //   setMeterValue(85);
-  //   // } else {
-  //   //   setMeterValue(95);
-  //   // }
-  // };
-  useEffect(() => {
-    // setRanges(userReducer?.assessmentDetails?.assessment_scoring);
-    // setRanges(userReducer?.gameInfo?.filter(game => game.assessment_id == ITEM.id))
-    // setRanges(Value);
-  }, [userReducer?.gameInfo]);
-
-  // useEffect(() => {
-  //   if (Uservalue.id) {
-  //     setIsLoading(true)
-  //     axios.post('https://webprojectmockup.com/custom/spectrum-8-v2/api/participantCount', {
-  //       assessment_id: ITEM?.id,
-  //       participant_id: Uservalue.id,
-  //       event_id: Event.id
-  //     }).then((res) => {
-  //       // alert(JSON.stringify({
-  //       //   a:Uservalue.Firstname,
-  //       //   d:res.data?.data
-  //       // }))
-  //       setIsLoading(false)
-  //       if (res.data?.data > 2) {
-  //         // alert(JSON.stringify({
-  //         //   a:Uservalue.Firstname,
-  //         //   d:res.data?.data
-  //         // }))
-  //         setErrorModal(true)
-  //       }
-  //     }).catch((err) => {
-  //       // alert(err)
-  //       setIsLoading(false)
-  //       console.log(err)
-  //     })
-  //   }
-  // }, [Uservalue])
 
   function nextCandidate() {
     const newIndex = Uservalue.index + 1
@@ -644,7 +419,7 @@ const TimeAssessment = ({
     setFlag(true)
     resetStopwatch();
     checkGame(false);
-    setSecs(0);
+    // setSecs(0);
     setScore('0');
     setShowTextField(false);
     setResultvalue({})
@@ -666,23 +441,6 @@ const TimeAssessment = ({
         index: newIndex,
       });
     } else {
-      // const updatedMembers = [...Memebers].map((it) => {
-      //   if (it.id == Uservalue.id) {
-      //     return {
-      //       ...it,
-      //       disable: true
-      //     }
-      //   } else {
-      //     return it
-      //   }
-      // })
-      // setMembers(updatedMembers)
-      // const disableExist = Memebers.filter((it,i) => (!it.disable))
-      // if (disableExist.length > 0) {
-      //   const index=Memebers.findIndex(x=>x.id==disableExist[0].id)
-      //   setUservalue({...disableExist[0],index});
-
-      // } else {
 
       const check = Memebers.slice(0, Memebers.length - 1).find(it => !it.disable)
       // alert(JSON.stringify(check))
@@ -706,79 +464,6 @@ const TimeAssessment = ({
     }
   };
 
-  // useEffect(() => {
-  //   meterController();
-  // }, [secs]);
-  // console.log("scoring",scoring)
-  const meterController = () => {
-    // console.log('faozannnnnn', secs);
-    // console.log('..//....//',Value[0]);
-    if (
-      parseInt(secs) > Number(Value[0]?.minTime) &&
-      Number(secs) <= Number(Value[0]?.maxTime)
-    ) {
-      setMeterValue(100);
-      setscoring(Value[0])
-    } else if (
-      Number(secs) >= Number(Value[1]?.minTime) &&
-      Number(secs) <= Number(Value[1]?.maxTime)
-    ) {
-      setMeterValue(200);
-      setscoring(Value[1])
-    } else if (
-      Number(secs) >= Number(Value[2]?.minTime) &&
-      Number(secs) <= Number(Value[2]?.maxTime)
-    ) {
-      setMeterValue(300);
-      setscoring(Value[2])
-    } else if (
-      Number(secs) >= Number(Value[3]?.minTime) &&
-      Number(secs) <= Number(Value[3]?.maxTime)
-    ) {
-      setMeterValue(400);
-      setscoring(Value[3])
-    } else if (
-      Number(secs) >= Number(Value[4]?.minTime) &&
-      Number(secs) <= Number(Value[4]?.maxTime)
-    ) {
-      setMeterValue(500);
-      setscoring(Value[4])
-    } else if (
-      Number(secs) >= Number(Value[5]?.minTime) &&
-      Number(secs) <= Number(Value[5]?.maxTime)
-    ) {
-      setMeterValue(600);
-      setscoring(Value[5])
-    } else if (
-      Number(secs) >= Number(Value[6]?.minTime) &&
-      Number(secs) <= Number(Value[6]?.maxTime)
-    ) {
-      setMeterValue(700);
-      setscoring(Value[6])
-    } else if (
-      Number(secs) >= Number(Value[7]?.minTime) &&
-      Number(secs) <= Number(Value[7]?.maxTime)
-    ) {
-      setMeterValue(800);
-      setscoring(Value[7])
-    }
-  };
-  // const toggleTimer = () => {
-  //   setTimer(prev => {
-  //     return {
-  //       ...prev,
-  //       timerStart: !timer.timerStart,
-  //       timerReset: false,
-  //     };
-  //   });
-  // };
-
-  // const resetTimer = () => {
-  //   setTimer(prev => {
-  //     return {...prev, timerStart: false, timerReset: true};
-  //   });
-  // };
-
   const toggleStopwatch = () => {
     setTimer(prev => {
       return {
@@ -797,20 +482,6 @@ const TimeAssessment = ({
         stopwatchReset: true,
       };
     });
-  };
-
-  const handleTimerComplete = () => alert('custom completion function');
-
-  const getFormattedTime = time => {
-    if (time) {
-      let currentTime = time;
-      setSecs(
-        Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 12)}`),
-      );
-      // setSecs(
-      //   Number(`${currentTime.split(':')[1]}.${currentTime.substring(6, 8)}`),
-      // );
-    }
   };
 
   // console.log(GROUP_DATA?.Name);
@@ -832,25 +503,6 @@ const TimeAssessment = ({
     // alert("call")
 
     if (Platform.OS == "ios") {
-      // var whoosh = new Sound('my_beep.mp3', Sound.MAIN_BUNDLE, error => {
-      //   if (error) {
-      //     // console.log('failed to load the sound', error);
-      //     return;
-      //   }
-      //   whoosh.play(success => {
-      //     if (success) {
-      //       console.log('successfully finished playing');
-      //     } else {
-      //       console.log('playback failed due to audio decoding errors');
-      //     }
-      //   });
-      //   // loaded successfully
-      //   // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-
-      //   // Play the sound with an onEnd callback
-      //   // whoosh.setNumberOfLoops(1)
-
-      // });
 
       var whoosh = new Sound('beep.mp3', Sound.MAIN_BUNDLE, (error) => {
         if (error) {
@@ -875,27 +527,7 @@ const TimeAssessment = ({
 
 
   };
-  const RenderMembersData = ({ item, index }) => (
-    <View style={{ flexDirection: 'row', paddingVertical: 3 }}>
-      {/* {console.log(Memebers)} */}
-      <TouchableOpacity
-        onPress={() => {
-          setUservalue({ ...item, index });
-        }}>
-        <Text
-          style={{
-            fontSize: 20,
-            alignSelf: 'center',
-            color: Uservalue.id == item.id ? 'green' : 'white',
-            // textAlign: 'center',
-            // textAlignVertical: 'center',
-            letterSpacing: 1,
-          }}>
-          {`${item.Firstname} ${item.Lastname}`}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+
 
   function renderHeader() {
     return (
@@ -933,7 +565,7 @@ const TimeAssessment = ({
                     setFlag(true)
                     resetStopwatch();
                     checkGame(false);
-                    setSecs(0);
+                    // setSecs(0);
                     setScore('0');
                     setShowTextField(false);
                     setUservalue({ ...item, index });
@@ -1056,7 +688,7 @@ const TimeAssessment = ({
                           checkGame(true);
                           toggleStopwatch();
                           setHasTimerStarted(true);
-                          setSecs(0);
+                          // setSecs(0);
                           setMeterValue(0);
                           playSound();
                           setShowTextField(false);
@@ -1335,8 +967,20 @@ const TimeAssessment = ({
                     fontFamily: 'Montserrat-SemiBold',
                   },
                 }}
-                getTime={time => {
-                  getFormattedTime(time)
+                getTime={time=>{
+                  let currentTime = time;
+                  const secs=Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 12)}`)
+
+                  if (secs) {
+
+                    ranges.forEach(it => {
+                      // console.log(secs,it.MinValue,it.MaxValue)
+              
+                      if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
+                        setResultvalue(it)
+                      }
+                    })
+                  }
                 }}
               />
             </View>
@@ -1374,7 +1018,7 @@ const TimeAssessment = ({
                   setFlag(true)
                   resetStopwatch();
                   checkGame(false);
-                  setSecs(0);
+                  // setSecs(0);
                   setScore('0');
                   setShowTextField(false);
                   setResultvalue({})
