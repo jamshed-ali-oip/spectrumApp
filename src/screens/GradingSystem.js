@@ -590,14 +590,18 @@ const GradingSystem = ({
         {
           currentNintyFive?.UseSegment == 1 && (
               <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
+                {ITEM.id==7?(
+                <Text style={{ color: 'white' }}>Shuttle distance: {currentNintyFive?.DistanceToRed}m</Text>
+                ):(
                 <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}</Text>
+                )}
               </View>
           )
         }
         {
-          currentNintyFive?.UseSegment == 1 && (
+          (currentNintyFive?.UseSegment == 1 && ITEM.id!=7) && (
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
-              <Text style={{ color: "white" }}>Percentage: {currentNintyFive?.Percent}%</Text>
+              <Text style={{ color: "white" }}>Percentage: {currentNintyFive?.Percent}m</Text>
             </View>)
         }
       </ImageBackground>

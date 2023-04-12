@@ -968,18 +968,20 @@ const TimeAssessment = ({
                   },
                 }}
                 getTime={time=>{
-                  let currentTime = time;
-                  const secs=Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 12)}`)
-
-                  if (secs) {
-
-                    ranges.forEach(it => {
-                      // console.log(secs,it.MinValue,it.MaxValue)
-              
-                      if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
-                        setResultvalue(it)
-                      }
-                    })
+                  if(!stopDisable){
+                    let currentTime = time;
+                    const secs=Number(`${currentTime.substring(6, 8)}.${currentTime.substring(9, 12)}`)
+  
+                    if (secs) {
+  
+                      ranges.forEach(it => {
+                        // console.log(secs,it.MinValue,it.MaxValue)
+                
+                        if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
+                          setResultvalue(it)
+                        }
+                      })
+                    }
                   }
                 }}
               />
@@ -1043,8 +1045,8 @@ const TimeAssessment = ({
   const RenderimageDAta = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        !hasTimerStarted && setResultvalue(item)
-        // setResultvalue(item)
+        // !hasTimerStarted && setResultvalue(item)
+        setResultvalue(item)
       }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center', height: responsiveHeight(12), marginBottom: responsiveHeight(1) }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>

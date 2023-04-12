@@ -104,7 +104,7 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
         />
 
         <Heading
-          title={new Date(pastAssessment[0]?.created_at).toDateString()}
+          title={moment(new Date(pastAssessment[0]?.created_at)).format('YYYY-MM-DD HH:MM')}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: width * 0.033,
     marginHorizontal: width * 0.01,
-    width: width * 0.15,
+    width: width * 0.3,
     // backgroundColor: 'red',
   },
   colorsViewStyle: {
