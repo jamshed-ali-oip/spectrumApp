@@ -51,9 +51,10 @@ const ParticipantsScreen = ({
   const [group, setGroup] = useState("All");
   const [grade, setGrade] = useState("All");
   const [participants, setParticipants] = useState([]);
-  const [fields, setFields] = useState({})
   const [gender, setGender] = useState("all")
   const [sort, setSort] = useState("asc")
+  const [fields, setFields] = useState({ group: "All", gender: "All", grade: "All" })
+
 
 
 
@@ -112,22 +113,21 @@ const ParticipantsScreen = ({
     if (data.group == "All" && (data.event == "All")) {
       setParticipants(userReducer.participants)
     } else {
-      if (data.event == "All" && data.group != "All") {
+      if (data.gender != "All" && data.grade == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          console.log("aa", participant?.group_organization?.GroupID,data?.group)
-          return participant?.group_organization?.GroupID == data?.group
+          return (participant?.group == data?.group_organization?.GroupID) && participant.GenderID == data?.gender
         });
         setParticipants(filtered)
       }
-      else if (data.event != "All" && data.group == "All") {
-        console.log("sdfsdf",participants)
+      else if (data.gender == "All" && data.grade != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant?.event?.find(its => its?.id == data?.event)
+          return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID == data?.grade
         });
         setParticipants(filtered)
-      } else {
+      }
+      else {
         const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID) && (participant?.event.find(its => its?.id == data?.event))
+          return (participant?.group == data?.group_organization?.GroupID)
         });
         setParticipants(filtered)
       }
@@ -193,9 +193,9 @@ const ParticipantsScreen = ({
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: responsiveFontSize(2.5) }}>
                   <TouchableOpacity
                     style={styles.selectFilterStyle}
-                    // onPress={() => setShowFilterModal(true)}
-                    >
-                    {/* <Heading
+                    onPress={() => setShowFilterModal(true)}
+                  >
+                    <Heading
                       title="Select Filter"
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
@@ -204,7 +204,7 @@ const ParticipantsScreen = ({
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
-                    /> */}
+                    />
                   </TouchableOpacity>
                   <View style={{ backgroundColor: 'white', width: 120, borderRadius: responsiveFontSize(1) }}>
                     <RNPickerSelect
@@ -222,18 +222,18 @@ const ParticipantsScreen = ({
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
-
                   <View style={styles.filterLabelViewStyle}>
-                    <Heading
-                      title="Event - "
+                  <Heading
+                      title="Groups - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
                     <Heading
-                      title={fields.grade ? fields.grade : "All"}
+                      title={fields.group}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
+
                     <IconComp
                       iconName={'chevron-right'}
                       type="Feather"
@@ -241,20 +241,31 @@ const ParticipantsScreen = ({
                     />
 
                     <Heading
-                      title="Groups - "
+                      title="Grade - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
                     <Heading
-                      title={fields.group ? fields.group : "All"}
+                      title={fields.grade}
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
-                    {/* <Heading
-                      title={`${GROUP_DATA?.Name} - ${selectedGender}`}
+                                        <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+
+                    <Heading
+                      title="Gender - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
-                    /> */}
+                    />
+                    <Heading
+                      title={fields.gender}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
                   </View>
                 </ScrollView>
 
@@ -351,17 +362,17 @@ const ParticipantsScreen = ({
             />
           )
         }
-        {/* {showFilterModal && (
-          <ParticipantFilterModal
-            isModalVisible={showFilterModal}
-            setIsModalVisible={setShowFilterModal}
-            onPress={filterParticipants}
-            showLoader={isLoading}
-            setSelectedGender1={setSelectedGender}
-            setGrade1={setGrade}
-            setGroup1={setGroup}
-          />
-        )} */}
+
+        <ParticipantFilterModal
+          isModalVisible={showFilterModal}
+          setIsModalVisible={setShowFilterModal}
+          onPress={filterParticipants}
+          showLoader={isLoading}
+          setSelectedGender1={setSelectedGender}
+          setGrade1={setGrade}
+          setGroup1={setGroup}
+          setFields={setFields}
+        />
       </ImageBackground>
     </>
   );

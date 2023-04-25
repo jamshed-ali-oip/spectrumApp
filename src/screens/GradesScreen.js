@@ -327,6 +327,22 @@ const GradesScreen = ({
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
+                                        <IconComp
+                      iconName={'chevron-right'}
+                      type="Feather"
+                      passedStyle={styles.rightIconStyle}
+                    />
+
+                    <Heading
+                      title="Gender - "
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
+                    <Heading
+                      title={fields.gender}
+                      passedStyle={styles.selectFilterTextStyle}
+                      fontType="semi-bold"
+                    />
                     {/* <Heading
                       title={`${GROUP_DATA?.Name} - ${selectedGender}`}
                       passedStyle={styles.selectFilterTextStyle}
@@ -361,6 +377,7 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
+                        traditional:route?.params?.traditional,
                         memberData: participants.filter(it=>it.Status==1).sort((a, b) => {
                           const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
                           const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase

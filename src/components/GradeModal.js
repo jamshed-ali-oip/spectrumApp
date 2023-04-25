@@ -81,7 +81,7 @@ const ParticipantFilterModal = ({
     if (gender || isFocus) {
       return (
         <Text style={[styles.label1]}>
-          Grade
+          Gender
         </Text>
       );
     }

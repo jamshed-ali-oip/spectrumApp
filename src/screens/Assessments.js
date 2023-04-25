@@ -18,6 +18,7 @@ import Heading from '../components/Heading';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import TraModal from "../components/TraModal"
 const {width, height} = Dimensions.get('window');
 
 const Assessments = ({navigation, userReducer, getAssessments}) => {
@@ -25,9 +26,11 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
   const [assessments, setAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [modal,setModal]=useState(false)
+  const [current,setCurrent]=useState({})
 // console.log("firstjolj",userReducer)
-  const _onPressRunAssessment = item => {
-    navigation.navigate('runAssessment', {item: item});
+  const _onPressRunAssessment = traditional => {
+    navigation.navigate('runAssessment', {item: current,traditional});
     // console.log("ljdkahsilh",item)
   };
 
@@ -122,11 +125,23 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
                 item={item}
                 assessments={assessments}
                 index={index}
-                onPress={_onPressRunAssessment}
+                onPress={(item)=>{
+                  if(item?.assessment_type?.Timed == 1){
+                    setCurrent(item)
+                    setModal(true)
+                  }else{
+                    navigation.navigate('runAssessment', {item: item,traditional:false});
+                  }
+                }}
               />
             )}
           />
         )}
+        <TraModal
+        isModalVisible={modal}
+        setIsModalVisible={setModal}
+        call={_onPressRunAssessment}
+        />
       </ImageBackground>
     </>
   );
