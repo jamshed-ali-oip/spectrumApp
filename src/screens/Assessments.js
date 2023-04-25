@@ -57,7 +57,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
     });
   }, []);
 
-  console.log("ass",assessments)
+  // console.log("ass",assessments)
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />

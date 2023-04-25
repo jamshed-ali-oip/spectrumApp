@@ -30,14 +30,14 @@ import Entypo from "react-native-vector-icons/Feather"
 import { useState } from 'react';
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Video from 'react-native-video';
+import {connect} from "react-redux"
 const { width, height } = Dimensions.get('window');
 
-const RunAssessment = ({ navigation, route }) => {
+const RunAssessment = ({ navigation, route ,userReducer}) => {
   const [videoModal, setVideoModal] = useState(false)
   const _onPressRunAssessment = () => { };
   const ITEM = route.params.item;
 
-  console.log("ddd",`${imageUrl}/assessment_image/${route.params?.item?.video}`)
   let SHOW_IMAGE =
     ITEM?.Name === 'Long Jump'
       ? LONG_JUMP
@@ -52,20 +52,20 @@ const RunAssessment = ({ navigation, route }) => {
     return (
       <Modal>
         <Video
-        controls={true}
-        resizeMode="cover"
-        onEnd={()=>{
-          setVideoModal(false)
-        }}
-        style={{width:responsiveWidth(100),height:responsiveHeight(100)}}
-        source={{uri:`${imageUrl}/assessment_image/${route.params?.item?.video}`}}
+          controls={true}
+          resizeMode="cover"
+          onEnd={() => {
+            setVideoModal(false)
+          }}
+          style={{ width: responsiveWidth(100), height: responsiveHeight(100) }}
+          source={{ uri: `${imageUrl}/assessment_image/${route.params?.item?.video}` }}
         />
-          <TouchableOpacity
-          onPress={()=>setVideoModal(false)}
-          style={{position:'absolute',right:0,top:0,paddingRight:responsiveWidth(2),paddingTop:responsiveHeight(1)}}
-          >
-            <Entypo color={"white"} name="x" size={responsiveFontSize(3.5)} />
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setVideoModal(false)}
+          style={{ position: 'absolute', right: 0, top: 0, paddingRight: responsiveWidth(2), paddingTop: responsiveHeight(1) }}
+        >
+          <Entypo color={"white"} name="x" size={responsiveFontSize(3.5)} />
+        </TouchableOpacity>
       </Modal>
     )
   }
@@ -196,33 +196,38 @@ const RunAssessment = ({ navigation, route }) => {
                 fontType="bold"
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => {
-                if(route?.params?.item?.video){
-                  setVideoModal(true)
-                }else{
-                  alert("No Video Found")
-                }
-              }}
-              style={[
-                styles.buttonContainerStyles,
-                { backgroundColor: "#6800b8" },
-              ]}>
-              <Heading
-                title={'VIDEO'}
-                passedStyle={[styles.buttonStyles, { backgroundColor: "#6800b8" }]}
-                fontType="bold"
-              />
-            </TouchableOpacity>
+            {userReducer?.userData?.show_video==1 && (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  if (route?.params?.item?.video) {
+                    setVideoModal(true)
+                  } else {
+                    alert("No Video Found")
+                  }
+                }}
+                style={[
+                  styles.buttonContainerStyles,
+                  { backgroundColor: "#6800b8" },
+                ]}>
+                <Heading
+                  title={'VIDEO'}
+                  passedStyle={[styles.buttonStyles, { backgroundColor: "#6800b8" }]}
+                  fontType="bold"
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </ImageBackground>
     </>
   );
 };
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
+};
 
-export default RunAssessment;
+export default connect(mapStateToProps)(RunAssessment);
 
 const styles = StyleSheet.create({
   container: {

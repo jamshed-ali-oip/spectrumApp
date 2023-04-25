@@ -55,11 +55,10 @@ const GradesScreen = ({
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
   const [Eventdetails, setEventdetails] = useState([]);
-  const [fields, setFields] = useState({})
+  const [fields, setFields] = useState({group:"All",gender:"All",grade:"All"})
   const [sort, setSort] = useState("asc")
-  console.log("event detyail on screen", Eventdetails)
   // console.log("GROUP_DATA",GROUP_DATA)
-  console.log("participants", participants)
+  // console.log("participants", participants)
   const apiData = {
     group_id: GROUP_DATA?.id,
   };
@@ -95,6 +94,8 @@ const GradesScreen = ({
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
 
+  console.log('par',userReducer.participants)
+
   const filterParticipants = async data => {
     // console.log("selected", data);
     // console.log("selected Gender", data.gender);
@@ -110,21 +111,21 @@ const GradesScreen = ({
     if (data.group == "All" && (data.event == "All")) {
       setParticipants(userReducer.participants)
     } else {
-      if (data.event == "All" && data.group != "All") {
+      if (data.gender != "All" && data.grade == "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          console.log("aa", participant?.group_organization?.GroupID)
-          return participant?.group_organization?.GroupID == data.group
+          return (participant?.group == data?.group_organization?.GroupID) && participant.GenderID==data?.gender
         });
         setParticipants(filtered)
       }
-      else if (data.event != "All" && data.group == "All") {
+      else if (data.gender == "All" && data.grade != "All") {
         const filtered = userReducer.participants.filter((participant) => {
-          return participant?.event.find(its => its?.id == data?.event)
+          return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade
         });
         setParticipants(filtered)
-      } else {
+      }
+      else{
         const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID) && (participant?.event.find(its => its?.id == data?.event))
+          return (participant?.group == data?.group_organization?.GroupID)
         });
         setParticipants(filtered)
       }
@@ -229,9 +230,9 @@ const GradesScreen = ({
                 <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
                   <TouchableOpacity
                     style={styles.selectFilterStyle}
-                    // onPress={() => setShowFilterModal(true)}
+                    onPress={() => setShowFilterModal(true)}
                     >
-                    {/* <Heading
+                    <Heading
                       title="Select Filter"
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
@@ -240,7 +241,7 @@ const GradesScreen = ({
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
-                    /> */}
+                    />
                   </TouchableOpacity>
                   <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
                     <RNPickerSelect
@@ -317,7 +318,7 @@ const GradesScreen = ({
                     />
 
                     <Heading
-                      title="Event - "
+                      title="Grade - "
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
@@ -428,7 +429,7 @@ const GradesScreen = ({
             }}
           />
         )}
-        <ParticipantFilterModal
+          <ParticipantFilterModal
           isModalVisible={showFilterModal}
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}

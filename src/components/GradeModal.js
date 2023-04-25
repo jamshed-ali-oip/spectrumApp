@@ -10,7 +10,6 @@ import {
   StatusBar,
 } from 'react-native';
 import Heading from './Heading';
-import Inputbox from './Inputbox';
 import LottieView from 'lottie-react-native';
 import Button from './Button';
 import {
@@ -19,16 +18,12 @@ import {
   themeLightBlue,
   themePurple,
 } from '../assets/colors/colors';
-import IconComp from './IconComp';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { baseUrl } from '../config';
 import * as actions from "../store/actions"
 import { ScrollView } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ParticipantFilterModal = ({
   isModalVisible,
@@ -38,38 +33,27 @@ const ParticipantFilterModal = ({
   showLoader,
   userReducer,
   setFields,
-  getEvents,
-  events
 }) => {
-  const [counter, setCounter] = useState(0);
-  const [counterGe, setCounterGe] = useState(0);
-  const [counterGa, setCounterGa] = useState(0);
-  const [counterEvent, setCounterEvent] = useState(0);
 
 
   const [selectedGroupsData, setGroupsData] = useState([]);
-  const [allGroud, setAllGroup] = useState(false);
-  const [allEvent, setAllEvent] = useState(false);
+  const [gradeData, setGradeData] = useState([]);
+  const [genderData, setGenderData] = useState([]);
 
-  const [allGender, allGenderSet] = useState(false);
-  const [allGrade, setAllGrade] = useState(false);
-  const [loading, setLoading] = useState(false)
-
-
-  const [event, setEvent] = useState({ value: 'All' });
+  const [grade, setGrade] = useState({ value: 'All' });
+  const [gender, setGender] = useState({ value: 'All' });
   const [group, setGroup] = useState({ value: 'All' });
 
   const [isFocus, setIsFocus] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
-    getEvents(userReducer?.accessToken).then(() => setLoading(false))
     if (userReducer?.groups) {
+      console.log("groups", userReducer?.groups)
       setGroupsData(
         userReducer?.groups
       )
     }
-  }, []);
+  }, [userReducer?.groups]);
 
   const renderLabel = () => {
     if (group || isFocus) {
@@ -83,10 +67,21 @@ const ParticipantFilterModal = ({
   };
 
   const renderLabel2 = () => {
-    if (event || isFocus) {
+    if (grade || isFocus) {
       return (
         <Text style={[styles.label1]}>
-          Event
+          Grade
+        </Text>
+      );
+    }
+    return null;
+  };
+
+  const renderLabel3 = () => {
+    if (gender || isFocus) {
+      return (
+        <Text style={[styles.label1]}>
+          Grade
         </Text>
       );
     }
@@ -99,58 +94,6 @@ const ParticipantFilterModal = ({
       <Modal onBackButtonPress={() => setIsModalVisible(false)} isVisible={isModalVisible}>
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={styles.container}>
-            {(events?.length > 0) ? (
-              <>
-                {renderLabel2()}
-                <Dropdown
-                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  itemTextStyle={{ color: 'black' }}
-                  iconStyle={styles.iconStyle}
-                  data={[{ Name: 'All', id: 'All' }, ...events]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder={!isFocus ? 'Select item' : '...'}
-                  searchPlaceholder="Search..."
-                  value={event.value}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => setIsFocus(false)}
-                  onChange={item => {
-                    setEvent(item);
-                    setIsFocus(false);
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                {renderLabel2()}
-                <Dropdown
-                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  itemTextStyle={{ color: 'black' }}
-                  iconStyle={styles.iconStyle}
-                  data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder={!isFocus ? 'Select item' : '...'}
-                  searchPlaceholder="Search..."
-                  value={event.value}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => setIsFocus(false)}
-                  onChange={item => {
-                    setEvent(item);
-                    setIsFocus(false);
-                  }}
-                />
-              </>
-            )}
-
             {
               (selectedGroupsData?.length > 0) ? (
                 <>
@@ -173,7 +116,13 @@ const ParticipantFilterModal = ({
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                     onChange={item => {
-                      setGroup(item);
+                      setGroup({ ...item, selected: true });
+                      const myData = selectedGroupsData.filter(it => it.id == item.value)[0]
+                      setGenderData(myData?.group_gender)
+                      setGradeData(myData?.group_grade)
+                      setGrade({value:"All"})
+                      setGender({value:"All"})
+                      console.log("dddddd", item)
                       setIsFocus(false);
                     }}
                   />
@@ -187,11 +136,11 @@ const ParticipantFilterModal = ({
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[{ Name: 'All', id: 'All' }]?.map(it => ({ ...it, label: it.Name, value: it.id }))}
+                    data={[]}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocus ? 'Select item' : '...'}
+                    placeholder={'Not available'}
                     searchPlaceholder="Search..."
                     value={group.value}
                     onFocus={() => setIsFocus(true)}
@@ -204,7 +153,112 @@ const ParticipantFilterModal = ({
                 </>
               )
             }
-
+            {(gradeData?.length > 0) ? (
+              <>
+                {renderLabel2()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
+                  disable={group.selected ? false : true}
+                  iconStyle={styles.iconStyle}
+                  data={[{ grade: { Name: 'All', id: 'All' } }, ...gradeData]?.map(it => ({ ...it, label: it.grade.Name, value: it.grade.id }))}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? 'Select item' : '...'}
+                  searchPlaceholder="Search..."
+                  value={grade.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setGrade({ ...item, selected: true });
+                    setIsFocus(false);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                {renderLabel2()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
+                  iconStyle={styles.iconStyle}
+                  disable={group.selected ? false : true}
+                  data={[]}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={group.selected ? 'Not available' : "First select group"}
+                  searchPlaceholder="Search..."
+                  value={grade.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setGrade(item);
+                    setIsFocus(false);
+                  }}
+                />
+              </>
+            )}
+            {(genderData?.length > 0) ? (
+              <>
+                {renderLabel3()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
+                  disable={group.selected ? false : true}
+                  iconStyle={styles.iconStyle}
+                  data={[{ gender: { Gender: 'All', id: 'All' } }, ...genderData]?.map(it => ({ ...it, label: it.gender.Gender, value: it.gender.id }))}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? 'Select item' : '...'}
+                  searchPlaceholder="Search..."
+                  value={gender.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setGender({ ...item, selected: true });
+                    setIsFocus(false);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                {renderLabel3()}
+                <Dropdown
+                  style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  itemTextStyle={{ color: 'black' }}
+                  iconStyle={styles.iconStyle}
+                  disable={group.selected ? false : true}
+                  data={[]}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={group.selected ? 'Not available' : "First select group"}
+                  searchPlaceholder="Search..."
+                  value={gender.value}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setGrade(item);
+                    setIsFocus(false);
+                  }}
+                />
+              </>
+            )}
             <View style={styles.flexRow}>
               {showLoader ? (
                 <View style={styles.requestingView}>
@@ -228,24 +282,14 @@ const ParticipantFilterModal = ({
                     onBtnPress={() => {
                       if (onPress) {
                         setFields({
-                          gender: allGender || group ? "All" : group.group_gender ? (group?.group_gender[0]?.gender?.Gender) : 'All',
-                          group: group.value == "All" ? "All" : group?.Name,
-                          grade: event.value == "All" ? "All" : event?.Name,
+                          gender:gender.label,
+                          group: group.label,
+                          grade:grade.label
                         })
-                        // console.log("tah",event.id)
-                        // alert(JSON.stringify(
-                        //   {
-                        //     gender: allGender ? "All" : group?.group_gender[0],
-                        //   group: group.value=="All" ? "All" : group?.id,
-                        //   event: event.value=="All" ? "All" : event?.id,
-                        //   grade: allGender ? "All" : group?.group_grade[0],
-                        //   }
-                        // ))
                         onPress({
-                          gender: allGender ? "All" : group.group_gender ? (group?.group_gender[0]) : 'All',
-                          group: group.value == "All" ? "All" : group?.id,
-                          event: event.value == "All" ? "All" : event?.id,
-                          grade: allGender ? "All" : (group.group_gender) ? (group?.group_grade[0]) : 'All',
+                          gender:gender.value,
+                          group: group.value,
+                          grade:grade.value
                         });
                         setIsModalVisible(false);
                       } else {
@@ -266,8 +310,8 @@ const ParticipantFilterModal = ({
     </View>
   );
 };
-const mapStateToProps = ({ userReducer, events }) => {
-  return { userReducer, events };
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(ParticipantFilterModal);
 
