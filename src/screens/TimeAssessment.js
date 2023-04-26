@@ -91,6 +91,7 @@ const TimeAssessment = ({
   const [reverse, setReverse] = useState("red")
   const [stopDisable, setStopDisable] = useState(false)
   const [currentNintyFive, setCurrentNintyFive] = useState({})
+  const [index,setIndex]=useState(null)
   const [wheelState, setWheelState] = useState({
     winnerValue: null,
     winnerIndex: null,
@@ -233,6 +234,12 @@ const TimeAssessment = ({
       ])
     }
   }, [Uservalue])
+
+  useEffect(()=>{
+    if(index!=null){
+      playSound()
+    }
+  },[index])
   
 
   useEffect(() => {
@@ -261,8 +268,6 @@ const TimeAssessment = ({
       setPlayer(currentPlayer)
     }
   }, [Uservalue, players])
-
-
 
   const apiData = {
     event_id: CHILD_DATA.event ? (CHILD_DATA?.event[0]?.id) : 1,
@@ -974,11 +979,15 @@ const TimeAssessment = ({
   
                     if (secs) {
   
-                      ranges.forEach(it => {
+                      ranges.forEach((it,i) => {
                         // console.log(secs,it.MinValue,it.MaxValue)
                 
                         if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
-                          setResultvalue(it)
+                          if(route.params?.traditional){
+                            setResultvalue(it)
+                          }else{
+                            setIndex(i)
+                          }
                         }
                       })
                     }
@@ -1046,18 +1055,40 @@ const TimeAssessment = ({
     <TouchableOpacity
       onPress={() => {
         // !hasTimerStarted && setResultvalue(item)
-        setResultvalue(item)
+        if(route.params?.traditional){
+          setResultvalue(item)
+        }else{
+          if(index!=null){
+            setResultvalue(item)
+          }
+        }
       }} style={{ width: "25%", flexDirection: "row", justifyContent: 'center', alignItems: 'center', height: responsiveHeight(12), marginBottom: responsiveHeight(1) }}>
       {Resultvalue.image == item.image && (
         <View style={{ position: 'absolute', zIndex: 1 }}>
           <CheckIcon name='check' color={"black"} size={30} />
         </View>
       )}
+      {route.params.traditional?(
       <Animated.View
+      style={{
+        height: height * .095, width: width / 6,
+        transform: [{ scale: Resultvalue.image == item.image ? fadeAnim : 1 }],
+        opacity: Resultvalue.image == item.image ? fadeAnim : 1
+      }}
+    >
+      <Image
+        style={{ height: height * .095, width: width / 6, resizeMode: "contain" }}
+
+        source={{
+          uri:
+            item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
+        }}
+      />
+    </Animated.View>
+      ):(
+        <View
         style={{
-          height: height * .095, width: width / 6,
-          transform: [{ scale: Resultvalue.image == item.image ? fadeAnim : 1 }],
-          opacity: Resultvalue.image == item.image ? fadeAnim : 1
+          height: height * .095, width: width / 6
         }}
       >
         <Image
@@ -1068,7 +1099,8 @@ const TimeAssessment = ({
               item.image === null ? "https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/error.png" : `https://webprojectmockup.com/custom/spectrum-8/public/images/assessment_image/scoring/${item.image}`
           }}
         />
-      </Animated.View>
+      </View>
+      )}
       <Text style={{ position: 'absolute', alignSelf: 'flex-end', bottom: -7, color: 'white', fontSize: responsiveFontSize(1.25) }}>
         {numeral(item?.MinValue).format('0.00')}-{numeral(item?.MaxValue).format('0.00')}
       </Text>
@@ -1183,20 +1215,20 @@ const TimeAssessment = ({
         />
         {/* <KeepAwake/> */}
 
-        {
+        {/* {
           currentNintyFive?.UseSegment == 1 && (
             <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
-              <Text style={{ color: 'white' }}>Distance To Red: {currentNintyFive?.DistanceToRed}</Text>
+              <Text style={{ color: 'white' }}>Distance To Red: {currentNintyFive?.DistanceToRed}m</Text>
             </View>
           )
         }
         {
           currentNintyFive?.UseSegment == 1 && (
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
-              <Text style={{ color: "white" }}>Percentage: {currentNintyFive?.Percent}%</Text>
+              <Text style={{ color: "white" }}>Color length: {currentNintyFive?.ColorSegment}m</Text>
             </View>
           )
-        }
+        } */}
       </ImageBackground>
     </>
   );

@@ -593,7 +593,7 @@ const GradingSystem = ({
                 {ITEM.id==7?(
                 <Text style={{ color: 'white' }}>Shuttle distance: {currentNintyFive?.DistanceToRed}m</Text>
                 ):(
-                <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}</Text>
+                <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}m</Text>
                 )}
               </View>
           )
@@ -601,7 +601,7 @@ const GradingSystem = ({
         {
           (currentNintyFive?.UseSegment == 1 && ITEM.id!=7) && (
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
-              <Text style={{ color: "white" }}>Percentage: {currentNintyFive?.Percent}m</Text>
+              <Text style={{ color: "white" }}>Color length: {currentNintyFive?.ColorSegment}m</Text>
             </View>)
         }
       </ImageBackground>

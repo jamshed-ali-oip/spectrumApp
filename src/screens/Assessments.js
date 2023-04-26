@@ -30,6 +30,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
   const [current,setCurrent]=useState({})
 // console.log("firstjolj",userReducer)
   const _onPressRunAssessment = traditional => {
+    setModal(false)
     navigation.navigate('runAssessment', {item: current,traditional});
     // console.log("ljdkahsilh",item)
   };
@@ -130,6 +131,7 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
                     setCurrent(item)
                     setModal(true)
                   }else{
+                    setModal(false)
                     navigation.navigate('runAssessment', {item: item,traditional:false});
                   }
                 }}
