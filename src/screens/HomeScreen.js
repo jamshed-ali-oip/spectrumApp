@@ -60,13 +60,13 @@ const HomeScreen = ({navigation, logoutRequest, userReducer,sendFCMToken,logo}) 
       <ImageBackground
         source={require('../assets/images/bg.jpg')}
         style={styles.container}>
-          {/* <View style={{position:'absolute',top:responsiveHeight(Platform.OS=="ios"?5:2),right:responsiveWidth(5),zIndex:1}}>
+          <View style={{position:'absolute',top:responsiveHeight(Platform.OS=="ios"?5:2),right:responsiveWidth(5),zIndex:1}}>
             <TouchableOpacity
             onPress={()=>navigation.navigate('setting')}
             >
               <IonicIcons name='ios-settings-outline' color={"white"} size={responsiveFontSize(3)}/>
             </TouchableOpacity>
-          </View> */}
+          </View>
         <ScrollView>
         {
           logo && (

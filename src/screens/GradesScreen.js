@@ -108,7 +108,7 @@ const GradesScreen = ({
     // alert(JSON.stringify({
     //   gender:data.gender.GenderID
     // }))
-    if (data.group == "All" && (data.event == "All")) {
+    if (data.group == "All") {
       setParticipants(userReducer.participants)
     } else {
       if (data.gender != "All" && data.grade == "All") {
@@ -120,6 +120,12 @@ const GradesScreen = ({
       else if (data.gender == "All" && data.grade != "All") {
         const filtered = userReducer.participants.filter((participant) => {
           return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade
+        });
+        setParticipants(filtered)
+      }
+      else if(data.gender != "All" && data.grade != "All"){
+        const filtered = userReducer.participants.filter((participant) => {
+          return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade && participant.GenderID==data?.gender
         });
         setParticipants(filtered)
       }

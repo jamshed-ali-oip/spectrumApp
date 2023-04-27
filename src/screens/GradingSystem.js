@@ -290,7 +290,25 @@ const GradingSystem = ({
 
   const onSuccess = () => {
     setResultvalue({})
-    if ((Uservalue.index + 1) < Memebers.length) {
+    // if ((Uservalue.index + 1) < Memebers.length){
+    //   const updatedMembers = [...Memebers].map((it) => {
+    //     if (it.id == Uservalue.id) {
+    //       return {
+    //         ...it,
+    //         disable: true
+    //       }
+    //     } else {
+    //       return it
+    //     }
+    //   })
+    //   setMembers(updatedMembers) 
+    //   const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
+    //   setUservalue({ ...Memebers[newIndex], index: newIndex })
+    // }else{
+    //   navigation.navigate('home');
+    // }
+
+    if (Uservalue.index + 1 < Memebers.length) {
       const updatedMembers = [...Memebers].map((it) => {
         if (it.id == Uservalue.id) {
           return {
@@ -302,11 +320,17 @@ const GradingSystem = ({
         }
       })
       setMembers(updatedMembers)
-      const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
-      setUservalue({ ...Memebers[newIndex], index: newIndex })
+        const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
+        if(Memebers[newIndex]){
+          setUservalue({
+            ...Memebers[newIndex],
+            index: newIndex,
+          });
+        }else{
+          navigation.navigate('home')
+        }
     } else {
       const check = Memebers.slice(0, Memebers.length - 1).find(it => !it.disable)
-      // alert(JSON.stringify(check))
       if (check) {
         const updatedMembers = [...Memebers].map((it) => {
           if (it.id == Uservalue.id) {
@@ -319,10 +343,12 @@ const GradingSystem = ({
           }
         })
         setMembers(updatedMembers)
-        setUservalue(check)
+        const index=Memebers.findIndex(it=>it.id=check.id)
+        setUservalue({...check,index})
       } else {
         navigation.navigate('home');
       }
+      // }
     }
   };
 
@@ -589,17 +615,17 @@ const GradingSystem = ({
         </ScrollView>
         {
           currentNintyFive?.UseSegment == 1 && (
-              <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
-                {ITEM.id==7?(
+            <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
+              {ITEM.id == 7 ? (
                 <Text style={{ color: 'white' }}>Shuttle distance: {currentNintyFive?.DistanceToRed}m</Text>
-                ):(
+              ) : (
                 <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}m</Text>
-                )}
-              </View>
+              )}
+            </View>
           )
         }
         {
-          (currentNintyFive?.UseSegment == 1 && ITEM.id!=7) && (
+          (currentNintyFive?.UseSegment == 1 && ITEM.id != 7) && (
             <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
               <Text style={{ color: "white" }}>Color length: {currentNintyFive?.ColorSegment}m</Text>
             </View>)

@@ -440,15 +440,17 @@ const TimeAssessment = ({
         }
       })
       setMembers(updatedMembers)
-      const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
-      setUservalue({
-        ...Memebers[newIndex],
-        index: newIndex,
-      });
+        const newIndex = Memebers[Uservalue.index + 1].disable ? (Uservalue.index + 2) : Uservalue.index + 1
+        if(Memebers[newIndex]){
+          setUservalue({
+            ...Memebers[newIndex],
+            index: newIndex,
+          });
+        }else{
+          navigation.navigate('home')
+        }
     } else {
-
       const check = Memebers.slice(0, Memebers.length - 1).find(it => !it.disable)
-      // alert(JSON.stringify(check))
       if (check) {
         const updatedMembers = [...Memebers].map((it) => {
           if (it.id == Uservalue.id) {
@@ -461,7 +463,8 @@ const TimeAssessment = ({
           }
         })
         setMembers(updatedMembers)
-        setUservalue(check)
+        const index=Memebers.findIndex(it=>it.id=check.id)
+        setUservalue({...check,index})
       } else {
         navigation.navigate('home');
       }
@@ -574,6 +577,8 @@ const TimeAssessment = ({
                     setScore('0');
                     setShowTextField(false);
                     setUservalue({ ...item, index });
+                    setStopDisable(false)
+                    setHasTimerStarted(false)
                   }}>
                   <Text
                     style={{

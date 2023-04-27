@@ -116,7 +116,7 @@ const ParticipantFilterModal = ({
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                     onChange={item => {
-                      setGroup({ ...item, selected: true });
+                      setGroup({ ...item, selected: item.value=="All"?false:true });
                       const myData = selectedGroupsData.filter(it => it.id == item.value)[0]
                       setGenderData(myData?.group_gender)
                       setGradeData(myData?.group_grade)
@@ -136,6 +136,7 @@ const ParticipantFilterModal = ({
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
+                    itemTextStyle={{ color: 'black' }}
                     data={[]}
                     maxHeight={300}
                     labelField="label"

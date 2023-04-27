@@ -161,7 +161,7 @@ const Setting = ({ navigation, userReducer, SaveDeviceCount, logo, getDevicesInf
         {renderModal()}
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View>
-            <Text style={{ color: 'white', marginLeft: responsiveWidth(6), marginTop: responsiveHeight(2) }}>No of Devices</Text>
+            {/* <Text style={{ color: 'white', marginLeft: responsiveWidth(6), marginTop: responsiveHeight(2) }}>No of Devices</Text>
             <TextInput
               placeholder="No of Devices"
               placeholderTextColor="#565B66"
@@ -177,8 +177,8 @@ const Setting = ({ navigation, userReducer, SaveDeviceCount, logo, getDevicesInf
                 setCounts(e);
               }}
               value={counts}
-            />
-            {isLoading ? (
+            /> */}
+            {/* {isLoading ? (
               <View style={styles.loginBtnStyle}>
                 <LottieView
                   speed={1}
@@ -198,7 +198,7 @@ const Setting = ({ navigation, userReducer, SaveDeviceCount, logo, getDevicesInf
                   fontType="semi-bold"
                 />
               </TouchableOpacity>
-            )}
+            )} */}
             <Text style={{ color: 'white', marginLeft: responsiveWidth(6), marginTop: responsiveHeight(2), fontSize: responsiveFontSize(2.5) }}>Login Devices</Text>
             {renderDevices()}
           </View>
