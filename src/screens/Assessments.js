@@ -9,29 +9,34 @@ import {
   Platform,
   Text,
 } from 'react-native';
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import LottieView from 'lottie-react-native';
-import {themeDarkBlue, themeFerozi} from '../assets/colors/colors';
+import { themeDarkBlue, themeFerozi } from '../assets/colors/colors';
 import AssessmentMapper from '../components/AssessmentMapper';
 import ColoredFlatlist from '../components/ColoredFlatlist';
 import Heading from '../components/Heading';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../store/actions';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import TraModal from "../components/TraModal"
-const {width, height} = Dimensions.get('window');
+import DeviceInfo from 'react-native-device-info';
 
-const Assessments = ({navigation, userReducer, getAssessments}) => {
+
+const { width, height } = Dimensions.get('window');
+
+const Assessments = ({ navigation, userReducer, getAssessments, checkLicense, logoutRequest }) => {
   const accessToken = userReducer.accessToken;
   const [assessments, setAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [modal,setModal]=useState(false)
-  const [current,setCurrent]=useState({})
-// console.log("firstjolj",userReducer)
+  const [modal, setModal] = useState(false)
+  const [current, setCurrent] = useState({})
+  const [license, setLicense] = useState({})
+
+  // console.log("firstjolj",userReducer)
   const _onPressRunAssessment = traditional => {
     setModal(false)
-    navigation.navigate('runAssessment', {item: current,traditional});
+    navigation.navigate('runAssessment', { item: current, traditional });
     // console.log("ljdkahsilh",item)
   };
 
@@ -46,7 +51,10 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
   const getAllAssessments = async () => {
     setIsLoading(true);
     await getAssessments(accessToken);
-    setIsLoading(false);
+    checkLicense(accessToken).then(res => {
+      setLicense(res.data?.data)
+      setIsLoading(false);
+    })
   };
 
   const wait = timeout => {
@@ -60,8 +68,6 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
       getAllAssessments();
     });
   }, []);
-
-  // console.log("ass",assessments)
   return (
     <>
       <StatusBar backgroundColor={themeDarkBlue} />
@@ -94,12 +100,12 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
                       width: width * 0.5,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginTop:height * 0.2,
+                      marginTop: height * 0.2,
                       alignSelf: 'center',
                     }}>
                     <Heading
                       title="No Record, Swipe Down To Refresh"
-                      passedStyle={{fontSize: width * 0.045, color: 'white'}}
+                      passedStyle={{ fontSize: width * 0.045, color: 'white' }}
                       fontType="semi-bold"
                     />
                   </View>
@@ -120,19 +126,24 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
               </>
             }
             data={assessments}
-            keyExtractor={({item, index}) => item?.id?.toString() || index?.toString()}
-            renderItem={({item, index}) => (
+            keyExtractor={({ item, index }) => item?.id?.toString() || index?.toString()}
+            renderItem={({ item, index }) => (
               <AssessmentMapper
                 item={item}
                 assessments={assessments}
                 index={index}
-                onPress={(item)=>{
-                  if(item?.assessment_type?.Timed == 1){
-                    setCurrent(item)
-                    setModal(true)
-                  }else{
-                    setModal(false)
-                    navigation.navigate('runAssessment', {item: item,traditional:false});
+                onPress={(item) => {
+                  if (!(license?.is_expire == "false")) {
+                    alert("Your License expired")
+                    logoutRequest(accessToken, DeviceInfo.getDeviceId())
+                  } else {
+                    if (item?.assessment_type?.Timed == 1) {
+                      setCurrent(item)
+                      setModal(true)
+                    } else {
+                      setModal(false)
+                      navigation.navigate('runAssessment', { item: item, traditional: false });
+                    }
                   }
                 }}
               />
@@ -140,17 +151,17 @@ const Assessments = ({navigation, userReducer, getAssessments}) => {
           />
         )}
         <TraModal
-        isModalVisible={modal}
-        setIsModalVisible={setModal}
-        call={_onPressRunAssessment}
+          isModalVisible={modal}
+          setIsModalVisible={setModal}
+          call={_onPressRunAssessment}
         />
       </ImageBackground>
     </>
   );
 };
 
-const mapStateToProps = ({userReducer}) => {
-  return {userReducer};
+const mapStateToProps = ({ userReducer }) => {
+  return { userReducer };
 };
 export default connect(mapStateToProps, actions)(Assessments);
 
@@ -176,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: themeFerozi,
     borderRadius: width * 0.05,
     width: width * 0.55,
-    marginBottom:height * 0.1,
+    marginBottom: height * 0.1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',

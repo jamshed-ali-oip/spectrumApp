@@ -757,3 +757,13 @@ export const getDevicesInfo = (accessToken) => async dispatch => {
   };
   return axios.get(`${apiUrl}/login_devices`,headers)
 }
+
+export const checkLicense = (accessToken) => async dispatch => {
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  return axios.get(`${apiUrl}/license_valid`,headers)
+}

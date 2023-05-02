@@ -617,7 +617,7 @@ const GradingSystem = ({
           currentNintyFive?.UseSegment == 1 && (
             <View style={{ position: 'absolute', bottom: 20, left: 20 }}>
               {ITEM.id == 7 ? (
-                <Text style={{ color: 'white' }}>Shuttle distance: {currentNintyFive?.DistanceToRed}m</Text>
+                <Text style={{ color: 'white' }}>Shuttle distance: {currentNintyFive?.ColorSegment}m</Text>
               ) : (
                 <Text style={{ color: 'white' }}>Distance to Red: {currentNintyFive?.DistanceToRed}m</Text>
               )}

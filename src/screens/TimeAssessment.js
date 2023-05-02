@@ -237,7 +237,9 @@ const TimeAssessment = ({
 
   useEffect(()=>{
     if(index!=null){
-      playSound()
+      if(Resultvalue.color_id==1){
+        playSound()
+      }
     }
   },[index])
   
@@ -985,8 +987,6 @@ const TimeAssessment = ({
                     if (secs) {
   
                       ranges.forEach((it,i) => {
-                        // console.log(secs,it.MinValue,it.MaxValue)
-                
                         if (secs >= (it.MinValue) && secs <= (it.MaxValue)) {
                           if(route.params?.traditional){
                             setResultvalue(it)
