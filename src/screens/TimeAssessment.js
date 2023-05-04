@@ -238,7 +238,7 @@ const TimeAssessment = ({
   useEffect(()=>{
     if(index!=null){
       if(Resultvalue.color_id==1){
-        playSound()
+        // playSound()
       }
     }
   },[index])
@@ -991,6 +991,10 @@ const TimeAssessment = ({
                           if(route.params?.traditional){
                             setResultvalue(it)
                           }else{
+                            console.log(it.MaxValue,numeral(secs+1).format('0.00'),it.color_id)
+                            if(it.color_id==1 && numeral(secs+1).format('0.00')==it.MaxValue){
+                              playSound()
+                            }
                             setIndex(i)
                           }
                         }
