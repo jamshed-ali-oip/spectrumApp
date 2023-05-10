@@ -991,8 +991,8 @@ const TimeAssessment = ({
                           if(route.params?.traditional){
                             setResultvalue(it)
                           }else{
-                            console.log(it.MaxValue,numeral(secs+0.2).format('0.00'),it.color_id)
-                            if(it.color_id==1 && numeral(secs+0.2).format('0.00')==it.MaxValue){
+                            console.log("sdf",numeral(it.MaxValue).format('0.0'),numeral(secs+0.2).format('0.0'),it.color_id)
+                            if(it.color_id==1 && numeral(secs+0.2).format('0.0')==numeral(it.MaxValue).format('0.0')){
                               playSound()
                             }
                             setIndex(i)

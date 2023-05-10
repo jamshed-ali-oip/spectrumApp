@@ -63,9 +63,9 @@ const AssessmentMapper = ({ item, index, onPress, assessments }) => {
             fontType="semi-bold"
           />
         </TouchableOpacity>
-        <View style={{marginTop:responsiveHeight(0.5)}}>
+        {/* <View style={{marginTop:responsiveHeight(0.5)}}>
           <Text style={{color:'white',fontSize:responsiveFontSize(1.25)}}>DT recorded: {item.dt_recorded?.DTRecorded}</Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );

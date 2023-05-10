@@ -110,31 +110,34 @@ const GradesScreen = ({
     // }))
     if (data.group == "All") {
       setParticipants(userReducer.participants)
-    } else {
-      if (data.gender != "All" && data.grade == "All") {
+    } 
+    else {
+      // if (data.gender != "All" && data.grade == "All") {
+      //   const filtered = userReducer.participants.filter((participant) => {
+      //     return (participant?.group == data?.group_organization?.GroupID) && participant.GenderID==data?.gender
+      //   });
+      //   setParticipants(filtered)
+      // }
+      // else if (data.gender == "All" && data.grade != "All") {
+      //   const filtered = userReducer.participants.filter((participant) => {
+      //     return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade
+      //   });
+      //   setParticipants(filtered)
+      // }
+      // else if(data.gender != "All" && data.grade != "All"){
+      //   const filtered = userReducer.participants.filter((participant) => {
+      //     return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade && participant.GenderID==data?.gender
+      //   });
+      //   setParticipants(filtered)
+      // }
+      // else{
         const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID) && participant.GenderID==data?.gender
+          // console.log("find",participant?.group_organization?.find(it=>it.GroupID==data?.group))
+          return participant?.group_organization?.find(it=>it.GroupID==data?.group)
+          // return (participant?.group_organization?.GroupID == data?.group)
         });
         setParticipants(filtered)
-      }
-      else if (data.gender == "All" && data.grade != "All") {
-        const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade
-        });
-        setParticipants(filtered)
-      }
-      else if(data.gender != "All" && data.grade != "All"){
-        const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID) && participant.GradeID==data?.grade && participant.GenderID==data?.gender
-        });
-        setParticipants(filtered)
-      }
-      else{
-        const filtered = userReducer.participants.filter((participant) => {
-          return (participant?.group == data?.group_organization?.GroupID)
-        });
-        setParticipants(filtered)
-      }
+      // }
     }
 
     setIsLoading(false);

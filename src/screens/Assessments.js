@@ -24,14 +24,13 @@ import DeviceInfo from 'react-native-device-info';
 
 const { width, height } = Dimensions.get('window');
 
-const Assessments = ({ navigation, userReducer, getAssessments, checkLicense, logoutRequest }) => {
+const Assessments = ({ navigation, userReducer, getAssessments }) => {
   const accessToken = userReducer.accessToken;
   const [assessments, setAssessments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [modal, setModal] = useState(false)
   const [current, setCurrent] = useState({})
-  const [license, setLicense] = useState({})
 
   // console.log("firstjolj",userReducer)
   const _onPressRunAssessment = traditional => {
@@ -51,10 +50,7 @@ const Assessments = ({ navigation, userReducer, getAssessments, checkLicense, lo
   const getAllAssessments = async () => {
     setIsLoading(true);
     await getAssessments(accessToken);
-    checkLicense(accessToken).then(res => {
-      setLicense(res.data?.data)
-      setIsLoading(false);
-    })
+    setIsLoading(false)
   };
 
   const wait = timeout => {
@@ -133,17 +129,12 @@ const Assessments = ({ navigation, userReducer, getAssessments, checkLicense, lo
                 assessments={assessments}
                 index={index}
                 onPress={(item) => {
-                  if (!(license?.is_expire == "false")) {
-                    alert("Your License expired")
-                    logoutRequest(accessToken, DeviceInfo.getDeviceId())
+                  if (item?.assessment_type?.Timed == 1) {
+                    setCurrent(item)
+                    setModal(true)
                   } else {
-                    if (item?.assessment_type?.Timed == 1) {
-                      setCurrent(item)
-                      setModal(true)
-                    } else {
-                      setModal(false)
-                      navigation.navigate('runAssessment', { item: item, traditional: false });
-                    }
+                    setModal(false)
+                    navigation.navigate('runAssessment', { item: item, traditional: false });
                   }
                 }}
               />

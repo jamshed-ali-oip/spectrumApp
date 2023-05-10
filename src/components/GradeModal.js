@@ -48,10 +48,9 @@ const ParticipantFilterModal = ({
 
   useEffect(() => {
     if (userReducer?.groups) {
-      console.log("groups", userReducer?.groups)
-      setGroupsData(
-        userReducer?.groups
-      )
+      // console.log("groups", userReducer?.groups)
+      const sortGroups=userReducer?.groups.sort((a,b)=>a.Name-b.Name)
+      setGroupsData(sortGroups)
     }
   }, [userReducer?.groups]);
 
@@ -154,7 +153,7 @@ const ParticipantFilterModal = ({
                 </>
               )
             }
-            {(gradeData?.length > 0) ? (
+            {/* {(gradeData?.length > 0) ? (
               <>
                 {renderLabel2()}
                 <Dropdown
@@ -206,8 +205,8 @@ const ParticipantFilterModal = ({
                   }}
                 />
               </>
-            )}
-            {(genderData?.length > 0) ? (
+            )} */}
+            {/* {(genderData?.length > 0) ? (
               <>
                 {renderLabel3()}
                 <Dropdown
@@ -259,7 +258,7 @@ const ParticipantFilterModal = ({
                   }}
                 />
               </>
-            )}
+            )} */}
             <View style={styles.flexRow}>
               {showLoader ? (
                 <View style={styles.requestingView}>
