@@ -420,7 +420,7 @@ export const getGameInfo = accessToken => async dispatch => {
   }
 };
 
-export const getParticipants = accessToken => async dispatch => {
+export const getParticipants = (accessToken,group_id)=> async dispatch => {
   console.log("aaa",accessToken)
   try {
     const URL = `${apiUrl}/participant`;
@@ -431,7 +431,7 @@ export const getParticipants = accessToken => async dispatch => {
       },
     };
 
-    const response = await axios.get(URL, headers);
+    const response = await axios.post(URL, {group_id},headers);
     if (response.data.success) {
       dispatch({
         type: GET_PARTICIPANTS_REQUEST,

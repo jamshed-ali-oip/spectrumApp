@@ -55,7 +55,7 @@ const GradesScreen = ({
   const [selectedGender, setSelectedGender] = useState('Boys');
   const [participants, setParticipants] = useState([])
   const [Eventdetails, setEventdetails] = useState([]);
-  const [fields, setFields] = useState({group:"All",gender:"All",grade:"All"})
+  const [fields, setFields] = useState({ group: "All", gender: "All", grade: "All" })
   const [sort, setSort] = useState("asc")
   // console.log("GROUP_DATA",GROUP_DATA)
   // console.log("participants", participants)
@@ -94,7 +94,7 @@ const GradesScreen = ({
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
 
-  console.log('par',userReducer.participants)
+  console.log('par', userReducer.participants)
 
   const filterParticipants = async data => {
     // console.log("selected", data);
@@ -102,15 +102,17 @@ const GradesScreen = ({
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    SET_GROUP_DATA({ ...data.GROUP_DATA, group: data.allGroud,Name:fields.group })
+    SET_GROUP_DATA({ ...data.GROUP_DATA, group: data.allGroud, Name: fields.group })
     // console.log("eevent datacon screen/////",)
     setEventdetails(data.event)
     // alert(JSON.stringify({
     //   gender:data.gender.GenderID
     // }))
     if (data.group == "All") {
-      setParticipants(userReducer.participants)
-    } 
+      setIsLoading(true);
+      await getParticipants(accessToken);
+      setIsLoading(false);
+    }
     else {
       // if (data.gender != "All" && data.grade == "All") {
       //   const filtered = userReducer.participants.filter((participant) => {
@@ -131,12 +133,15 @@ const GradesScreen = ({
       //   setParticipants(filtered)
       // }
       // else{
-        const filtered = userReducer.participants.filter((participant) => {
-          // console.log("find",participant?.group_organization?.find(it=>it.GroupID==data?.group))
-          return participant?.group_organization?.find(it=>it.GroupID==data?.group)
-          // return (participant?.group_organization?.GroupID == data?.group)
-        });
-        setParticipants(filtered)
+      // const filtered = userReducer.participants.filter((participant) => {
+      //   // console.log("find",participant?.group_organization?.find(it=>it.GroupID==data?.group))
+      //   return participant?.group_organization?.find(it => it.GroupID == data?.group)
+      //   // return (participant?.group_organization?.GroupID == data?.group)
+      // });
+      // setParticipants(filtered)
+      setIsLoading(true);
+      await getParticipants(accessToken,data.group);
+      setIsLoading(false);
       // }
     }
 
@@ -236,11 +241,11 @@ const GradesScreen = ({
                     />
                   </View>
                 </TouchableOpacity> */}
-                <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:responsiveFontSize(2.5)}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: responsiveFontSize(2.5) }}>
                   <TouchableOpacity
                     style={styles.selectFilterStyle}
                     onPress={() => setShowFilterModal(true)}
-                    >
+                  >
                     <Heading
                       title="Select Filter"
                       passedStyle={styles.selectFilterTextStyle}
@@ -252,11 +257,11 @@ const GradesScreen = ({
                       passedStyle={styles.rightIconStyle}
                     />
                   </TouchableOpacity>
-                  <View style={{ backgroundColor: 'white',width:120,borderRadius:responsiveFontSize(1) }}>
+                  <View style={{ backgroundColor: 'white', width: 120, borderRadius: responsiveFontSize(1) }}>
                     <RNPickerSelect
                       value={sort}
-                      style={{viewContainer:{marginVertical:0}}}
-                      pickerProps={{style:{color:'black'}}}
+                      style={{ viewContainer: { marginVertical: 0 } }}
+                      pickerProps={{ style: { color: 'black' } }}
                       useNativeAndroidPickerStyle={true}
                       onValueChange={(value) => setSort(value)}
                       items={[
@@ -336,7 +341,7 @@ const GradesScreen = ({
                       passedStyle={styles.selectFilterTextStyle}
                       fontType="semi-bold"
                     />
-                                        <IconComp
+                    <IconComp
                       iconName={'chevron-right'}
                       type="Feather"
                       passedStyle={styles.rightIconStyle}
@@ -363,14 +368,14 @@ const GradesScreen = ({
                 <ColoredFlatlist />
               </>
             }
-            data={participants.filter(it=>it.Status==1).sort((a, b) => {
+            data={participants.filter(it => it.Status == 1).sort((a, b) => {
               const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
               const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
               if (nameA < nameB) {
-                return sort=="asc"?-1:1;
+                return sort == "asc" ? -1 : 1;
               }
               if (nameA > nameB) {
-                return sort=="asc"?1:-1;
+                return sort == "asc" ? 1 : -1;
               }
 
               // names must be equal
@@ -386,17 +391,17 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        traditional:route?.params?.traditional,
-                        memberData: participants.filter(it=>it.Status==1).sort((a, b) => {
+                        traditional: route?.params?.traditional,
+                        memberData: participants.filter(it => it.Status == 1).sort((a, b) => {
                           const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
                           const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
                           if (nameA < nameB) {
-                            return sort=="asc"?-1:1;
+                            return sort == "asc" ? -1 : 1;
                           }
                           if (nameA > nameB) {
-                            return sort=="asc"?1:-1;
+                            return sort == "asc" ? 1 : -1;
                           }
-            
+
                           // names must be equal
                           return 0;
                         }),
@@ -408,16 +413,16 @@ const GradesScreen = ({
                         item: ITEM,
                         childData: { ...item, index },
                         groupData: GROUP_DATA,
-                        memberData: participants.filter(it=>it.Status==1).sort((a, b) => {
+                        memberData: participants.filter(it => it.Status == 1).sort((a, b) => {
                           const nameA = a.Firstname.toUpperCase(); // ignore upper and lowercase
                           const nameB = b.Firstname.toUpperCase(); // ignore upper and lowercase
                           if (nameA < nameB) {
-                            return sort=="asc"?-1:1;
+                            return sort == "asc" ? -1 : 1;
                           }
                           if (nameA > nameB) {
-                            return sort=="asc"?1:-1;
+                            return sort == "asc" ? 1 : -1;
                           }
-            
+
                           // names must be equal
                           return 0;
                         }),
@@ -455,7 +460,7 @@ const GradesScreen = ({
             }}
           />
         )}
-          <ParticipantFilterModal
+        <ParticipantFilterModal
           isModalVisible={showFilterModal}
           setIsModalVisible={setShowFilterModal}
           onPress={filterParticipants}

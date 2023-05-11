@@ -111,7 +111,9 @@ const ParticipantsScreen = ({
     setIsLoading(true);
 
     if (data.group == "All") {
-      setParticipants(userReducer.participants)
+      setIsLoading(true);
+      await getParticipants(accessToken);
+      setIsLoading(false);
     } else {
       // if (data.gender != "All" && data.grade == "All") {
       //   const filtered = userReducer.participants.filter((participant) => {
@@ -132,12 +134,15 @@ const ParticipantsScreen = ({
       //   setParticipants(filtered)
       // }
       // else{
-        const filtered = userReducer.participants.filter((participant) => {
-          // console.log("find",participant?.group_organization?.find(it=>it.GroupID==data?.group))
-          return participant?.group_organization?.find(it=>it.GroupID==data?.group)
-          // return (participant?.group_organization?.GroupID == data?.group)
-        });
-        setParticipants(filtered)
+        // const filtered = userReducer.participants.filter((participant) => {
+        //   // console.log("find",participant?.group_organization?.find(it=>it.GroupID==data?.group))
+        //   return participant?.group_organization?.find(it=>it.GroupID==data?.group)
+        //   // return (participant?.group_organization?.GroupID == data?.group)
+        // });
+        // setParticipants(filtered)
+        setIsLoading(true);
+        await getParticipants(accessToken,data.group);
+        setIsLoading(false);
       // }
     }
 
