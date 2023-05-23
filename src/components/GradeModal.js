@@ -48,8 +48,8 @@ const ParticipantFilterModal = ({
 
   useEffect(() => {
     if (userReducer?.groups) {
-      // console.log("groups", userReducer?.groups)
-      const sortGroups=userReducer?.groups.sort((a,b)=>a.Name-b.Name)
+      console.log("groups", userReducer?.groups)
+      const sortGroups=[...userReducer?.groups].sort((a,b)=>a.Name?.localeCompare(b.Name))
       setGroupsData(sortGroups)
     }
   }, [userReducer?.groups]);
