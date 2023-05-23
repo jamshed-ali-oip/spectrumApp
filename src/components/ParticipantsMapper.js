@@ -102,9 +102,8 @@ const ParticipantsMapper = ({ item, index, userReducer, pastAssessment }) => {
           passedStyle={styles.nameStyle}
           fontType="regular"
         />
-
         <Heading
-          title={moment(new Date(pastAssessment[0]?.DTRecorded)).format('YYYY-MM-DD HH:MM')}
+          title={moment(pastAssessment[0]?.DTRecorded).format('YYYY-MM-DD HH:MM')}
           passedStyle={styles.dateStyle}
           fontType="regular"
         />
