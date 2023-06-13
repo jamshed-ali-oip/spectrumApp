@@ -289,7 +289,8 @@ const ParticipantFilterModal = ({
                         onPress({
                           gender:gender.value,
                           group: group.value,
-                          grade:grade.value
+                          grade:grade.value,
+                          name:group.Name
                         });
                         setIsModalVisible(false);
                       } else {

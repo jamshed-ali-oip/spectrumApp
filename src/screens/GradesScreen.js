@@ -102,7 +102,7 @@ const GradesScreen = ({
     // console.log("selected Grade Id", data.grade_id);
     // console.log("selected Group Id", data.group_id);
     setIsLoading(true);
-    SET_GROUP_DATA({ ...data.GROUP_DATA, group: data.allGroud, Name: fields.group })
+    SET_GROUP_DATA({ ...data.GROUP_DATA, group: data.allGroud, Name: data.name })
     // console.log("eevent datacon screen/////",)
     setEventdetails(data.event)
     // alert(JSON.stringify({
